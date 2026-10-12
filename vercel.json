@@ -54,5 +54,6 @@
    ]
   }
  ],
- "buildCommand": "node scripts/bump-sitemap.js"
+ "buildCommand": "node scripts/bump-sitemap.js",
+ "outputDirectory": "."
 }
