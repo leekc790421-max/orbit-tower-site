@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Orbit Tower · 收單台（本機）</title>
+<style>
+ body{font-family:ui-sans-serif,system-ui,"Noto Sans TC",sans-serif;background:#0B1220;color:#E2E8F0;margin:0;padding:28px;line-height:1.7}
+ .wrap{max-width:860px;margin:0 auto} h1{font-size:20px;letter-spacing:.08em} .sub{color:#64748B;font-size:13px}
+ table{width:100%;border-collapse:collapse;margin-top:18px;font-size:13px} th{text-align:left;color:#94A3B8;font-weight:500;border-bottom:1px solid #1E293B;padding:8px 6px;font-size:11px;letter-spacing:.15em}
+ td{border-bottom:1px dashed #1E293B;padding:9px 6px;vertical-align:top} .tag{color:#22D3EE;font-size:11px;letter-spacing:.1em}
+ button{background:#2563EB;border:0;color:#fff;border-radius:9px;padding:9px 16px;cursor:pointer;font-size:13px;margin:14px 8px 0 0} button.g{background:transparent;border:1px solid #334155}
+ .empty{color:#64748B;padding:30px 4px} .warn{font-size:12px;color:#94A3B8;border:1px dashed #334155;padding:10px 14px;border-radius:10px;margin-top:22px}
+</style></head><body><div class="wrap">
+ <h1>📥 Orbit Tower 收單台</h1><p class="sub">读本機瀏覽器 <code>ot.leads</code> 佇列——訪客送單後若經郵件通道送達業務匣，此處為第二備援。<b>僅此裝置可見</b>。</p>
+ <div id="box"></div>
+ <div id="btns" hidden><button id="exp">匯出 JSON</button><button id="csv">匯出 CSV</button><button class="g" id="clr">清空（連按兩次確認）</button></div>
+ <div class="warn">正式多裝置收單請接表單服務／CRM（API 端點預留於 /api/leads，上線時由 site.js 改 POST 即可）。站方不儲存任何訪客個人資料於伺服器。</div>
+</div><script>
+var L=[];try{L=JSON.parse(localStorage.getItem('ot.leads'))||[]}catch(e){}
+var box=document.getElementById('box');
+if(!L.length){box.innerHTML='<p class="empty">本裝置尚無收單——表單送出後會出現在這裡。</p>'}
+else{document.getElementById('btns').hidden=false;
+ box.innerHTML='<table><tr><th>時間</th><th>類型</th><th>來源</th><th>內容</th></tr>'+L.map(function(d){
+  return '<tr><td style="white-space:nowrap">'+new Date(d.at).toLocaleString('zh-TW')+'</td><td class="tag">'+d.type+'</td><td style="max-width:150px;word-break:break-all">'+(d.url||'')+'</td><td style="max-width:320px">'+Object.keys(d.fields||{}).map(function(k){return '<b>'+k+'</b>：'+String(d.fields[k]).slice(0,120)}).join('<br>')+'</td></tr>'}).join('')+'</table>'}
+function dl(n,t){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=n;a.click()}
+document.getElementById('exp')&&document.getElementById('exp').addEventListener('click',function(){dl('ot-leads.json',JSON.stringify(L,null,1))});
+document.getElementById('csv')&&document.getElementById('csv').addEventListener('click',function(){dl('ot-leads.csv','at,type,url,fields\n'+L.map(function(d){return [d.at,d.type,d.url,'"'+JSON.stringify(d.fields||{}).replace(/"/g,'""')+'"'].join(',')}).join('\n'))});
+var cc=0;document.getElementById('clr')&&document.getElementById('clr').addEventListener('click',function(){if(++cc===1){this.textContent='再按一次確認清空';return}localStorage.removeItem('ot.leads');location.reload()});
+</script></body></html>

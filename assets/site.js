@@ -74,33 +74,41 @@
       var q = []; try { q = JSON.parse(localStorage.getItem('ot.leads')) || []; } catch (err) { }
       q.push(data); localStorage.setItem('ot.leads', JSON.stringify(q));
       track('lead_' + data.type);
-      f.innerHTML = '<div style="padding:8px 2px"><b style="color:#059669;font-size:17px">✓ 已收到，感謝你！</b><p class="muted" style="margin:8px 0 0;font-size:14.5px">我們已將資料記在本機佇列（正式站將自動通知業務並發送 Email）。' +
-        (data.type === 'report' ? '报告下載連結稍後會寄到你的信箱。' : '業務团队會在 24 小時內與你聯繫。') + '</p></div>';
+      var payload = ['【Orbit Tower 收單】類型：' + data.type, '時間：' + data.at, '來源頁：' + data.url, '─── 表單欄位 ───']
+        .concat(Object.keys(data.fields).map(function (k) { return k + '：' + data.fields[k]; })).join('\n');
+      var mailBtn = '<a class="btn btn--primary" style="margin-top:10px;display:inline-block" href="mailto:service@xingdeng.tw?subject=' +
+        encodeURIComponent('[Orbit Tower][' + data.type + '] ' + (data.fields.company || data.fields.name || 'lead')) + '&body=' + encodeURIComponent(payload) + '">✉️ 一按下送收單（開啟郵件即寄達業務匣）</a>';
+      f.innerHTML = '<div style="padding:8px 2px"><b style="color:#059669;font-size:17px">✓ 已在本機留存，下一步送出即達業務</b><p class="muted" style="margin:8px 0 0;font-size:14.5px">本表單探雙軌收單：按下方按鈕開啟郵件客戶端即送達 service@xingdeng.tw（內容已自動帶入）；若視窗未跳出，請直接複製此碼寄同址：<br><code class="mono" style="font-size:12px;word-break:break-all">' + encodeURIComponent(location.href) + '</code></p>' + mailBtn +
+        '<button class="btn" style="margin-left:8px" id="lead-copy">複製表單內容</button></div>';
+      var cp = document.getElementById('lead-copy');
+      cp.addEventListener('click', function () { navigator.clipboard.writeText(payload).then(function () { cp.textContent = '✓ 已複製，貼至 service@xingdeng.tw 即完成'; setTimeout(function () { cp.textContent = '複製表單內容'; }, 2800); }); });
     });
   });
 
-  /* ---- 網站診斷 v0（client 端初步评分，正式版接后端爬取） ---- */
+  /* ---- 網站診斷 v2：走 /api/diagnose 真實掃描（後端抓取＋標頭檢測） ---- */
   var dg = $('#diag-form');
   if (dg) dg.addEventListener('submit', function (e) {
     e.preventDefault();
     var site = $('#diag-url').value.trim(); if (!site) return;
+    if (!/^https?:\/\//i.test(site)) site = 'https://' + site;
     var out = $('#diag-out');
-    out.innerHTML = '<p class="muted mono" style="font-size:13px">▍掃描中（正式版将由后端執行 SEO／性能／多语检测）…</p>';
-    setTimeout(function () {
-      var scores = { '網站體驗': 62, 'SEO 分數': 71, '國際化能力': 38, 'AI 成熟度': 9, '品牌展示能力': 45 };
-      var rows = Object.keys(scores).map(function (k) {
-        var v = scores[k];
-        return '<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:13.5px"><b>' + k + '</b><span class="mono">' + v + '/100</span></div>' +
-          '<div style="height:8px;background:#E2E8F0;border-radius:99px;overflow:hidden"><div style="width:' + v + '%;height:100%;background:linear-gradient(90deg,#2563EB,#06B6D4)"></div></div></div>';
-      }).join('');
-      out.innerHTML = '<h3 style="margin-top:0">診斷結果（示意）— ' + site.replace(/</g, '') + '</h3>' + rows +
-        '<p class="muted" style="font-size:13.5px">最弱項：<b>AI 成熟度 9/100</b>。你的網站尚未具備 24 小時接待與導購能力。</p>' +
-        '<a class="btn btn--primary btn--lg" href="/demo/">立即體驗 Orbit Tower 補強 →</a>';
-      track('diagnose_done');
-    }, 900);
+    out.innerHTML = '<p class="muted mono" style="font-size:13px">▍真實掃描中（抓取目標首頁・檢測 SEO／效能／資安／國際化 12 項）…</p>';
+    fetch('/api/diagnose', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ url: site }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || d.error) { out.innerHTML = '<p style="color:#DC2626">掃描失敗：' + (d && d.error || '未知') + '——請確認網址可公開存取。</p>'; return; }
+        var bars = Object.keys(d.scores).map(function (k) {
+          var v = d.scores[k];
+          return '<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:13.5px"><b>' + k + '</b><span class="mono">' + v + '/100</span></div><div style="height:8px;background:#E2E8F0;border-radius:99px;overflow:hidden"><div style="width:' + v + '%;height:100%;background:linear-gradient(90deg,#2563EB,#06B6D4)"></div></div></div>';
+        }).join('');
+        out.innerHTML = bars + '<ul class="muted" style="font-size:13px;margin-top:10px;line-height:1.9">' + d.findings.map(function (f) { return '<li>' + (f.ok ? '✅' : '⚠️') + ' ' + f.label + '</li>'; }).join('') + '</ul>' +
+          '<p class="muted" style="font-size:12px;margin-top:8px">延遲 ' + d.ms + 'ms・HTML ' + Math.round(d.kb) + 'KB・快照時間 ' + new Date().toLocaleString('zh-TW') + '</p>' +
+          '<a class="btn btn--primary" style="margin-top:12px" href="/contact?topic=' + encodeURIComponent('診斷複核・人工加購報告') + '">要一份「人工複核＋改善報價」？業務 24h 內回覆 →</a>';
+        track('diag_real');
+      })
+      .catch(function () { out.innerHTML = '<p style="color:#DC2626">服務暫時不可用，請稍後再試或改約人工診斷。</p>'; });
   });
 
-  /* ---- 極輕量事件追蹤（正式站替換為 GA4 events） ---- */
   function track(name) {
     try { console.log('[ot-event]', name, performance.now() | 0); } catch (e) { }
     if (window.dataLayer) window.dataLayer.push({ event: 'ot_' + name });
