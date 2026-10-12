@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://tower.xingdeng.tw/sitemap.xml
