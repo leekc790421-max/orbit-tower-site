@@ -75,7 +75,7 @@
     });
   });
 
-  /* ---- 网站诊断 v0（client 端初步评分，正式版接后端爬取） ---- */
+  /* ---- 網站診斷 v0（client 端初步评分，正式版接后端爬取） ---- */
   var dg = $('#diag-form');
   if (dg) dg.addEventListener('submit', function (e) {
     e.preventDefault();
