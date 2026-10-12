@@ -5,8 +5,11 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   let url;
   try {
-    const __raw = await new Promise((resolve) => { const c = []; req.on('data', (x) => c.push(x)); req.on('end', () => resolve(Buffer.concat(c).toString('utf8'))); });
-    url = JSON.parse(__raw || '{}').url;
+    if (req.body && typeof req.body === 'object' && req.body.url) { url = req.body.url; }
+    else {
+      const __raw = await new Promise((resolve) => { const c = []; req.on('data', (x) => c.push(x)); req.on('end', () => resolve(Buffer.concat(c).toString('utf8'))); });
+      url = JSON.parse(__raw || (req.text ? await req.text() : '{}')).url;
+    }
     if (!url) throw new Error('missing url');
   } catch { return res.status(400).json({ error: 'json required' }); }
   let u; try { u = new URL(url); } catch { return res.status(400).json({ error: 'invalid url' }); }
