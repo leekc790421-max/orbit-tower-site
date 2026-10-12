@@ -6,9 +6,13 @@
 
   /* ---- 手機導覽 ---- */
   var burger = $('.nav__burger');
-  if (burger) burger.addEventListener('click', function () {
-    var links = $('.nav__links');
-    links.style.display = links.style.display === 'flex' ? '' : 'flex';
+  var linksEl = $('.nav__links');
+  if (burger && linksEl) burger.addEventListener('click', function () {
+    var open = linksEl.classList.toggle('open');
+    burger.setAttribute('aria-expanded', String(open));
+  });
+  if (linksEl) linksEl.addEventListener('click', function (e) {
+    if (e.target.closest('a')) linksEl.classList.remove('open');
   });
 
   /* ---- 風琴 FAQ ---- */
