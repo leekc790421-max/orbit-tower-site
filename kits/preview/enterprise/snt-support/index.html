@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="x-snt-kid" content="DEMO-ente">
+<meta name="robots" content="noindex">
+<title>SNT 維修區・雲端辦公室連線</title>
+<style>
+:root{--p:#2563EB;--gold:#d4af37}
+body{font-family:"Noto Sans TC",system-ui,sans-serif;background:#0a0b0e;color:#e7e8ec;margin:0;min-height:100vh}
+.wrap{width:min(820px,calc(100% - 32px));margin:auto;padding:26px 0}
+.card{background:#161922;border:1px solid rgba(212,175,55,.26);border-radius:16px;padding:20px 22px;margin:14px 0}
+h1{font-size:22px;background:linear-gradient(120deg,#fff2b2,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+#conn{border:1px solid #1c7044;background:#071b13;color:#83e5aa;border-radius:10px;padding:10px 14px;font-size:14px}
+#chatlog{max-height:46vh;overflow:auto;display:grid;gap:10px}
+.msg{max-width:82%;padding:10px 14px;border-radius:12px;font-size:14.5px;white-space:pre-wrap;line-height:1.65}
+.msg.me{background:#1e3a8a;color:#fff;justify-self:end}
+.msg.ai{background:#1c2330;border:1px solid #2b3648;color:#dbe2ee;justify-self:start}
+form{display:flex;gap:10px;margin-top:12px}
+input{flex:1;background:#0d0f14;border:1px solid #334155;color:#fff;border-radius:10px;padding:12px;font:inherit}
+button{background:linear-gradient(135deg,#f4d978,#a87a19);border:0;color:#111;font-weight:700;border-radius:10px;padding:0 18px;cursor:pointer;font:inherit}
+a{color:#7dd3fc}.meta{font-size:12px;color:#8b8e97}
+</style>
+</head>
+<body>
+<main class="wrap">
+<h1>🛠 SNT 維修區・雲端辦公室</h1>
+<div id="conn">🟢 雲端辦公室已連線（展示模擬）・授權碼 DEMO-ente<br><span style="font-size:12px">正式站此處為即時對話與修復引導</span></div>
+<div class="card">
+<div id="chatlog" aria-live="polite"></div>
+<form id="askform"><input id="ask" placeholder="描述問題：頁面 404／表單失效／SSL／語系亂碼…" autocomplete="off"><button>送出</button></form>
+<p class="meta">本頁即時對接 SNT 雲端辦公室 AI 值班・對話內容僅含授權碼與站點資訊。真人升級：LINE <a href="https://line.me/R/ti/p/@559julyu">@559julyu</a>｜免責：<a href="https://xingdeng.tw/legal" target="_blank" rel="noopener">法律聲明</a></p>
+</div>
+<script type="application/json" id="licjson">{{LICENSE_JSON}}</script>
+<script src=""></script>
+</main>
+</body>
+</html>

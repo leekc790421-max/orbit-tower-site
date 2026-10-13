@@ -1,0 +1,32 @@
+/* SNT Starter Kit・共享樣式（企業藍×白・響應式） */
+:root{--p:#2563EB;--p2:#1E40AF;--cy:#06B6D4;--ink:#0F172A;--mut:#475569;--sec:#F8FAFC;--line:#E7EEF7}
+*{box-sizing:border-box;margin:0}body{font-family:"Noto Sans TC","Segoe UI",system-ui,sans-serif;color:var(--ink);line-height:1.7;background:#fff}
+img{max-width:100%}.wrap{width:min(1080px,calc(100% - 36px));margin:auto}
+a{color:var(--p);text-decoration:none}
+header.site{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+header.site .wrap{display:flex;align-items:center;gap:16px;height:62px}
+.brand{font-weight:700;font-size:17px;color:var(--ink)}.brand i{display:inline-block;width:24px;height:28px;vertical-align:-6px;margin-right:8px;background:linear-gradient(135deg,var(--cy),var(--p));clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+nav a{color:var(--mut);font-size:14.5px;margin-left:16px}nav a:hover{color:var(--p)}
+#langbar select{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:13px;background:#fff;margin-left:14px}
+.hero{padding:72px 0 56px;background:linear-gradient(160deg,#EFF6FF 0%,#ECFEFF 60%,#fff 100%)}
+.hero .k{font-size:12px;letter-spacing:.18em;color:var(--p);font-family:ui-monospace,monospace}
+.hero h1{font-size:clamp(28px,4.8vw,44px);margin:.3em 0}
+.hero p{max-width:620px;color:var(--mut);font-size:17px}
+.btn{display:inline-block;margin:18px 10px 0;padding:12px 22px;border-radius:11px;font-weight:600}
+.btn--a{background:var(--p);color:#fff}.btn--b{border:1px solid var(--line);background:#fff;color:var(--ink)}
+section{padding:56px 0}section.sec{background:var(--sec)}
+h2{font-size:24px;margin-bottom:20px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px}
+.card h3{font-size:16px;margin-bottom:8px}.card p{font-size:14px;color:var(--mut)}
+.pay{border:1px dashed var(--p);background:#EFF6FF;border-radius:14px;padding:18px 22px;font-size:14.5px;margin-top:22px}
+.pay b{color:var(--p2)}
+form .row{display:grid;gap:12px;grid-template-columns:1fr 1fr;max-width:560px}
+input,textarea{width:100%;border:1px solid #CBD5E1;border-radius:10px;padding:11px 13px;font:inherit;margin-bottom:12px}
+footer.site{background:#0F172A;color:#94A3B8;font-size:13.5px;padding:34px 0}
+footer.site a{color:#DBEAFE}
+#legal-footer{display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:space-between;border-top:1px solid #1E293B;margin-top:18px;padding-top:16px}
+#legal-footer .must{color:#fbbf24;font-weight:600}
+@media(max-width:720px){form .row{grid-template-columns:1fr}nav a{margin-left:10px;font-size:13.5px}}
+
+/* snt-kid-anchor */
