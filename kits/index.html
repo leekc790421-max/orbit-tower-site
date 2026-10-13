@@ -15,7 +15,17 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"SNT 一鍵架網懶人包","itemListElement":[{"@type":"ListItem","position":1,"name":"個人版 Starter 3,000"},{"@type":"ListItem","position":2,"name":"店家版 Business 6,600"},{"@type":"ListItem","position":3,"name":"企業版 Flagship 13,900"}]}</script>
-</head>
+<style>
+.shot{border:1px solid #E7EEF7;border-radius:12px;box-shadow:0 18px 40px -18px rgba(15,23,42,.35);display:block;width:100%;height:auto;background:#fff}
+.gallery{display:grid;grid-template-columns:2.1fr 1fr;gap:14px;margin:18px 0 6px}
+.gallery .side{display:grid;gap:12px;align-content:stretch}
+.gallery .side a{position:relative;overflow:hidden;border-radius:10px}
+.gallery .side img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:10px;border:1px solid #E7EEF7}
+.gal-cap{font-size:12px;color:#64748B;text-align:center;margin-top:4px}
+.plane{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.card-hd{font-size:13px;color:#334155;background:#F8FAFC;border-radius:8px;padding:2px 8px}
+@media(max-width:720px){.gallery{grid-template-columns:1fr}}
+</style></head>
 <body>
 <nav class="nav"><div class="wrap nav__in">
 <a class="brand" href="/"><span class="mark"><img src="/assets/logo-mark.png" alt="光曜星樞 SNT 圖章"></span><span>光曜星樞・Orbit Tower<small>AI-Powered Digital Headquarters</small></span></a>
@@ -33,26 +43,45 @@
 
 <section class="band--sec"><div class="wrap">
 <h2 style="font-size:23px">選擇你的尺寸</h2>
-<div class="grid g3" style="margin-top:18px;align-items:stretch">
-
-<div class="card plan" style="position:relative"><span class="k">T1・個人版 Starter</span>
-<div class="price">NT$3,000<span style="font-size:14px;color:#64748B"> 一次性</span></div>
-<p class="muted" style="font-size:13.5px">適合： Freelancer、工作室、個人品牌</p>
-<ul><li>personal 樣板（作品集＋服務＋聯絡）</li><li>七語系切換器・繁中為預設</li><li>/snt-support 維修區（AI 值班）</li><li>實名授權＋浮水印＋免責頁腳</li><li>Nginx／Vercel 雙部署腳本</li></ul>
-<div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn--ghost btn--sm" href="/kits/preview/personal/" target="_blank">試看 Demo ↗</a><a class="btn btn--primary btn--sm" href="/contact?kit=starter">購置此款</a></div></div>
-
-<div class="card plan plan--ft" style="position:relative"><div class="ribbon">熱銷</div><span class="k">T2・店家版 Business</span>
-<div class="price">NT$6,600<span style="font-size:14px;color:#64748B"> 一次性</span></div>
-<p class="muted" style="font-size:13.5px">適合：餐飲、美容、診所、在地商店</p>
-<ul><li>shop 樣板（商品動線＋收款框＋来店預約）</li><li>LINE 加友入口全預留・接你的官方帳號</li><li>維穩升級：雲端診斷每季 2 次</li><li>其餘同 T1（授權／維修區／語系）</li></ul>
-<div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn--ghost btn--sm" href="/kits/preview/shop/" target="_blank">試看 Demo ↗</a><a class="btn btn--primary btn--sm" href="/contact?kit=business">購置此款</a></div></div>
-
-<div class="card plan" style="position:relative"><span class="k">T3・企業版 Flagship</span>
-<div class="price">NT$13,900<span style="font-size:14px;color:#64748B"> 一次性</span></div>
-<p class="muted" style="font-size:13.5px">適合：中小企業官網、準備進駐數位总部者</p>
-<ul><li>enterprise 樣板（數位總部骨架＋webhook 預留）</li><li>子網域分租＋SSL 自動派發（2 組）</li><li>維修區 SLA：AI 值班秒回、真人 1 工作日上限</li><li>可憑購買紀錄折抵 Pro 訂閱首月 NT$3,000</li></ul>
-<div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn--ghost btn--sm" href="/kits/preview/enterprise/" target="_blank">試看 Demo ↗</a><a class="btn btn--primary btn--sm" href="/contact?kit=flagship">購置此款</a></div></div>
-
+<div class="card" style="position:relative;margin:16px 0;padding:28px">
+<div class="plane"><span class="k">T1・個人版 Starter</span><h2 style="font-size:21px;margin:0">Freelancer／個人品牌門面</h2>
+<span style="font-size:29px;font-weight:700;color:#1E40AF">NT$3,000</span><span style="color:#94A3B8;font-size:12.5px">一次性｜邊際成本 NT$1,350｜利潤率 55%</span></div>
+<p class="muted" style="font-size:14px;margin:6px 0 0">作品集＋服務項目＋雙軌聯絡表單。適合想快速擁有「像樣第一印象」的創作者。</p>
+<div class="gallery">
+<a href="/assets/shots/personal-hero.jpg" target="_blank" rel="noopener"><img class="shot" src="/assets/shots/personal-hero.jpg" alt="Freelancer／個人品牌門面 桌面版首屏截圖" loading="lazy"><div class="gal-cap">🖥 桌面版・首屏（點看大圖）</div></a>
+<div class="side">
+<a href="/assets/shots/personal-services.jpg" target="_blank" rel="noopener"><img src="/assets/shots/personal-services.jpg" alt="服務區截圖" loading="lazy"><div class="gal-cap">服務區塊</div></a>
+<a href="/assets/shots/personal-support.jpg" target="_blank" rel="noopener"><img src="/assets/shots/personal-support.jpg" alt="維修區截圖" loading="lazy"><div class="gal-cap">🛠 維修區・連雲端辦公室</div></a>
+<a href="/assets/shots/personal-mobile.jpg" target="_blank" rel="noopener"><img src="/assets/shots/personal-mobile.jpg" alt="手機版截圖" loading="lazy" style="max-height:170px"><div class="gal-cap">手機版 390px</div></a>
+</div></div>
+<div class="card-hd" style="align-self:start">實名授權浮水印・七語系・Nginx/Vercel 雙部署</div>
+<div style="display:flex;gap:12px;margin-top:14px"><a class="btn btn--ghost btn--sm" href="/kits/preview/personal/" target="_blank" rel="noopener">互動預覽 ↗</a><a class="btn btn--primary btn--sm" href="/contact?kit=personal">購置此款</a></div>
+</div><div class="card" style="position:relative;margin:16px 0;padding:28px;border-color:#2563EB">
+<div class="ribbon">熱銷</div><div class="plane"><span class="k">T2・店家版 Business</span><h2 style="font-size:21px;margin:0">餐飲／美容／診所／在地商店</h2>
+<span style="font-size:29px;font-weight:700;color:#1E40AF">NT$6,600</span><span style="color:#94A3B8;font-size:12.5px">一次性｜邊際成本 NT$2,970｜利潤率 55%</span></div>
+<p class="muted" style="font-size:14px;margin:6px 0 0">商品動線＋收款框＋来店預約＋LINE 加友預留；營業資訊合規版位一併附上。</p>
+<div class="gallery">
+<a href="/assets/shots/shop-hero.jpg" target="_blank" rel="noopener"><img class="shot" src="/assets/shots/shop-hero.jpg" alt="餐飲／美容／診所／在地商店 桌面版首屏截圖" loading="lazy"><div class="gal-cap">🖥 桌面版・首屏（點看大圖）</div></a>
+<div class="side">
+<a href="/assets/shots/shop-services.jpg" target="_blank" rel="noopener"><img src="/assets/shots/shop-services.jpg" alt="服務區截圖" loading="lazy"><div class="gal-cap">服務區塊</div></a>
+<a href="/assets/shots/shop-support.jpg" target="_blank" rel="noopener"><img src="/assets/shots/shop-support.jpg" alt="維修區截圖" loading="lazy"><div class="gal-cap">🛠 維修區・連雲端辦公室</div></a>
+<a href="/assets/shots/shop-mobile.jpg" target="_blank" rel="noopener"><img src="/assets/shots/shop-mobile.jpg" alt="手機版截圖" loading="lazy" style="max-height:170px"><div class="gal-cap">手機版 390px</div></a>
+</div></div>
+<div class="card-hd" style="align-self:start">實名授權浮水印・七語系・Nginx/Vercel 雙部署</div>
+<div style="display:flex;gap:12px;margin-top:14px"><a class="btn btn--ghost btn--sm" href="/kits/preview/shop/" target="_blank" rel="noopener">互動預覽 ↗</a><a class="btn btn--primary btn--sm" href="/contact?kit=shop">購置此款</a></div>
+</div><div class="card" style="position:relative;margin:16px 0;padding:28px">
+<div class="plane"><span class="k">T3・企業版 Flagship</span><h2 style="font-size:21px;margin:0">中小企業官網・數位總部前哨</h2>
+<span style="font-size:29px;font-weight:700;color:#1E40AF">NT$13,900</span><span style="color:#94A3B8;font-size:12.5px">一次性｜邊際成本 NT$6,255｜利潤率 55%</span></div>
+<p class="muted" style="font-size:14px;margin:6px 0 0">關於／服務／案例骨架＋webhook 預留＋子網域分租兩組（SSL 自動派發）；可折抵 Pro 訂閱首月。</p>
+<div class="gallery">
+<a href="/assets/shots/enterprise-hero.jpg" target="_blank" rel="noopener"><img class="shot" src="/assets/shots/enterprise-hero.jpg" alt="中小企業官網・數位總部前哨 桌面版首屏截圖" loading="lazy"><div class="gal-cap">🖥 桌面版・首屏（點看大圖）</div></a>
+<div class="side">
+<a href="/assets/shots/enterprise-services.jpg" target="_blank" rel="noopener"><img src="/assets/shots/enterprise-services.jpg" alt="服務區截圖" loading="lazy"><div class="gal-cap">服務區塊</div></a>
+<a href="/assets/shots/enterprise-support.jpg" target="_blank" rel="noopener"><img src="/assets/shots/enterprise-support.jpg" alt="維修區截圖" loading="lazy"><div class="gal-cap">🛠 維修區・連雲端辦公室</div></a>
+<a href="/assets/shots/enterprise-mobile.jpg" target="_blank" rel="noopener"><img src="/assets/shots/enterprise-mobile.jpg" alt="手機版截圖" loading="lazy" style="max-height:170px"><div class="gal-cap">手機版 390px</div></a>
+</div></div>
+<div class="card-hd" style="align-self:start">實名授權浮水印・七語系・Nginx/Vercel 雙部署</div>
+<div style="display:flex;gap:12px;margin-top:14px"><a class="btn btn--ghost btn--sm" href="/kits/preview/enterprise/" target="_blank" rel="noopener">互動預覽 ↗</a><a class="btn btn--primary btn--sm" href="/contact?kit=enterprise">購置此款</a></div>
 </div>
 <p class="faint" style="font-size:12.5px;margin-top:12px">※ 款項性質為「一次授權＋交付費」。年度維運方案（備份、改版小修、診斷加倍）另計：NT$1,800／站／年起。全部定價含 55% 目標利潤之結構化計價（見下表）。</p>
 
