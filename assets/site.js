@@ -114,3 +114,6 @@
     if (window.dataLayer) window.dataLayer.push({ event: 'ot_' + name });
   }
 })();
+
+/* ---- AI 行銷戰略長 Widget autoload（進場 2.5 秒後，避開轉化首屏）---- */
+(function(){setTimeout(function(){var s=document.createElement('script');s.src='/assets/chat-widget.js';document.head.appendChild(s);},2500);})();
