@@ -60,28 +60,42 @@
     });
   });
 
-  /* ---- 名單表單（前端收單＋本地佇列；正式站請接 CRM／表單服務） ---- */
+  /* ---- 名單表單：後端優先送 /api/leads（Supabase 雙寫）；斷網降級本地佇列＋mailto ---- */
   $$('form[data-leads]').forEach(function (f) {
     f.addEventListener('submit', function (e) {
       e.preventDefault();
       var btn = $('button[type="submit"]', f);
       var consent = $('.consent input', f);
-      if (consent && !consent.checked) { flash(btn.parentNode ? consent.closest('form') : f, ''); consent.focus(); alert('請先同意資料使用與Privacy政策'); return; }
+      if (consent && !consent.checked) { flash(btn.parentNode ? consent.closest('form') : f, ''); consent.focus(); alert('請先同意資料使用與隱私政策（/privacy）'); return; }
       var data = { type: f.getAttribute('data-leads'), at: new Date().toISOString(),
         url: location.href,
         fields: {} };
-      $$('input,textarea,select', f).forEach(function (i) { if (i.name) data.fields[i.name] = i.value; });
-      var q = []; try { q = JSON.parse(localStorage.getItem('ot.leads')) || []; } catch (err) { }
-      q.push(data); localStorage.setItem('ot.leads', JSON.stringify(q));
-      track('lead_' + data.type);
+      $$('input,textarea,select', f).forEach(function (i) { if (i.name && i.type !== 'checkbox') data.fields[i.name] = i.value; });
       var payload = ['【Orbit Tower 收單】類型：' + data.type, '時間：' + data.at, '來源頁：' + data.url, '─── 表單欄位 ───']
         .concat(Object.keys(data.fields).map(function (k) { return k + '：' + data.fields[k]; })).join('\n');
-      var mailBtn = '<a class="btn btn--primary" style="margin-top:10px;display:inline-block" href="mailto:service@xingdeng.tw?subject=' +
-        encodeURIComponent('[Orbit Tower][' + data.type + '] ' + (data.fields.company || data.fields.name || 'lead')) + '&body=' + encodeURIComponent(payload) + '">✉️ 一按下送收單（開啟郵件即寄達業務匣）</a>';
-      f.innerHTML = '<div style="padding:8px 2px"><b style="color:#059669;font-size:17px">✓ 已在本機留存，下一步送出即達業務</b><p class="muted" style="margin:8px 0 0;font-size:14.5px">本表單探雙軌收單：按下方按鈕開啟郵件客戶端即送達 service@xingdeng.tw（內容已自動帶入）；若視窗未跳出，請直接複製此碼寄同址：<br><code class="mono" style="font-size:12px;word-break:break-all">' + encodeURIComponent(location.href) + '</code></p>' + mailBtn +
-        '<button class="btn" style="margin-left:8px" id="lead-copy">複製表單內容</button></div>';
-      var cp = document.getElementById('lead-copy');
-      cp.addEventListener('click', function () { navigator.clipboard.writeText(payload).then(function () { cp.textContent = '✓ 已複製，貼至 service@xingdeng.tw 即完成'; setTimeout(function () { cp.textContent = '複製表單內容'; }, 2800); }); });
+      function mailFallback() {
+        var q = []; try { q = JSON.parse(localStorage.getItem('ot.leads')) || []; } catch (err) { }
+        q.push(data); localStorage.setItem('ot.leads', JSON.stringify(q));
+        var mailBtn = '<a class="btn btn--primary" style="margin-top:10px;display:inline-block" href="mailto:service@xingdeng.tw?subject=' +
+          encodeURIComponent('[Orbit Tower][' + data.type + '] ' + (data.fields.company || data.fields.name || 'lead')) + '&body=' + encodeURIComponent(payload) + '">✉️ 一按下送收單（開啟郵件即寄達業務匣）</a>';
+        f.innerHTML = '<div style="padding:8px 2px"><b style="color:#D97706;font-size:17px">⚠ 名單已在本機留存，但線上送單暫時不通</b><p class="muted" style="margin:8px 0 0;font-size:14.5px">請按下方按鈕以郵件送出（內容已自動帶入），或複製內容寄 service@xingdeng.tw：</p>' + mailBtn +
+          '<button class="btn" style="margin-left:8px" id="lead-copy">複製表單內容</button></div>';
+        var cp = document.getElementById('lead-copy');
+        if (cp) cp.addEventListener('click', function () { navigator.clipboard.writeText(payload).then(function () { cp.textContent = '✓ 已複製，貼至 service@xingdeng.tw 即完成'; setTimeout(function () { cp.textContent = '複製表單內容'; }, 2800); }); });
+      }
+      btn.disabled = true; btn.textContent = '送件中…';
+      var ctl = ('AbortController' in window) ? new AbortController() : null;
+      if (ctl) setTimeout(function () { ctl.abort(); }, 8000);
+      fetch('/api/leads', { method: 'POST', headers: { 'content-type': 'application/json' }, signal: ctl ? ctl.signal : undefined,
+        body: JSON.stringify({ kind: 'form-' + data.type, page: location.pathname, form: data.fields })
+      }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok && j && j.ok !== false, j: j }; }); })
+        .then(function (res) {
+          track('lead_' + data.type + '_sent');
+          f.innerHTML = '<div style="padding:10px 2px"><b style="color:#059669;font-size:17px">✓ 名單已送達後端收單池</b><p class="muted" style="margin:8px 0 0;font-size:14.5px">業務與 AI 顧問將於 24 小時內回覆 ' +
+            (f.querySelector('[name="email"]') ? f.querySelector('[name="email"]').value : '您的信箱') +
+            '。若想加速，可同步加 <a href="https://line.me/R/ti/p/@559julyu" style="color:#06C755;font-weight:700">LINE 官方帳號 @559julyu</a> 註明姓名，AI 直接為您排單。</p></div>';
+        })
+        .catch(function () { track('lead_' + data.type); mailFallback(); });
     });
   });
 
