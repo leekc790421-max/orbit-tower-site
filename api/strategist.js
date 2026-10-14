@@ -25,7 +25,7 @@ function detectIndustry(text){
   return null;
 }
 const SWOT_LIB = {
-  餐飲:{s:'翻桌率與熟客回購數據在手裡；短：平台抽成高、同質報價戰',o:'在地語觀光客、企業外燦與訂閱制午餐盒',t:'外食成本上升與人力斷鏈'},
+  餐飲:{s:'翻桌率與熟客回購數據在手裡；短：平台抽成高、同質報價戰',o:'在地語觀光客、企業外燴與訂閱制午餐盒',t:'外食成本上升與人力斷鏈'},
   美容:{s:'案例前後對照即最強銷售素材；短：過度依賴單位美容師 IP',o:'男人醫美與熟齡客群滲透率低',t:'客訴與_compare_比價、廣告成本墊高'},
   軟體:{s:'邊際成本趨零、產品即演示；短：銷售週期長、POC 要求高',o:'AI 代理風口＋垂直產業模組化',t:'巨頭平台內建同類功能'},
   房地產:{s:'高單價高毛利、信任即貨幣；短：成交週期長、來點依賴通路',o:'线上 3D 接待可過濾 80% 無效帶看',t:'利率政策與建案口碑連坐'},
@@ -35,8 +35,10 @@ const SWOT_LIB = {
   醫療:{s:'剛需＋高信任；短：廣告法規束多',o:'健檢/package 化與國際客語系',t:'負評放大速度極快'},
   教育:{s:'結果可見度決定招生；短：淡季洪峰曲線劇烈',o:'AI 個別化導學敘事',t:'免費內容氾濫'},
 };
+function OFFTOPIC(q){return /周杰伦|周杰倫|詩|歌詞|小說|感情|分手|男友|女友|星座|占卜|遊戲攻略|腳本程式碼|寫程式|python|java/i.test(String(q||''))&&!/行銷|獲客|廣告|轉換|品牌/.test(q)}
 function fallbackEngine(msgs){
-  const last = [...msgs].reverse().find(m=>m.role==='user'); 
+  const last = [...msgs].reverse().find(m=>m.role==='user');
+  if (last && OFFTOPIC(last.content)) return {reply:'這題超出我的作戰範圍——我是行銷戰略長，不是點歌台。不過會拿這種問題考我的訪客，通常表示你的官網缺一個會拉回主題的接待員。來，報上行業與痛點，我三分鐘給你一套 SWOT。',capture:false};
   const all = msgs.map(m=>m.content).join(' ');
   const ind = detectIndustry(all);
   const askedPain = /痛|困|流失|轉化|沒有客户|客戶少|流量|名單|廣告/.test(all);
@@ -67,8 +69,8 @@ module.exports = async function handler(req,res){
   if (key) {
     try {
       const contents = msgs.map(m=>({role:m.role==='assistant'?'model':'user',parts:[{text:String(m.content).slice(0,4000)}]}));
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
-        method:'POST',headers:{'Content-Type':'application/json'},
+      const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',{
+        method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},
         body: JSON.stringify({system_instruction:{parts:[{text:SYSTEM}]},contents,generationConfig:{temperature:0.7,maxOutputTokens:1200}})
       });
       const j = await r.json();

@@ -19,7 +19,7 @@ module.exports = async function handler(req,res){
     pain:String(b.pain||'').slice(0,300),
     page:String(b.page||'').slice(0,160),
     transcript:Array.isArray(b.transcript)?b.transcript.slice(-8).map(m=>({r:String(m.r||m.role||''),c:String(m.c||m.content||'').slice(0,400)}):[],
-    at:new Date().toISOString(), ip:req.headers['x-forwarded-for']||''
+    at:new Date().toISOString(), ip:(req.headers||{})['x-forwarded-for']||''
   };
   console.log('LEAD '+JSON.stringify(lead));
   // 持久化預留：env SUPABASE_URL/SUPABASE_SERVICE_KEY 就緒後此處雙寫（現行以函式日誌＝維修台工單池）
