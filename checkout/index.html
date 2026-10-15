@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線上報價與定金沙箱・Orbit Tower｜光曜星樞</title>
+<meta name="description" content="三步驟產生初步商業報價單（含 ROI 摘要與 PDF 列印），並透過沙箱金流鎖定預約。">
+<link rel="canonical" href="https://xingdeng.tw/checkout">
+<meta property="og:type" content="website"><meta property="og:title" content="線上報價與定金・Orbit Tower">
+<meta property="og:description" content="選方案→留資訊→立即拿到格式化報價單與 ROI 摘要。金流目前為沙箱測試模式。">
+<meta property="og:image" content="https://xingdeng.tw/assets/og.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="/assets/logo-mark.png">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+.co-grid{display:grid;gap:18px;grid-template-columns:1fr}
+@media(min-width:900px){.co-grid{grid-template-columns:1.1fr .9fr}}
+.pill{display:inline-flex;gap:6px;align-items:center;border:1px solid #CBD5E1;border-radius:99px;padding:7px 14px;font-size:13.5px;cursor:pointer;background:#fff}
+.pill.on{border-color:#2563EB;background:#EFF6FF;color:#1D4ED8;font-weight:700}
+.quote{border:1px solid #E2E8F0;border-radius:14px;background:#fff;padding:18px}
+.quote table{width:100%;border-collapse:collapse;font-size:14px}
+.quote th,.quote td{text-align:left;padding:7px 6px;border-bottom:1px solid #EEF2F8}
+.roi{margin-top:10px;background:#F8FAFC;border:1px dashed #94A3B866;border-radius:10px;padding:10px 12px;font-size:13px}
+.steps{display:flex;gap:8px;flex-wrap:wrap;font-size:13px;color:#64748B;margin-bottom:14px}
+.steps b{color:#0F172A}
+@media print{.nav,.no-print,footer{display:none!important}.hero,.wrap{padding:0!important}body{background:#fff}}
+</style></head>
+<body>
+<nav class="nav"><div class="wrap nav__in"><a class="brand" href="/"><span class="mark"><img src="/assets/logo-mark.png" alt="光曜星樞 SNT 圖章"></span><span>光曜星樞・Orbit Tower<small>AI-Powered Digital Headquarters</small></span></a><div class="nav__links"><a href="/kits">懶人包</a><a href="/pricing">定價</a><a href="/contact">人工諮詢</a><a href="/" style="margin-left:auto">← 返回官網</a></div></div></nav>
+
+<section style="padding-top:34px"><div class="wrap">
+<span class="tag-chip">🧾 QUOTE ENGINE・三步驟自動報價</span>
+<h1 style="margin:12px 0 6px">產生你的初步商業報價單</h1>
+<p class="lead" style="max-width:680px">選方案 → 留 COMPANY／EMAIL → 立即拿到格式化報價單與 ROI 摘要；可列印為 PDF，或送進定金沙箱（本階段僅沙箱／測試模式，不收真实款項）。</p>
+<div class="steps"><b>1 選擇方案</b><span>→</span><b>2 公司資訊</b><span>→</span><b>3 報價單＋定金沙箱</b></div>
+
+<div class="co-grid">
+<div class="card">
+<h3 style="margin:0 0 10px;font-size:16px">① 選擇方案</h3>
+<div id="pick" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px"></div>
+<label style="font-size:13.5px">數量（僅一次性方案適用）</label>
+<select id="qty" style="width:100%;padding:10px;border-radius:10px;border:1px solid #E2E8F0;margin:6px 0 14px"><option value="1">1 套</option><option value="2">2 套</option><option value="3">3 套</option><option value="5">5 套（佈點）</option></select>
+<h3 style="margin:14px 0 8px;font-size:16px">② 公司與窗口資訊</h3>
+<div style="display:grid;gap:10px;grid-template-columns:1fr 1fr">
+<div><label>-company *</label><input id="cname" style="width:100%;padding:10px;border:1px solid #E2E8F0;border-radius:10px" placeholder="○○國際有限公司"></div>
+<div><label>承辦姓名 *</label><input id="uname" style="width:100%;padding:10px;border:1px solid #E2E8F0;border-radius:10px" placeholder="王小明"></div>
+<div style="grid-column:1/-1"><label>Email *</label><input id="email" type="email" style="width:100%;padding:10px;border:1px solid #E2E8F0;border-radius:10px" placeholder="you@company.com"></div>
+<div style="grid-column:1/-1"><label>備註（ Industry／時程需求）</label><textarea id="note" rows="2" style="width:100%;padding:10px;border:1px solid #E2E8F0;border-radius:10px" placeholder="例：餐飲連鎖 5 店，Q1 要上线，需串 LINE"></textarea></div>
+</div>
+<div class="no-print" style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+<button class="btn btn--primary" id="gen">⚡ 產生報價單＋ROI 摘要</button>
+<button class="btn" id="pay" disabled style="opacity:.5">🔒 定金・沙箱金流</button>
+</div>
+<p class="no-print" style="font-size:12px;color:#94A3B8;margin-top:8px" id="mode-note">金流模式：偵測中…（綁定 sk_test_／sandbox 金鑰後自動升級為真實沙箱收單）</p>
+</div>
+
+<div><div id="qbox" class="quote" aria-live="polite"><p class="muted" style="margin:4px 0">報價單預覽：完成左側選擇後按「產生報價單」。此預覽區塊可直接 <b>⌘/Ctrl+P 列印為 PDF</b>。</p></div></div>
+</div></div></section>
+
+<footer><div class="wrap"><div class="foot__bar"><span>© 2026 SNT・Orbit Tower｜報價單為初步商業文件，正式合約以業務核可版本為準。</span><span>本頁面為沙箱模式 — 不會產生真實扣款。</span></div></div></footer>
+
+<script src="/assets/chat-widget.js" defer></script>
+<script>
+var CAT={T1:{n:'懶人包 T1・個人版',p:3000,u:'一次性'},T2:{n:'懶人包 T2・店家版',p:6600,u:'一次性'},T3:{n:'懶人包 T3・企業版',p:13900,u:'一次性'},R1:{n:'訂閱 R1・數位接待員',p:3500,u:'月'},R2:{n:'訂閱 R2・AI 行銷團隊',p:9800,u:'月'},R3:{n:'訂閱 R3・雲端 AI 辦公室',p:300000,u:'專案'}};
+var MAP={personal:'T1',shop:'T2',enterprise:'T3'};
+var sel='T2',quote=null;
+function fmt(n){return 'NT$'+n.toLocaleString('en-US')}
+function pills(){var el=document.getElementById('pick'),h='';for(var k in CAT){var c=CAT[k];h+='<button class="pill'+(k===sel?' on':'')+'" data-i="'+k+'">'+k+' '+c.n.split('・')[1]+'・'+fmt(c.p)+'／'+c.u+'</button>'}el.innerHTML=h;el.querySelectorAll('.pill').forEach(function(b){b.onclick=function(){sel=b.dataset.i;pills()}})}
+pills();
+(function(){var q=new URLSearchParams(location.search);var k=(q.get('kit')||'').toLowerCase();var p=(q.get('plan')||'').toUpperCase();if(MAP[k])sel=MAP[k];else if(CAT[p])sel=p;document.getElementById('note').value=q.get('topic')?'（意圖：'+q.get('topic')+'）':'';pills()})();
+function render(q){
+ var rows=q.lines.map(function(l){return '<tr><td>'+l.desc+'</td><td style="text-align:center">'+l.qty+'</td><td style="text-align:right">'+fmt(l.unit_price)+'／'+q.item.unit+'</td><td style="text-align:right">'+fmt(l.amount)+'</td></tr>'}).join('');
+ document.getElementById('qbox').innerHTML='<div class="no-print" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="tag-chip">🧾 初步商業報價單</span><button class="btn btn--sm" onclick="window.print()">🖨 列印／存 PDF</button></div>'
+ +'<h3 style="margin:0 0 2px">'+q.seller.name+'・報價單 '+q.no+'</h3><p class="muted" style="font-size:12.5px;margin:0 0 10px">'
+ +'開立：'+q.issued+'｜有效至：'+q.validTo+'｜客戶：'+q.customer.company+'（'+q.customer.name+'・'+q.customer.email+'）</p>'
+ +'<table><thead><tr><th>項目</th><th style="text-align:center">數量</th><th style="text-align:right">單價</th><th style="text-align:right">金額</th></tr></thead><tbody>'+rows+'</tbody></table>'
+ +'<div style="display:grid;gap:2px;justify-items:end;font-size:14px;margin-top:8px"><div>小計 '+fmt(q.totals.subtotal)+'</div><div>营业税 5% '+fmt(q.totals.tax)+'</div><div style="font-size:18px;font-weight:800">合計 '+fmt(q.totals.grand)+'・'+q.totals.currency+'</div></div>'
+ +'<div class="roi"><b>📈 ROI 摘要（依 a06 三公式・保守預估）</b><br>預估月新增熱名單 '+q.roi.monthlyHotLeads+' 個・假設成交率 '+(q.roi.assumedCloseRate*100)+'%・單案毛利 '+fmt(q.roi.avgGrossMargin)+' → 預估月增毛利 <b>'+fmt(q.roi.estMonthlyGrossGain)+'</b>；月攤提成本 '+fmt(q.roi.estMonthlyCost)+' → <b>預估回本 '+q.roi.paybackMonths+' 個月</b>。'+q.roi.disclaimer+'</div></div>';
+ document.getElementById('pay').disabled=false;document.getElementById('pay').style.opacity=1;quote=q;
+}
+document.getElementById('gen').onclick=function(){
+ var body={item:sel,qty:+document.getElementById('qty').value||1,email:document.getElementById('email').value.trim(),name:document.getElementById('uname').value.trim(),company:document.getElementById('cname').value.trim(),note:document.getElementById('note').value.trim()};
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(body.email)){alert('請填有效 Email');return}
+ var b=document.getElementById('gen');b.disabled=true;b.textContent='產出報價中…';
+ fetch('/api/quote',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)})
+ .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})})
+ .then(function(r){b.disabled=false;b.textContent='⚡ 產生報價單＋ROI 摘要';if(!r.ok||!r.j.ok)throw 0;render(r.j);})
+ .catch(function(){b.disabled=false;b.textContent='⚡ 產生報價單＋ROI 摘要';alert('報價服務暫時不可用，請稍後重試或改約人工報價。');});
+};
+document.getElementById('pay').onclick=function(){
+ if(!quote)return;
+ var b=document.getElementById('pay');b.disabled=true;b.textContent='建立沙箱訂單…';
+ fetch('/api/order',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({ref:quote.no,item:quote.item.id,amount:quote.totals.grand,qty:quote.lines[0].qty,desc:quote.lines[0].desc,email:quote.customer.email,company:quote.customer.company})})
+ .then(function(r){return r.json()})
+ .then(function(j){b.textContent='🔒 定金・沙箱金流';b.disabled=false;if(!j.ok)throw 0;window.dispatchEvent(new CustomEvent('order-mode',{detail:j}))
+  var n=document.getElementById('mode-note');n.innerHTML='已建立沙箱訂單：<b>'+j.order+'</b>（provider: '+j.provider+'）→ ';
+  var a=document.createElement('a');a.className='btn btn--sm btn--primary';a.href=j.payUrl;a.textContent=j.mode.indexOf('local')>-1?'進入確認頁（模擬）':'前往沙箱金流付定金';n.appendChild(a);
+  setTimeout(function(){ if(!/^\w+:\/\//.test(a.href))a.click(); },4000);})
+ .catch(function(){b.textContent='🔒 定金・沙箱金流';b.disabled=false;alert('訂單服務暫時可用，報價單仍可留存。');});
+};
+</script>
+</body></html>
