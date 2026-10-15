@@ -17,11 +17,11 @@ const CTAS = {
   kits: '預算在萬元級：SNT 一鍵架網懶人包（個人 $3,000／店家 $6,600／企業 $13,900）30 分鐘上線——https://xingdeng.tw/kits',
   hq: '想要的不只是網站：预约 30 分鐘，進駐會接待人的 3D 數位總部——https://orbit.xingdeng.tw',
 };
-const INDUSTRY_KEYS = {餐飲:['咖啡','餐饮','餐廳','吃到飽','飲料','火鍋','烘焙'],美容:['医美','診所','皮膚','美學','髮廊','美甲','眼鏡'],軟體:['saas','軟體','app','平台','系統','科技'],房地產:['房產','建案','不動產','仲介','預售','土地'],製造:['工廠','製造','工具機','零組件','外銷','B2B'],電商:['网店','購物','賣場','pinterest','shopee','momo'],顧問:['顧問','会計','法律','企管','補助款'],醫療:['診所','醫療','復健','牙醫'],教育:['教學','才藝','線上課','留學']
+const INDUSTRY_KEYS = {餐飲:['咖啡','餐饮','餐廳','吃到飽','飲料','火鍋','烘焙','餐飲','外食','外帶','速食','開店','加盟','客源'],美容:['医美','診所','皮膚','美學','髮廊','美甲','眼鏡'],軟體:['saas','軟體','app','平台','系統','科技'],房地產:['房產','建案','不動產','仲介','預售','土地'],製造:['工廠','製造','工具機','零組件','外銷','B2B'],電商:['网店','購物','賣場','pinterest','shopee','momo'],顧問:['顧問','会計','法律','企管','補助款'],醫療:['診所','醫療','復健','牙醫'],教育:['教學','才藝','線上課','留學']
 };
 function detectIndustry(text){
   const t = (text||'').toLowerCase();
-  for (const [k,arr] of Object.entries(INDUSTRY_KEYS)) if (arr.some(x=>t.includes(x)||k.includes(x))) return k;
+  for (const [k,arr] of Object.entries(INDUSTRY_KEYS)) if (arr.some(x=>t.includes(x))) return k;
   return null;
 }
 const SWOT_LIB = {
