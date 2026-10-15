@@ -6,7 +6,9 @@
    ※ Copilot 為開發端工具（MuleRun 產線使用），非運行時端點；其「開發職」由 Gemini Pro 鏈接管。 */
 const crypto = require('crypto');
 
-/* ---------- Provider 適配器（統一介面：chat(messages, system, timeoutMs)）----------- */
+/* ---------- Provider 調度器（統一介面：chat(messages, system, timeoutMs)）---------- */
+/* system 可能是字串（rule 線）或 {text,rules} 對照（LLM 線）：LLM 一律取純文字 */
+const sysText = (system) => (typeof system === 'string' ? system : String((system && system.text) || ''));
 async function hopFetch(url, opts, ms) {
   const ac = new AbortController(); const t = setTimeout(() => ac.abort(), ms);
   try { return await fetch(url, { ...opts, signal: ac.signal }); }
@@ -17,9 +19,10 @@ const Providers = {
     name: 'gemini', model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
     ready: () => !!process.env.GEMINI_API_KEY,
     async chat(msgs, system, ms = 18000) {
+
       const r = await hopFetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
-        body: JSON.stringify({ system_instruction: { parts: [{ text: system }] }, contents: msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.content).slice(0, 4000) }] })), generationConfig: { temperature: .7, maxOutputTokens: 1400 } })
+        body: JSON.stringify({ system_instruction: { parts: [{ text: sysText(system) }] }, contents: msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.content).slice(0, 4000) }] })), generationConfig: { temperature: .7, maxOutputTokens: 1400 } })
       }, ms);
       const j = await r.json(); const text = j?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (!r.ok || !text) throw new Error(`gemini ${r.status} ${(j?.error?.message || j?.error?.status || '').replace(/\s+/g, ' ').slice(0, 120)}`);
@@ -30,9 +33,10 @@ const Providers = {
     name: 'grok', model: 'grok-2-latest',
     ready: () => !!process.env.GROK_API_KEY,
     async chat(msgs, system, ms = 18000) {
+
       const r = await hopFetch('https://api.x.ai/v1/chat/completions', {
         method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.GROK_API_KEY}` },
-        body: JSON.stringify({ model: 'grok-2-latest', messages: [{ role: 'system', content: system }, ...msgs.map(m => ({ role: m.role, content: m.content }))], temperature: .9, max_tokens: 1200 })
+        body: JSON.stringify({ model: 'grok-2-latest', messages: [{ role: 'system', content: sysText(system) }, ...msgs.map(m => ({ role: m.role, content: m.content }))], temperature: .9, max_tokens: 1200 })
       }, ms);
       const j = await r.json(); const text = j?.choices?.[0]?.message?.content;
       if (!r.ok || !text) throw new Error(`grok ${r.status}`);
@@ -45,7 +49,7 @@ const Providers = {
     async chat(msgs, system, ms = 22000) {
       const r = await hopFetch(process.env.LLAMA_API_URL.replace(/\/$/, '') + '/chat/completions', {
         method: 'POST', headers: { 'Content-Type': 'application/json', ...(process.env.LLAMA_API_KEY ? { Authorization: `Bearer ${process.env.LLAMA_API_KEY}` } : {}) },
-        body: JSON.stringify({ model: process.env.LLAMA_MODEL || 'llama3.1:8b', messages: [{ role: 'system', content: system }, ...msgs], response_format: { type: 'json_object' }, temperature: 0 })
+        body: JSON.stringify({ model: process.env.LLAMA_MODEL || 'llama3.1:8b', messages: [{ role: 'system', content: sysText(system) }, ...msgs], response_format: { type: 'json_object' }, temperature: 0 })
       }, ms);
       const j = await r.json(); const text = j?.choices?.[0]?.message?.content;
       if (!r.ok || !text) throw new Error(`llama ${r.status}`);
