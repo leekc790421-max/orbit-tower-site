@@ -1,6 +1,8 @@
-/* 訂單／沙箱金流層：POST /api/order {quoteNo}（或 {item,qty} 快速建單）
-   模式鐵律：僅沙箱。STRIPE_SECRET_KEY 以 sk_test_ 開頭→真接 Stripe Checkout（測試模式）；
-   sk_live_ → 一律拒絕（本階段不收真钱）。PayPal CLIENT_ID 同理走 sandbox 端點。無任何金鑰→本地沙箱模擬單。 */
+/* 訂單／金流層（三段梯）：POST /api/order {quoteNo|item,amount,qty}
+   ① 沙箱模式（預設）：STRIPE_SECRET_KEY=sk_test_→Stripe 測試收單；PAYPAL_CLIENT_ID→sandbox 端點；無鑰→本地模擬單。
+   ② 正式版（雙重開關）：只有「env PAYMENT_MODE=live」且「金鑰為 live 格式」同時成立才走正式扣款；缺一律拒絕，防止誤收真錢。
+   ③ GET /api/order → 金流模式探測（給 /checkout 頁顯示＋ops 監控，不洩任何金鑰字串）。
+   對公分帳（人工匯款）：樂天國際銀行 826・臺銀松山 BKTWTWTP060・Payoneer 直連——於 /legal 與 /checkout 明示，屬「預留啟用」通道，正式以業務核可報價單為準。 */
 
 function orderId() { return 'ORD-' + String(Date.now()).slice(-6) + '-' + Math.random().toString(36).slice(2, 5).toUpperCase(); }
 
@@ -64,20 +66,59 @@ async function paypalSandbox(clientId, clientSecret, b) {
   return { payUrl: link.href, sessionId: o.id };
 }
 
+/* 正式版（live）與沙箱版同端點同協定，只差鑰與 base URL。 */
+async function paypalLive(clientId, clientSecret, b) {
+  const auth = 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64');
+  const t = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
+    method: 'POST', headers: { Authorization: auth, 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grant_type=client_credentials'
+  }).then(r => r.json());
+  if (!t.access_token) throw new Error('paypal-live token fail');
+  const o = await fetch('https://api-m.paypal.com/v2/checkout/orders', {
+    method: 'POST', headers: { Authorization: AUTH(t.access_token), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ intent: 'CAPTURE', purchase_units: [{ reference_id: b.ref || '', description: b.desc || 'Orbit Tower', amount: { currency_code: 'TWD', value: String((b.amount || 0).toFixed(0)) } }],
+      application_context: { return_url: b.successUrl || 'https://xingdeng.tw/checkout/confirm?paid=1&mode=live', cancel_url: b.cancelUrl || 'https://xingdeng.tw/checkout' } })
+  }).then(r => r.json());
+  const link = (o.links || []).find(l => l.rel === 'payer-action' || l.rel === 'approve');
+  if (!link) throw new Error('paypal-live no approval link');
+  return { payUrl: link.href, sessionId: o.id };
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'content-type');
   res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
   if (req.method === 'OPTIONS') return res.status(204).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
+  if (req.method === 'GET') {
+    const k = process.env.STRIPE_SECRET_KEY || ''; const pc = process.env.PAYPAL_CLIENT_ID || '';
+    const wantLive = process.env.PAYMENT_MODE === 'live';
+    return res.status(200).json({ ok: true, mode: wantLive ? (k.startsWith('sk_live_') || pc.startsWith('LIVE_') ? 'live-armed' : 'live-refused（缺 live 鑰）') : 'sandbox',
+      stripe: k ? (k.startsWith('sk_test_') ? 'test' : k.startsWith('sk_live_') ? 'live-detected' : 'unknown-prefix') : 'none',
+      paypal: pc ? (pc.startsWith('LIVE_') ? 'live-detected' : 'sandbox') : 'none',
+      manual_channels: [{ id: 'lot826', name: '樂天國際商業銀行（826）網銀/ATM/臨櫃', status: 'reserved' }, { id: 'bktw060', name: '臺灣銀行松山分行 BKTWTWTP060', status: 'reserved' }, { id: 'payoneer', name: 'Payoneer 快速付款直連', status: 'direct-link' }],
+      fx: 'api/align.js（台新銀行 SD 願景匯率・UTC 08:30・3s 逾時降級）' });
+  }
+  if (req.method !== 'POST') return res.status(405).json({ error: 'GET|POST' });
   let b; try { b = await readBody(req); } catch { return res.status(400).json({ error: 'json required' }); }
 
   const stripeKey = process.env.STRIPE_SECRET_KEY || '';
   const paypalCid = process.env.PAYPAL_CLIENT_ID || '';
   const paypalSecret = process.env.PAYPAL_CLIENT_SECRET || '';
 
-  if (stripeKey.startsWith('sk_live_') || paypalCid.startsWith('LIVE_'))
-    return res.status(409).json({ ok: false, error: 'SAFETY_GUARD: 本階段僅接受沙箱金鑰（sk_test_／sandbox）。正式金鑰請待啟動金流第二階段後再綁定。' });
+  const wantLive = process.env.PAYMENT_MODE === 'live';
+  if ((stripeKey.startsWith('sk_live_') || paypalCid.startsWith('LIVE_')) && !wantLive)
+    return res.status(409).json({ ok: false, error: 'SAFETY_GUARD: 偵測到 live 金鑰但未開啟正式開關——為防誤收真錢，沙箱模式拒用 live 鑰（需 env PAYMENT_MODE=live＋sk_live_ 雙重確認）。' });
+  if (wantLive) {
+    if (!stripeKey.startsWith('sk_live_') && !paypalCid.startsWith('LIVE_')) return res.status(409).json({ ok: false, error: 'PAYMENT_MODE=live 已在，但缺 sk_live_／LIVE_ 金鑰：正式收單未武裝。' });
+    const refL = orderId();
+    try {
+      let s;
+      if (stripeKey.startsWith('sk_live_')) s = await stripeSandbox(stripeKey, { ...b, ref: refL });
+      else s = await paypalLive(paypalCid, paypalSecret, { ...b, ref: refL });
+      syncLead({ ref: refL, email: b.email, company: b.company, desc: String(b.desc || 'Orbit Tower 方案'), amount: Number(b.amount || 0), provider: (stripeKey.startsWith('sk_live_') ? 'stripe' : 'paypal') + '-live', status: 'payment_session_created' });
+      console.log('ORDER ' + JSON.stringify({ ref: refL, mode: 'live', amount: Number(b.amount || 0) }));
+      return res.status(200).json({ ok: true, order: refL, provider: stripeKey.startsWith('sk_live_') ? 'stripe' : 'paypal', mode: 'live', payUrl: s.payUrl });
+    } catch (e) { return res.status(502).json({ ok: false, mode: 'live', error: String(e.message || e).slice(0, 160) }); }
+  }
 
   const amount = Number(b.amount || 0);
   const desc = String(b.desc || 'Orbit Tower 方案');

@@ -16,11 +16,14 @@ async function hopFetch(url, opts, ms) {
 }
 const Providers = {
   gemini: {
-    name: 'gemini', model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
-    ready: () => !!process.env.GEMINI_API_KEY,
+    name: 'gemini', model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+    /* 【強制降級穩健版 2026-10-15】rule engine lock：
+       外部 API 權限不穩（403）期間一律鎖死 ready=false，調度器永走規則引擎降級鏈。
+       要恢復真 LLM：改回 ready: () => !!process.env.GEMINI_API_KEY。 */
+    ready: () => false,
     async chat(msgs, system, ms = 18000) {
 
-      const r = await hopFetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
+      const r = await hopFetch(`https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
         body: JSON.stringify({ system_instruction: { parts: [{ text: sysText(system) }] }, contents: msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.content).slice(0, 4000) }] })), generationConfig: { temperature: .7, maxOutputTokens: 1400 } })
       }, ms);
@@ -57,22 +60,22 @@ const Providers = {
       return text;
     }
   },
-  /* 規則引擎：各職務線的下限保障（永不断線） */
+  /* 規則引擎：各職務線的下限保障（永不中斷線） */
   rule: { name: 'rule', model: 'snt-rule-engine', ready: () => true, async chat(msgs, system) { const o = (system.rules || (() => '（調度器：此職務線離線待命）'))(msgs); return typeof o === 'string' ? o : (o && o.reply) || '（規則引擎空轉）'; } }
 };
 
 /* ---------- 職務線定義 + System Prompts ---------- */
-const FRONT_DESK_SYS = '你是光曜星樞的 AI 行銷戰略長：專業犀利繁中；訪客報行業＋痛點即以 SWOT/AIDA 免費開局，結尾雙軌 CTA（懶人包 xingdeng.tw/kits 或 3D 总部 orbit.xingdeng.tw），完整策略後獨立一行輸出 [[LEAD_CAPTURE]]；無關話題以專業幽默拉回。';
+const FRONT_DESK_SYS = '你是光曜星樞的 AI 行銷戰略長：專業犀利繁中；訪客報行業＋痛點即以 SWOT/AIDA 免費開局，結尾雙軌 CTA（懶人包 xingdeng.tw/kits 或 3D 總部 orbit.xingdeng.tw），完整策略後獨立一行輸出 [[LEAD_CAPTURE]]；無關話題以專業幽默拉回。';
 function ruleFrontDesk(msgs){
   const all = msgs.map(m => m.content).join(' ');
   const ind = /餐|咖啡|食/.test(all) ? '餐飲業' : /軟體|saas|app|科技/i.test(all) ? '軟體業' : /房|建案|屋/.test(all) ? '房地產' : /廠|製造|機/.test(all) ? '製造業' : null;
   if (!ind) return { reply: '我是行銷戰略長。報上行業與痛點，我三分鐘給你一套 SWOT 起手式。', capture: false };
-  return { reply: `【SWOT 快局｜${ind}】\nS：產品可信與案例在手上｜W：通路與時區缺口\nO：AI 全天候接待＋3D 展示把「看」變「逛」\nT：廣告成本與跳出率侵蝕毛利\n起手：1) A注意→型錄頁升級 3D 展示；2) I興趣→三語 AI 接待夜間不關門；3) D慾望→免費五維診斷 xingdeng.tw/diagnose；4) A行動→萬元級選懶人包 xingdeng.tw/kits，规模級進駐 3D 总部 orbit.xingdeng.tw\n[[LEAD_CAPTURE]]`, capture: true };
+  return { reply: `【SWOT 快局｜${ind}】\nS：產品可信與案例在手上｜W：通路與時區缺口\nO：AI 全天候接待＋3D 展示把「看」變「逛」\nT：廣告成本與跳出率侵蝕毛利\n起手：1) A注意→型錄頁升級 3D 展示；2) I興趣→三語 AI 接待夜間不關門；3) D慾望→免費五維診斷 xingdeng.tw/diagnose；4) A行動→萬元級選懶人包 xingdeng.tw/kits，规模級進駐 3D 總部 orbit.xingdeng.tw\n[[LEAD_CAPTURE]]`, capture: true };
 }
 const LANES = {
   dev:        { chain: ['gemini', 'rule'], system: { text: '你是 Orbit Tower 研發架構師（Gemini Pro 職代）：聚焦解題，輸出架構推理與程式碼，繁體中文。', rules: () => '（研發線待命：Gemini 啟用後此線提供架構推理與代碼級產出；本訊息為規則引擎占位。）' } },
-  finance:    { chain: ['llama', 'rule'], system: { text: '你是財會稽核員（Llama 私有部署模式）：只輸出嚴格 JSON（schema: {subject,period,items:[{label,amount,currency}],flags:[strings],verdict}）；嚴禁编造数字，缺資料時 flags 註明。', rules: () => JSON.stringify({ subject: null, period: null, items: [], flags: ['llama-private-not-attached'], verdict: 'awaiting-private-model' }) } },
-  promo:      { chain: ['grok', 'rule'], system: { text: '你是 xAI Grok 坐镇的社群爆點組：貼近即時聲量、語氣犀利、產出 3 版促銷文案＋1 個梗圖腳本；但不得造假數據、不碰政治與歧視話題。', rules: (msgs) => { const t = String((msgs.slice(-1)[0] || {}).content || '本品'); return `【促銷骨架（Grok 上線前規則版）】\n1. 直擊痛點版：「${t}——還在花錢買没人逛的官網？」\n2. 反差版：「別人還在改 Banner，你已經在接待半夜三點的客戶。」\n3. 數字版：「停留 2–3 倍、名單不漏夜—這才是 2026 的門面。」`; } } },
+  finance:    { chain: ['llama', 'rule'], system: { text: '你是財會稽核員（Llama 私有部署模式）：只輸出嚴格 JSON（schema: {subject,period,items:[{label,amount,currency}],flags:[strings],verdict}）；嚴禁編造數字，缺資料時於 flags 註明。', rules: () => JSON.stringify({ subject: null, period: null, items: [], flags: ['llama-private-not-attached'], verdict: 'awaiting-private-model' }) } },
+  promo:      { chain: ['grok', 'rule'], system: { text: '你是 xAI Grok 坐鎮的社群爆點組：貼近即時聲量、語氣犀利、產出 3 版促銷文案＋1 個梗圖腳本；但不得造假數據、不碰政治與歧視話題。', rules: (msgs) => { const t = String((msgs.slice(-1)[0] || {}).content || '本品'); return `【促銷骨架（Grok 上線前規則版）】\n1. 直擊痛點版：「${t}——還在花錢買没人逛的官網？」\n2. 反差版：「別人還在改 Banner，你已經在接待半夜三點的客戶。」\n3. 數字版：「停留 2–3 倍、名單不漏夜—這才是 2026 的門面。」`; } } },
   front_desk: { chain: ['gemini', 'rule'], system: { text: FRONT_DESK_SYS, rules: ruleFrontDesk } },
 };
 const laneKey = (req) => [req.socket?.remoteAddress || 'anon', req.url].join('|');

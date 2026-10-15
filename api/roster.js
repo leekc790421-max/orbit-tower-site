@@ -30,6 +30,12 @@ function crewDef() {
     { id:'copilot', name:'GitHub Copilot', role:'開發職（IDE 工具，非線上客服）', floors:['產線'], kind:'dev_tool', status:'dev_tool', note:'其運行時職務由 Gemini 鏈代板' },
     { id:'manus', name:'Manus', role:'政務代班・自動化跑批', floors:['3F 備援'], kind:'honorary', status:'honorary', note:'名譽職員：待接 API／Webhook 即轉正式編制' },
     { id:'mulerun', name:'MuleRun', role:'數位幕僚長・工作流編排', floors:['5F'], kind:'honorary', status:'honorary', note:'名譽職員：待外部 Agent 連線資訊' },
+    { id:'funnel', name:'名單分流機器人', role:'商業情報・AIDA 熱度分流', floors:['2F','1F'], kind:'staff', status:'online', note:'本地規則評分（零金鑰恆在線）：leads 入池即打分分流' },
+    { id:'sequence', name:'排程序列機器人', role:'業務跟進・EDM/LINE 養客序列', floors:['2F'], kind:'staff', status:'online', note:'沙箱恆在線；掛 RESEND/LINE 鑰即轉真發送' },
+    { id:'broadcast', name:'廣播推播機器人', role:'4F 社群爆點・分眾推送廣播', floors:['4F'], kind:'staff', status:'online', note:'沙箱模式僅預演；掛 LINE_CHANNEL_TOKEN 走官方 push' },
+    { id:'adsbridge', name:'廣告轉換橋', role:'4F・Meta CAPI／GA4 伺服器端回傳', floors:['4F'], kind:'staff', status:'online', note:'埋點已上線（/assets/site.js）；掛 Pixel/GA4 鑰即雙橋生效' },
+    { id:'radar', name:'SEO 健康雷達', role:'3F Content Engine・本站巡檢', floors:['3F'], kind:'staff', status:'online', note:'每日巡檢 title/hreflang/JSON-LD/canonical；僅自查合法邊界' },
+    { id:'omo', name:'OMO 門市機器人', role:'1F 迎賓・線下 QR 接合', floors:['1F'], kind:'staff', status:'online', note:'展場/收銀台 QR 產生器＋掃碼留單直入漏斗' },
   ];
 }
 

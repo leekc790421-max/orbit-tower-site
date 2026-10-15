@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>線上報價與定金沙箱｜光曜星樞・Orbit Tower</title>
-<meta name="description" content="三步驟產生初步商業報價單（含 ROI 摘要與 PDF 列印），並透過沙箱金流鎖定預約。"><meta property="og:site_name" content="光曜星樞・Orbit Tower">
+<meta name="description" content="三步驟產生初步商業報價單（含 ROI 摘要，可列印或一鍵下載 PDF），並透過沙箱金流鎖定預約。"><meta property="og:site_name" content="光曜星樞・Orbit Tower">
 <link rel="canonical" href="https://xingdeng.tw/checkout"><link rel="alternate" hreflang="zh-Hant" href="https://xingdeng.tw/checkout"><link rel="alternate" hreflang="en" href="https://xingdeng.tw/checkout?hl=en"><link rel="alternate" hreflang="ja" href="https://xingdeng.tw/checkout?hl=ja"><link rel="alternate" hreflang="x-default" href="https://xingdeng.tw/checkout">
 <meta property="og:type" content="website"><meta property="og:title" content="線上報價與定金・Orbit Tower">
-<meta property="og:description" content="選方案→留資訊→立即拿到格式化報價單與 ROI 摘要。金流目前為沙箱測試模式。">
+<meta property="og:description" content="選方案→留資訊→格式化報價單＋ROI 摘要，一鍵下載 PDF。定金三通道：沙箱收單・對公匯款（826／臺銀松山）・Payoneer 直連。">
 <meta property="og:image" content="https://xingdeng.tw/assets/og.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/assets/logo-mark.png">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
 <section style="padding-top:34px"><div class="wrap">
 <span class="tag-chip">🧾 QUOTE ENGINE・三步驟自動報價</span>
 <h1 style="margin:12px 0 6px">產生你的初步商業報價單</h1>
-<p class="lead" style="max-width:680px">選方案 → 留 COMPANY／EMAIL → 立即拿到格式化報價單與 ROI 摘要；可列印為 PDF，或送進定金沙箱（本階段僅沙箱／測試模式，不收真实款項）。</p>
+<p class="lead" style="max-width:680px">選方案 → 留 COMPANY／EMAIL → 立即拿到格式化報價單與 ROI 摘要；可列印為 PDF，或送進定金沙箱（本階段僅沙箱／測試模式，不收真實款項）。</p>
 <div class="steps"><b>1 選擇方案</b><span>→</span><b>2 公司資訊</b><span>→</span><b>3 報價單＋定金沙箱</b></div>
 
 <div class="co-grid">
@@ -50,14 +50,16 @@
 <div class="no-print" style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
 <button class="btn btn--primary" id="gen">⚡ 產生報價單＋ROI 摘要</button>
 <button class="btn" id="pay" disabled style="opacity:.5">🔒 定金・沙箱金流</button>
+<button class="btn" id="pdfdown" disabled style="opacity:.5">⬇ 下載 PDF 報價單</button>
+<button class="btn btn--ghost" id="printbtn" disabled style="opacity:.5">🖨 列印／另存 PDF</button>
 </div>
-<p class="no-print" style="font-size:12px;color:#94A3B8;margin-top:8px" id="mode-note">金流模式：偵測中…（綁定 sk_test_／sandbox 金鑰後自動升級為真實沙箱收單）</p>
+<p class="no-print" style="font-size:12px;color:#94A3B8;margin-top:8px" id="mode-note">金流模式：偵測中…（綁定 sk_test_／sandbox 金鑰後自動升級為真實沙箱收單）</p><div class="no-print" style="margin-top:12px;border:1px solid #E2E8F0;border-radius:12px;padding:12px 14px;font-size:13px;line-height:2;color:#334155"><b>② 定金・對公收款（三通道・現為預留啟用，正式以業務核可報價單為準）</b><br>🏦 國內網銀／ATM／臨櫃：樂天國際商業銀行（代碼 826）帳號 812-010-0××-××××<br>🌍 海外大額電匯：臺灣銀行松山分行 Bank of Taiwan｜SWIFT BKTWTWTP（海外 B2B 專用 BKTWTWTP060）｜分行解款 0040646｜帳號 004-064××××××××4×<br>⚡ 國際快速：Payoneer <a href="https://link.payoneer.com/Token?t=4D0FBCB1CAEE48E48FEACE39662D6BB7&src=mobile" target="_blank" rel="noopener">快速付款直連</a><br><span style="color:#64748B">美元計價依 api/align.js 即時匯率折算。帳資為部分遮蔽版；完整欄位列於簽約後核可文件。任何声稱冒名收款皆可向 service@xingdeng.tw 舉報。</span></div>
 </div>
 
 <div><div id="qbox" class="quote" aria-live="polite"><p class="muted" style="margin:4px 0">報價單預覽：完成左側選擇後按「產生報價單」。此預覽區塊可直接 <b>⌘/Ctrl+P 列印為 PDF</b>。</p></div></div>
 </div></div></section>
 
-<footer><div class="wrap"><div class="foot__net" style="border-top:1px solid rgba(148,163,184,.16);margin-top:22px;padding-top:12px;font-size:13px;line-height:1.9;color:#94A3B8">雙星互鏈：<a href="https://orbit.xingdeng.tw/?utm_source=xingdeng-main&amp;utm_medium=footnet&amp;utm_campaign=twin-domain" style="color:#EDCF70;font-weight:600">光曜 Orbit Tower｜3D 數位總部 →</a> ｜ <a href="https://lumi.xingdeng.tw/?utm_source=xingdeng-main&amp;utm_medium=footnet&amp;utm_campaign=twin-domain" style="color:#EDCF70;font-weight:600">拾光引 SNT｜命理雙域站 →</a> ｜ <a href="https://vip.xingdeng.tw/?utm_source=xingdeng-main&amp;utm_medium=footnet&amp;campaign=twin-domain#axes" style="color:#94A3B8">拾光引 VIP</a></div><div class="foot__bar"><span>© 2026 光曜星樞・Orbit Tower（SNT）｜報價單為初步商業文件，正式合約以業務核可版本為準。</span><span>本頁面為沙箱模式 — 不會產生真實扣款。</span></div></div></footer>
+<footer><div class="wrap"><div class="foot__bar"><span>© 2026 光曜星樞・Orbit Tower（SNT）｜報價單為初步商業文件，正式合約以業務核可版本為準。</span><span>本頁面為沙箱模式 — 不會產生真實扣款。</span></div></div></footer>
 
 <script src="/assets/chat-widget.js" defer></script>
 <script>
@@ -74,9 +76,9 @@ function render(q){
  +'<h3 style="margin:0 0 2px">'+q.seller.name+'・報價單 '+q.no+'</h3><p class="muted" style="font-size:12.5px;margin:0 0 10px">'
  +'開立：'+q.issued+'｜有效至：'+q.validTo+'｜客戶：'+q.customer.company+'（'+q.customer.name+'・'+q.customer.email+'）</p>'
  +'<table><thead><tr><th>項目</th><th style="text-align:center">數量</th><th style="text-align:right">單價</th><th style="text-align:right">金額</th></tr></thead><tbody>'+rows+'</tbody></table>'
- +'<div style="display:grid;gap:2px;justify-items:end;font-size:14px;margin-top:8px"><div>小計 '+fmt(q.totals.subtotal)+'</div><div>营业税 5% '+fmt(q.totals.tax)+'</div><div style="font-size:18px;font-weight:800">合計 '+fmt(q.totals.grand)+'・'+q.totals.currency+'</div></div>'
+ +'<div style="display:grid;gap:2px;justify-items:end;font-size:14px;margin-top:8px"><div>小計 '+fmt(q.totals.subtotal)+'</div><div>營業稅 5% '+fmt(q.totals.tax)+'</div><div style="font-size:18px;font-weight:800">合計 '+fmt(q.totals.grand)+'・'+q.totals.currency+'</div></div>'
  +'<div class="roi"><b>📈 ROI 摘要（依 a06 三公式・保守預估）</b><br>預估月新增熱名單 '+q.roi.monthlyHotLeads+' 個・假設成交率 '+(q.roi.assumedCloseRate*100)+'%・單案毛利 '+fmt(q.roi.avgGrossMargin)+' → 預估月增毛利 <b>'+fmt(q.roi.estMonthlyGrossGain)+'</b>；月攤提成本 '+fmt(q.roi.estMonthlyCost)+' → <b>預估回本 '+q.roi.paybackMonths+' 個月</b>。'+q.roi.disclaimer+'</div></div>';
- document.getElementById('pay').disabled=false;document.getElementById('pay').style.opacity=1;quote=q;
+ document.getElementById('pay').disabled=false;document.getElementById('pay').style.opacity=1;['pdfdown','printbtn'].forEach(function(b){var e=document.getElementById(b);e.disabled=false;e.style.opacity=1;});quote=q;
 }
 document.getElementById('gen').onclick=function(){
  var body={item:sel,qty:+document.getElementById('qty').value||1,email:document.getElementById('email').value.trim(),name:document.getElementById('uname').value.trim(),company:document.getElementById('cname').value.trim(),note:document.getElementById('note').value.trim()};
@@ -98,5 +100,28 @@ document.getElementById('pay').onclick=function(){
   setTimeout(function(){ if(!/^\w+:\/\//.test(a.href))a.click(); },4000);})
  .catch(function(){b.textContent='🔒 定金・沙箱金流';b.disabled=false;alert('訂單服務暫時可用，報價單仍可留存。');});
 };
+document.getElementById('printbtn').onclick=function(){window.print();};
+document.getElementById('pdfdown').onclick=function(){
+ var q=document.getElementById('qbox');if(!q||!/報價/.test(q.textContent)){alert('請先按「產生報價單」。');return;}
+ var b=document.getElementById('pdfdown');b.disabled=true;b.textContent='排版中…';
+ var load=function(src,done,err){var e=document.createElement('script');e.src=src;e.onload=done;e.onerror=err;document.head.appendChild(e);};
+ var run=function(){try{
+   html2canvas(q,{scale:2,backgroundColor:'#ffffff'}).then(function(cv){
+     var pdf=new jspdf.jsPDF({unit:'pt',format:'a4'});
+     var w=pdf.internal.pageSize.getWidth()-48,h=cv.height*w/cv.width,maxH=pdf.internal.pageSize.getHeight()-72;
+     var y=36,rest=h,sy=0;
+     while(rest>0){var pageH=Math.min(rest,maxH);var slice=document.createElement('canvas');slice.width=cv.width;slice.height=pageH*w/cv.width;slice.getContext('2d').drawImage(cv,0,-sy,cv.width,cv.height);
+       pdf.addImage(slice.toDataURL('image/png'),'PNG',24,y,w,pageH);rest-=maxH;sy+=maxH*cv.width/w;if(rest>0){pdf.addPage();y=36;}else y+=pageH;}
+     pdf.save('SNT-'+((quote&&quote.no)||'QUOTE')+'.pdf');
+   });}catch(e){b.disabled=false;b.textContent='⬇ 下載 PDF 報價單';alert('自動排版失敗，改用瀏覽器列印（可選「另存為 PDF」）。');window.print();}};
+ var fail=function(){b.disabled=false;b.textContent='⬇ 下載 PDF 報價單';alert('離線無法載排版元件——請改用右側「列印／另存 PDF」。');};
+ if(window.html2canvas&&window.jspdf){run();}else{
+   load('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',function(){load('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',run,fail);},fail);}
+};
+(function(){try{fetch('/api/order').then(function(r){return r.json()}).then(function(j){
+ var n=document.getElementById('mode-note');if(!n)return;
+ if(j.mode==='sandbox'&&!j.stripe.match(/test|live/))n.innerHTML='金流模式：<b>沙箱（模擬單）</b>｜綁 sk_test_＝真沙箱收單；<b>PAYMENT_MODE=live＋sk_live_ 雙重開關</b>才收正式款。';
+ else n.innerHTML='金流模式：<b>'+j.mode+'</b>｜Stripe: '+j.stripe+'｜PayPal: '+j.paypal;
+}).catch(function(){});}catch(e){}})();
 </script>
 </body></html>

@@ -131,3 +131,20 @@
 
 /* ---- AI 行銷戰略長 Widget autoload（進場 2.5 秒後，避開轉化首屏）---- */
 (function(){setTimeout(function(){var s=document.createElement('script');s.src='/assets/chat-widget.js';document.head.appendChild(s);},2500);})();
+
+/* ---- ADS BRIDGE・前端埋點（無個資明文：UTM 留存＋事件 Beacon，服务端由 /api/ads-bridge 驗收）---- */
+(function(){
+  try{
+    var q=new URLSearchParams(location.search), keep={};
+    ['utm_source','utm_medium','utm_campaign','src','omo'].forEach(function(k){if(q.get(k))keep[k]=q.get(k);});
+    if(Object.keys(keep).length)localStorage.setItem('snt.track',JSON.stringify(keep));
+    var send=function(ev,payload){
+      try{navigator.sendBeacon&&navigator.sendBeacon('/api/ads-bridge',JSON.stringify({event:ev,utm:JSON.parse(localStorage.getItem('snt.track')||'null'),value:(payload&&payload.value)||undefined,currency:'TWD'}));}catch(e){}
+    };
+    send('page_view');
+    window.SNT_track=function(ev,payload){send(String(ev||'custom').toLowerCase().replace(/[^a-z_]/g,'_'),payload);};
+    document.addEventListener('click',function(e){var a=e.target.closest?e.target.closest('a[href*="/checkout"],a[href*="/kits"],.btn--primary'):null;if(a)SNT_track('cta_click',{href:a.getAttribute('href')});},true);
+    document.addEventListener('submit',function(){SNT_track('lead_submit');},true);
+    console.log('[SNT] ads-bridge 埋點上崗（沙箱零鑰＝只驗收不外呼）');
+  }catch(e){}
+})();

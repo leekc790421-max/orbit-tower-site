@@ -1,0 +1,38 @@
+# 光曜星樞 · Orbit Tower（Singularity Nexus Technology）
+
+> 官網：https://xingdeng.tw ｜ 3D 數位總部：https://orbit.xingdeng.tw
+> 品牌正名：官方名稱「光曜星樞 / Orbit Tower」，公司主體 SNT（Singularity Nexus Technology）。
+
+## 定位
+經營販賣「未來趨勢」的 AI 商業服務站：以動態晶體六邊形大樓 3D 展館為旗艦體驗，
+提供 AI 行銷戰略長（對話式顧問）、趨勢診斷、趨勢報告、-kit 交付方案與雲端報價單自動化。
+
+## 核心頁面
+- 首頁： https://xingdeng.tw/
+- 3D 展館（母公司數位總部）： https://xingdeng.tw/3d ｜獨立網域 https://orbit.xingdeng.tw
+- 方案定價（R1/R2/R3）： https://xingdeng.tw/pricing
+- Kit 產品線： https://xingdeng.tw/kits （互動預覽 /kits/preview/*）
+- 趨勢診斷（公開 API 演示）： https://xingdeng.tw/diagnose
+- 趨勢報告： https://xingdeng.tw/reports
+- 文章（Content Engine a01–a09）： https://xingdeng.tw/articles/a01 …/a09
+- 自動報價單＋沙箱金流： https://xingdeng.tw/checkout
+- 關於／集團架構（含子業「拾光引」）： https://xingdeng.tw/about
+- 聯絡收單： https://xingdeng.tw/contact
+- 部門矩陣： https://xingdeng.tw/departments
+- FAQ： https://xingdeng.tw/faq
+- 法務： https://xingdeng.tw/privacy ｜ https://xingdeng.tw/terms ｜ https://xingdeng.tw/legal
+
+## 關係企業（子業）
+- 拾光引・雲端辦公室： https://lumi.xingdeng.tw
+- 拾光引 VIP： https://vip.xingdeng.tw
+
+## API 端點（後端，金鑰不外顯）
+- POST /api/strategist — AI 行銷戰略長對話
+- POST /api/leads — 統一收單（名單落庫）
+- POST /api/quote — 報價單_generate_
+- POST /api/order — 訂單／沙箱金流
+- POST /api/diagnose — 網站趨勢掃描
+- GET /api/health — 運維健康檢查（僅回 presence）
+
+## 語言
+- 繁中（預設/x-default）、English（?hl=en）、日本語（?hl=ja）；全站四語系 hreflang 矩陣。

@@ -1,5 +1,5 @@
 /* 光曜星樞・全站語系基底 v2（繁中 base → EN/JA chrome 級翻譯）
-   範圍：導覽列／頁尾／HUD 連結／CTA／指挥中樞共同介面元素；策略長對話與 3D 場景
+   範圍：導覽列／頁尾／HUD 連結／CTA／指揮中樞共同介面元素；策略長對話與 3D 場景
    內容文字不受影響（引擎各走各的多語處理）。
    路由協定（hreflang 語意矩陣對應）：
      ?(無 hl) → zh-Hant｜?hl=en → EN chrome｜?hl=ja → JA chrome
@@ -57,8 +57,8 @@
     '預約導覽 Demo': { en: 'Book a Guided Demo', ja: 'デモ予約' },
     '光曜星樞官網｜行銷站': { en: 'SNT Official Site', ja: '光曜星樞公式サイト' },
     '線上報價單・沙箱金流': { en: 'Online Quote・Sandbox Pay', ja: 'オンライン見積・サンドボックス決済' },
-    '拾光引 SNT｜雲端辦公室': { en: 'LumiGuide SNT｜Cloud Office', ja: '拾光引 SNT｜クラウドオフィス' },
-    '拾光引 SNT・雲端辦公室': { en: 'LumiGuide SNT・Cloud Office', ja: '拾光引 SNT・クラウドオフィス' },
+    '拾光引 SNT｜命理雙域站': { en: 'LumiGuide SNT｜Destiny Suite', ja: '拾光引 SNT｜命理ツインサイト' },
+    '拾光引 SNT・命理雙域站': { en: 'LumiGuide SNT・Destiny Suite', ja: '拾光引 SNT・命理ツインサイト' },
     '拾光引 LumiGuide': { en: 'LumiGuide', ja: '拾光引 LumiGuide' },
     '拾光引 VIP 體驗': { en: 'LumiGuide VIP Trial', ja: '拾光引 VIP体験' },
     '拾光引 VIP': { en: 'LumiGuide VIP', ja: '拾光引 VIP' },
@@ -67,10 +67,10 @@
     '延伸閱讀・從 AI 戰略長開始': { en: 'Further Reading・Start with the AI Strategist', ja: '関連記事・AI戦略長から' },
     '雙星互鏈：': { en: 'Twin-site network:', ja: 'ツインサイト：' },
     'SNT 集團直達': { en: 'SNT Group Direct', ja: 'SNTグループ直通' },
-    '拾光引・雲端辦公室 ↗': { en: 'LumiGuide・Cloud Office ↗', ja: '拾光引・クラウドオフィス ↗' },
+    '拾光引・命理雙域站 ↗': { en: 'LumiGuide・Destiny Suite ↗', ja: '拾光引・命理ツインサイト ↗' },
     '拾光引 VIP ↗': { en: 'LumiGuide VIP ↗', ja: '拾光引 VIP ↗' },
     '線上報價單': { en: 'Online Quote', ja: 'オンライン見積' },
-    '雲端辦公室・拾光引': { en: 'Cloud Office・LumiGuide', ja: 'クラウドオフィス・拾光引' },
+    '命理雙域站・拾光引': { en: 'Destiny Suite・LumiGuide', ja: '命理ツインサイト・拾光引' },
     'AI 崗位': { en: 'AI Roles', ja: 'AIポジション' }, '進駐引擎': { en: 'Deployed Engines', ja: '導入エンジン' },
     '官網': { en: 'Site', ja: '公式サイト' }, '3D 總部': { en: '3D HQ', ja: '3D本社' }, '報價單': { en: 'Quote', ja: '見積' },
     '光曜 Orbit Tower｜3D 數位總部 →': { en: 'Orbit Tower｜3D Digital HQ →', ja: 'Orbit Tower｜3Dデジタル本部 →' },

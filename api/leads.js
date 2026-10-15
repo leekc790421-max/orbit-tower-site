@@ -62,6 +62,13 @@ module.exports = async function handler(req, res) {
     at: new Date().toISOString(),
     ip: (req.headers || {})['x-forwarded-for'] || ''
   };
+  // 獲客漏斗機器人：入池即評分分流（require 失敗＝略過不擋單）
+  try {
+    const { score, playbook } = require('./funnel.js');
+    lead.funnel_score = score(lead);
+    const pb = playbook(lead.funnel_score, (lead.page || '') + ' ' + (lead.intent || '') + ' offline?');
+    lead.funnel_tier = pb.tier; lead.funnel_next = pb.next_steps[0];
+  } catch (e) { lead.funnel_score = null; }
   // 降級池：console（Vercel 函式日誌＝維修台工單池），Supabase 未接前不丟單
   console.log('LEAD ' + JSON.stringify(lead));
   const sb = await toSupabase(lead);
