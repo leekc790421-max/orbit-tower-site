@@ -22,7 +22,7 @@ const Providers = {
         body: JSON.stringify({ system_instruction: { parts: [{ text: system }] }, contents: msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.content).slice(0, 4000) }] })), generationConfig: { temperature: .7, maxOutputTokens: 1400 } })
       }, ms);
       const j = await r.json(); const text = j?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!r.ok || !text) throw new Error(`gemini ${r.status} ${j?.error?.status || ''}`);
+      if (!r.ok || !text) throw new Error(`gemini ${r.status} ${(j?.error?.message || j?.error?.status || '').replace(/\s+/g, ' ').slice(0, 120)}`);
       return text;
     }
   },
