@@ -1,3 +1,6 @@
-.DS_Store
+__pycache__
+.env.local
+.vercel/
+node_modules/
 *.log
-.vercel
+.vercel-tmp/
