@@ -76,11 +76,22 @@ const laneKey = (req) => [req.socket?.remoteAddress || 'anon', req.url].join('|'
 /* ---------- Circuit Breaker（進程内；多實例規模化接 Upstash 同介面）---------- */
 const state = global.__SNT_BREAKER = global.__SNT_BREAKER || {}; // {provider:{fails,opened}}
 function canCall(p) { const s = state[p]; if (!s) return true; if (s.opened && Date.now() - s.opened > 30000) { state[p] = null; return true; } return !(s.fails >= 2); }
+
+/* GET /api/ai-router → 健康檢查＋前台雙軌判定的單點真相（無任何金鑰值外洩，僅布爾值） */
+function routerStatus() {
+  const out = { version: 'snt-ai-router@2', lanes: {}, providers: {}, breakers: {} };
+  for (const [k, L] of Object.entries(LANES)) out.lanes[k] = { chain: L.chain, active: L.chain.filter((p) => Providers[p] && Providers[p].ready()) };
+  for (const [p, P] of Object.entries(Providers)) out.providers[p] = { ready: !!P.ready(), model: P.model };
+  for (const p of Object.keys(Providers)) { const s = state[p]; out.breakers[p] = s && s.fails >= 2 ? { fails: s.fails, open: true } : { fails: (s && s.fails) || 0, open: false }; }
+  out.front_desk_mode = Providers.gemini.ready() && canCall('gemini') ? 'true_llm' : 'rules_engine';
+  return out;
+}
 function record(p, ok) { const s = state[p] || (state[p] = { fails: 0, opened: 0 }); if (ok) { state[p] = null; } else { s.fails++; if (s.fails >= 2) s.opened = Date.now(); } }
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*'); res.setHeader('Access-Control-Allow-Headers', 'content-type'); res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
   if (req.method === 'OPTIONS') return res.status(204).end();
+  if (req.method === 'GET') return res.status(200).json(routerStatus());
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   let body = {};
   try {
