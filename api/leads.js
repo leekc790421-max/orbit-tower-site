@@ -62,14 +62,21 @@ module.exports = async function handler(req, res) {
     at: new Date().toISOString(),
     ip: (req.headers || {})['x-forwarded-for'] || ''
   };
-  // 獲客漏斗機器人：入池即評分分流（require 失敗＝略過不擋單）
+  /* 獲客漏斗評分（與 /api/corps?bot=funnel 規則同步——重複系刻意：Hobby 方案每部署 12 函數上限，函式間不得互相 require） */
   try {
-    const { score, playbook } = require('./funnel.js');
-    lead.funnel_score = score(lead);
-    const pb = playbook(lead.funnel_score, (lead.page || '') + ' ' + (lead.intent || '') + ' offline?');
-    lead.funnel_tier = pb.tier; lead.funnel_next = pb.next_steps[0];
+    const F = [
+      l => /(餐飲|餐|咖啡|食|軟體|saas|app|房|建案|製造|工廠|電商|顧問|醫療|教育|美容)/i.test(`${l.industry||''} ${l.message||''} ${l.note||''}`) ? 20 : 0,
+      l => /(痛|困|流失|轉化|沒名單|沒客戶|流量|廣告|跳出|海外|夜間|多語|排名)/i.test(l.message || l.note || '') ? 15 : 0,
+      l => /\$|NT\$|萬|千元|budget/i.test(`${l.budget||''} ${l.message||''} ${l.note||''}`) ? 20 : 0,
+      l => /(老闆|總裁|總經理|負責人|founder|CEO|行銷經理|主管)/i.test(`${l.title||''} ${l.role||''} ${l.message||''}`) ? 15 : 0,
+      l => /(急|馬上|這週|本月|deadline|asap)/i.test(`${l.timeline||''} ${l.message||''}`) ? 10 : 0,
+      l => /(checkout|kit=|plan=R[123]|diagnose|offline|omo|try)/i.test(`${l.source||''} ${l.page||''}`) ? 10 : 0,
+      l => (/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(l.email || '') && (l.phone || '').replace(/\D/g, '').length >= 8) ? 15 : 0,
+    ];
+    lead.funnel_score = F.reduce((a, fn) => a + fn(lead), 0);
+    lead.funnel_tier = lead.funnel_score >= 70 ? 'hot' : lead.funnel_score >= 40 ? 'warm' : 'cold';
   } catch (e) { lead.funnel_score = null; }
-  // 降級池：console（Vercel 函式日誌＝維修台工單池），Supabase 未接前不丟單
+// 降級池：console（Vercel 函式日誌＝維修台工單池），Supabase 未接前不丟單
   console.log('LEAD ' + JSON.stringify(lead));
   const sb = await toSupabase(lead);
   if (sb && !sb.ok) console.log('LEAD_SUPABASE_FAIL ' + JSON.stringify(sb));

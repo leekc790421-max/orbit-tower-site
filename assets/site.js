@@ -139,7 +139,7 @@
     ['utm_source','utm_medium','utm_campaign','src','omo'].forEach(function(k){if(q.get(k))keep[k]=q.get(k);});
     if(Object.keys(keep).length)localStorage.setItem('snt.track',JSON.stringify(keep));
     var send=function(ev,payload){
-      try{navigator.sendBeacon&&navigator.sendBeacon('/api/ads-bridge',JSON.stringify({event:ev,utm:JSON.parse(localStorage.getItem('snt.track')||'null'),value:(payload&&payload.value)||undefined,currency:'TWD'}));}catch(e){}
+      try{navigator.sendBeacon&&navigator.sendBeacon('/api/corps?bot=ads',JSON.stringify({event:ev,utm:JSON.parse(localStorage.getItem('snt.track')||'null'),value:(payload&&payload.value)||undefined,currency:'TWD'}));}catch(e){}
     };
     send('page_view');
     window.SNT_track=function(ev,payload){send(String(ev||'custom').toLowerCase().replace(/[^a-z_]/g,'_'),payload);};

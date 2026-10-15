@@ -163,23 +163,20 @@ test("規則引擎回訪：報餐飲答餐飲、報 saas 答軟體（業別不�
   let p2 = await call("我們是做 saas 平台，客戶看完官網都不留名單");
   assert.match(p2.reply, /軟體業/, "self-match 漏洞修復保錘");
 });
-test("漏斗機器人：老闆＋預算＋留資＝hot 95 起跳", async () => {
+test("兵團閘道 funnel：老闆＋預算＋留資＝hot（Hobby 12 函數上限→六機合一 /api/corps）", async () => {
   const { createRequire } = await import("node:module");
   const req2 = createRequire(import.meta.url);
-  const h = req2(new URL("../api/funnel.js", import.meta.url).pathname);
-  const res = { code: 0, payload: null, setHeader() {}, status(c) { this.code = c; return this; }, json(o) { this.payload = o; return this; }, end() { return this; } };
-  const body = JSON.stringify({ lead: { industry: "餐飲", message: "我是老闆，預算 3 萬，這週要上線，廣告沒名單", email: "boss@abc.tw", phone: "0912345678", source: "kits" } });
-  await h({ method: "POST", headers: {}, on(ev, cb) { if (ev === "data") setImmediate(() => cb(Buffer.from(body))); if (ev === "end") setImmediate(cb); } }, res);
-  assert.ok(res.payload.score >= 85, `score ${res.payload.score}`); assert.equal(res.payload.tier, "hot");
-});
-test("ads-bridge 沙箱收單：零鑰不外呼（鎖死政策一致）", async () => {
-  const { createRequire } = await import("node:module");
-  const req2 = createRequire(import.meta.url);
-  const h = req2(new URL("../api/ads-bridge.js", import.meta.url).pathname);
-  const res = { code: 0, payload: null, setHeader() {}, status(c) { this.code = c; return this; }, json(o) { this.payload = o; return this; }, end() { return this; } };
-  const body = JSON.stringify({ event: "lead_submit" });
-  await h({ method: "POST", headers: {}, on(ev, cb) { if (ev === "data") setImmediate(() => cb(Buffer.from(body))); if (ev === "end") setImmediate(cb); } }, res);
-  assert.equal(res.payload.mode, "sandbox"); assert.equal(res.payload.ok, true);
+  const h = req2(new URL("../api/corps.js", import.meta.url).pathname);
+  const call = (method, url, obj) => new Promise(async (done) => {
+    const res = { code: 0, payload: null, setHeader() {}, status(c) { this.code = c; return this; }, json(o) { this.payload = o; done(this); }, end() { done(this); } };
+    const body = obj ? JSON.stringify(obj) : "";
+    await h({ method, url, headers: {}, on(ev, cb) { if (ev === "data" && body) setImmediate(() => cb(Buffer.from(body))); if (ev === "end") setImmediate(cb); } }, res);
+  });
+  let r = await call("POST", "/api/corps?bot=funnel", { lead: { industry: "餐飲", message: "我是老闆，預算 3 萬，這週要上線，廣告沒名單", email: "boss@abc.tw", phone: "0912345678", source: "kits" } });
+  assert.ok(r.payload.score >= 85, `score ${r.payload.score}`); assert.equal(r.payload.tier, "hot");
+  r = await call("GET", "/api/corps?bot=status"); assert.equal(r.ok200 ?? (r.code === 200), true); assert.ok(r.payload.bots.funnel);
+  r = await call("GET", "/api/corps?bot=seq"); assert.equal(r.payload.bot, "sequence-v1");
+  r = await call("POST", "/api/corps?bot=ads", { event: "lead_submit" }); assert.equal(r.payload.mode.split("（")[0], "sandbox");
 });
 test("繁簡分界守門：使用者可见字串不得混入簡体／異体（输入 alias 白名单除外）", () => {
 const set = /[们条录为试换刚载价队边欢带机实获进远连过让间开门类营张长东车马鸟岛际随谁约预报红绿语视觉险关级账财资产响询备废属帮并弹忆战挂摄无时书页众愿团极数据]/;
