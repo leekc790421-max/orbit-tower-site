@@ -8,6 +8,8 @@
 提供 AI 行銷戰略長（對話式顧問）、趨勢診斷、趨勢報告、-kit 交付方案與雲端報價單自動化。
 
 ## 核心頁面
+- 一鍵快速架網（免費生成品牌站預覽）： https://xingdeng.tw/quick
+- 星樞廣告機器人（瀏覽器本地生成影片/圖/文案）： https://xingdeng.tw/studio
 - 首頁： https://xingdeng.tw/
 - 3D 展館（母公司數位總部）： https://xingdeng.tw/3d ｜獨立網域 https://orbit.xingdeng.tw
 - 方案定價（R1/R2/R3）： https://xingdeng.tw/pricing

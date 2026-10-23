@@ -35,6 +35,20 @@
 4. GA4／GTM → `site.js` 已預留 dataLayer 事件（`track()`）
 5. 隱私政策／條款頁 → 上線法務檢核後補
 
+## 🤖 被動收入閉環（v1・2026-10）
+
+| 環節 | 機制 | 零人工狀態 | 插鑰即升級 |
+|---|---|---|---|
+| 流量 | 文章 pSEO＋JSON-LD＋llms.txt＋sitemap lastmod＋IndexNow（build 自動提交，Yandex/Bing/Naver） | ✅ | — |
+| 名單 | /api/leads → Neon leads 表（hot/warm/cold 評分；驅動缺失降級日誌池不丟單） | ✅ `NEON_CONNECTION_STRING` 已設兩產線 | — |
+| 養客 | corps?bot=seq tick：hot-48h/warm-7d/cold-30d/omo-24h 真實派工＋nurture_log 留痕；已付客自動排除 | 🟡 `awaiting-email-key`（有隊列不髮信） | `RESEND_API_KEY`+`RESEND_FROM` |
+| 收款 | /api/webhook（Stripe 回調 k 閘）→入帳列＋自動收據＋DELIVERY_MAP 交付說明 | 🟡 待 `WEBHOOK_SECRET` 已設、掛 Stripe 回調址 | `PAYMENT_MODE=live`+live keys |
+| 健守 | radar 每日 Cron（vercel.json）全站健檢回 ops HUD | ✅（若 files 部署未登記 cron→Dashboard 手動加一條） | — |
+
+誠實邊界：退款爭議、對公認帳、PayPal 回調（明確 not_implemented）屬人工；稅務開票若想零人工可評估 Paddle/Lemon Squeezy 当 merchant-of-record（鉤子在 order.js provider 層）。
+
+⚠️ 部署須知：`xingdeng.tw`（專案 xingdeng-tw-static）與 `tower.xingdeng.tw`（專案 orbit-tower-site）是同一 git 源的兩條產線，改 env 後需重新部署才快照生效；3d/ 目錄系從線上快照還原（git 歷史缺檔，2026-10-17 已並入倉庫）。
+
 ## 品牌規範（依 Growth Engine V2）
 
 白底・企業藍 `#2563EB`・Secondary `#06B6D4`・`#F8FAFC` 區塊・`#0F172A` 文字・Glass UI。

@@ -114,7 +114,7 @@ module.exports = async function handler(req, res) {
       let s;
       if (stripeKey.startsWith('sk_live_')) s = await stripeSandbox(stripeKey, { ...b, ref: refL });
       else s = await paypalLive(paypalCid, paypalSecret, { ...b, ref: refL });
-      syncLead({ ref: refL, email: b.email, company: b.company, desc: String(b.desc || 'Orbit Tower 方案'), amount: Number(b.amount || 0), provider: (stripeKey.startsWith('sk_live_') ? 'stripe' : 'paypal') + '-live', status: 'payment_session_created' });
+      await syncLead({ ref: refL, email: b.email, company: b.company, desc: String(b.desc || 'Orbit Tower 方案'), amount: Number(b.amount || 0), provider: (stripeKey.startsWith('sk_live_') ? 'stripe' : 'paypal') + '-live', status: 'payment_session_created' });
       console.log('ORDER ' + JSON.stringify({ ref: refL, mode: 'live', amount: Number(b.amount || 0) }));
       return res.status(200).json({ ok: true, order: refL, provider: stripeKey.startsWith('sk_live_') ? 'stripe' : 'paypal', mode: 'live', payUrl: s.payUrl });
     } catch (e) { return res.status(502).json({ ok: false, mode: 'live', error: String(e.message || e).slice(0, 160) }); }
@@ -127,18 +127,18 @@ module.exports = async function handler(req, res) {
   try {
     if (stripeKey.startsWith('sk_test_')) {
       const s = await stripeSandbox(stripeKey, { ...b, ref });
-      syncLead({ ref, email: b.email, company: b.company, desc, amount, provider: 'stripe-sandbox', status: 'payment_session_created' });
+      await syncLead({ ref, email: b.email, company: b.company, desc, amount, provider: 'stripe-sandbox', status: 'payment_session_created' });
       console.log('ORDER ' + JSON.stringify({ ref, provider: 'stripe-sandbox', session: s.sessionId, amount, desc }));
       return res.status(200).json({ ok: true, order: ref, provider: 'stripe', mode: 'sandbox', payUrl: s.payUrl });
     }
     if (paypalCid) {
       const p = await paypalSandbox(paypalCid, paypalSecret, { ...b, ref });
-      syncLead({ ref, email: b.email, company: b.company, desc, amount, provider: 'paypal-sandbox', status: 'payment_session_created' });
+      await syncLead({ ref, email: b.email, company: b.company, desc, amount, provider: 'paypal-sandbox', status: 'payment_session_created' });
       console.log('ORDER ' + JSON.stringify({ ref, provider: 'paypal-sandbox', order: p.sessionId, amount, desc }));
       return res.status(200).json({ ok: true, order: ref, provider: 'paypal', mode: 'sandbox', payUrl: p.payUrl });
     }
     const payUrl = '/checkout/confirm?mode=sandbox&order=' + ref + '&amount=' + amount;
-    syncLead({ ref, email: b.email, company: b.company, desc, amount, provider: 'none', status: 'sandbox_ordered' });
+      await syncLead({ ref, email: b.email, company: b.company, desc, amount, provider: 'none', status: 'sandbox_ordered' });
     console.log('ORDER ' + JSON.stringify({ ref, provider: 'local-stub', amount, desc }));
     res.status(200).json({ ok: true, order: ref, provider: 'none', mode: 'local-sandbox', payUrl,
       hint: '尚未綁定沙箱金鑰：現行為純模擬收單，按下確認即產生 quoted→sandbox 訂單。' });

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一鍵快速架網 懒人包｜30 秒生成你的品牌站｜光曜星樞 Orbit Tower</title>
+<meta name="description" content="不等外包、不學程式：四題填一填，30 秒生成可上線的 3D 感品牌站預覽＋可下載單檔官網，之後再升級光曜星樞全案。">
+<meta property="og:type" content="website"><meta property="og:site_name" content="光曜星樞・Orbit Tower"><meta property="og:locale" content="zh_TW"><meta property="og:title" content="30 秒開店：一鍵快速架網懶人包｜生成你的品牌站"><meta property="og:description" content="四欄資料 30 秒生成線上預覽品牌站＋可下載單檔官網，內建 AI 留單直達中控台。光曜星樞 Orbit Tower 一鍵架網。"><meta property="og:url" content="https://xingdeng.tw/quick"><meta property="og:image" content="https://xingdeng.tw/assets/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="30 秒開店：一鍵快速架網懶人包｜生成你的品牌站"><meta name="twitter:description" content="四欄資料 30 秒生成線上預覽品牌站＋可下載單檔官網，內建 AI 留單直達中控台。光曜星樞 Orbit Tower 一鍵架網。"><meta name="twitter:image" content="https://xingdeng.tw/assets/og.png"><link rel="canonical" href="https://xingdeng.tw/quick">
+<link rel="stylesheet" href="/assets/site.css"></head>
+<body>
+<main class="wrap" style="max-width:760px;padding:36px 20px 80px">
+  <a class="ghost" href="/">← 返回光曜星樞</a>
+  <h1 style="margin-top:14px">🚀 一鍵快速架網<span class="muted" style="font-size:.5em">　懶人包 v1</span></h1>
+  <p class="muted">四題、30 秒：立即生成你的品牌站——線上預覽網址＋可下載的單檔官網（丟進任何空間就能跑）。頁面內建的「顾客留单框」是活的：訪客留單直達中控台，讓你看見完整迴路。</p>
+  <div class="card" style="padding:22px;display:grid;gap:12px">
+    <label>品牌／店名 <input id="q1" placeholder="例：极光咖啡 Aurora Lab" style="width:100%;padding:11px 13px;border-radius:10px;border:1px solid #CBD5E1"></label>
+    <label>產業
+      <select id="q2" style="width:100%;padding:11px;border-radius:10px;border:1px solid #CBD5E1">
+        <option>餐飲</option><option>美容</option><option>房地產</option><option>Software</option><option>製造</option><option>顧問</option><option>電商</option></select></label>
+    <label>三句話賣點（一行一句）<textarea id="q3" rows="3" style="width:100%;padding:11px;border-radius:10px;border:1px solid #CBD5E1">線上訂位免排隊
+夜晚來客自動接
+熟客回購自動推</textarea></label>
+    <div style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
+      <label>聯絡（IG／電話／地址）<input id="q4" value="IG: aurora.coffee｜02-000-0000" style="width:100%;padding:11px;border-radius:10px;border:1px solid #CBD5E1"></label>
+      <label>品牌色 <input id="q5" type="color" value="#0E7C66" style="height:46px;border:1px solid #CBD5E1;border-radius:10px;background:#fff;padding:3px"></label>
+    </div>
+  </div>
+  <p style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px">
+    <button class="btn btn--primary" onclick="go1()" style="padding:13px 22px;border:0;cursor:pointer;border-radius:12px;font-weight:800">① 生成我的線上預覽</button>
+    <button class="ghost" onclick="go2()" style="padding:12px 20px;cursor:pointer;border-radius:12px;border:1px solid #CBD5E1;background:#fff;font-weight:700">② 下載單檔官網 .html</button>
+  </p>
+  <div id="out" class="card" style="display:none;padding:18px;margin-top:8px"></div>
+  <div class="card" style="margin-top:26px;padding:18px">
+    <b>③ 升級全案（懒人包 → 星樞完全體）</b>
+    <p class="muted" style="font-size:14px">3D 動態總部、多語 AI 接待、名單自動養客、OMO 掃碼線——都是本預覽頁做不到、<a href="/pricing?src=quick" style="font-weight:800">/pricing 三方案</a> 立刻接上的。<button class="btn btn--sm" style="margin-left:8px;padding:8px 14px;border:0;cursor:pointer;border-radius:9px;background:#0F172A;color:#fff" onclick="location.href='/pricing?src=quick'">查看 T1／T2／T3</button></p>
+  </div>
+</main>
+<script>
+var LIB={'餐飲':['午晚高峰不再漏單','顧客檔案自動长成','回購推播不用人盯'],'美容':['預約時段滿得快','案例牆永遠常新','放鳥率自動下降'],'房地產':['夜間諮詢有人接','案場故事可逛','來客意願先分級'],'Software':['Demo 授權自動寄','功能被看見','线索直接入 CRM'],'製造':['深夜詢盤即時接','型錄即點即讀','多語業務不睡覺'],'顧問':['痛點測驗前置','方案一目了然','續約自動喚醒'],'電商':['三秒抓住來客','夜間客服不打烊','回購自動經營'],'_':['門面煥新','接待在線','名單入帳']};
+function S(){return {brand:(document.getElementById('q1').value||'我的品牌').trim(),ind:document.getElementById('q2').value,sells:(document.getElementById('q3').value||'').split('\n').filter(Boolean).slice(0,3),contact:(document.getElementById('q4').value||'').trim(),col:document.getElementById('q5').value}}
+function b64(s){return btoa(unescape(encodeURIComponent(JSON.stringify(s))))}
+function esc(s){return String(s==null?'':s).replace(/[<>&"']/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]})}
+function page(d){var bl=d.sells.length?d.sells:(LIB[d.ind]||LIB._);return ''+
+'<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
+'<title>'+esc(d.brand)+'｜AI 接待中・光曜星樞驅動</title>'+
+'<style>body{margin:0;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,sans-serif;background:#FAFAF8;color:#0F172A}'+
+'.hero{background:linear-gradient(135deg,'+esc(d.col)+',#0B132B);color:#fff;padding:64px 22px 58px;text-align:center}*{box-sizing:border-box}'+
+'.hero h1{margin:0 0 12px;font-size:clamp(30px,6vw,52px)}.hero p{opacity:.82;margin:0}.pill{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:6px 16px;font-size:13px;margin-bottom:18px}'+
+'.grid{max-width:860px;margin:34px auto;padding:0 20px;display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}'+
+'.card{background:#fff;border:1px solid #E7E5E4;border-radius:16px;padding:20px;box-shadow:0 8px 28px -18px rgba(15,23,42,.35);font-weight:700}'+
+'.cta{max-width:560px;margin:8px auto 60px;padding:0 20px;text-align:center}.cta h2{font-size:22px}'+
+'input,textarea{width:100%;padding:12px;border:1px solid #CBD5E1;border-radius:10px;margin:6px 0;font:inherit}button{background:'+esc(d.col)+';color:#fff;border:0;border-radius:10px;padding:12px 26px;font-weight:800;cursor:pointer;font-size:15px}'+
+'.foot{border-top:1px solid #E7E5E4;padding:20px;text-align:center;font-size:12.5px;color:#78716C;background:#fff}a{color:'+esc(d.col)+'}</style></head><body>'+
+'<div class="hero"><div class="pill">★ 本站由 AI 全天候接待中（即時留單直達中控台）</div><h1>'+esc(d.brand)+'</h1><p>'+esc(d.contact||'歡迎來訊・24/7 線上接待')+'</p></div>'+
+'<div class="grid">'+bl.map(function(b){return '<div class="card">✦ '+esc(b)+'</div>'}).join('')+'</div>'+
+'<div class="cta"><h2>留下聯絡方式，我們回你時你正在忙——所以這由 AI 先接</h2>'+
+'<input id="e" placeholder="你的信箱" type="email"><textarea id="m" rows="2" placeholder="一句話需求（例：週末兩位）"></textarea>'+
+'<button onclick="sub()">送出・取得回覆</button><div id="r" style="margin-top:10px;font-size:14px"></div></div>'+
+'<div class="foot">「'+esc(d.brand)+'」由 <a href="https://xingdeng.tw/quick?src=yoursite">光曜星樞・Orbit Tower 一鍵生成</a>｜升級 3D 全案點此</div>'+
+'<script>function sub(){var e=document.getElementById("e").value.trim(),m=document.getElementById("m").value.trim();if(!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]{2,}$/.test(e)){document.getElementById("r").textContent="請留有效信箱";return}fetch("/api/leads",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({kind:"guest-site",email:e,message:m,company:'+(JSON.stringify(d.brand).replace(/</g,'\\u003c').replace(/>/g,'\\u003e'))+',industry:'+(JSON.stringify(d.ind).replace(/</g,'\\u003c').replace(/>/g,'\\u003e'))+',page:"/quick-render",intent:"from:'+location.hostname+'"})}).then(function(r){return r.json()}).then(function(d){document.getElementById("r").innerHTML=d.persisted?"✅ 已送達商家中控台，稍後回覆你":"已暫存，系統稍後補遞"}).catch(function(){document.getElementById("r").textContent="網路打盹，再試一次"})}<\/script></body></html>'}
+function go1(){var d=S();var url='https://xingdeng.tw/api/corps?bot=site&h=render&d='+encodeURIComponent(b64(d));var o=document.getElementById('out');o.style.display='block';o.innerHTML='<b>✅ 你的品牌站上線中</b><p><a href="'+url+'" target="_blank" style="font-weight:800">→ 開新視窗預覽我的站</a><br><span style="font-size:12.5px;color:#64748B">此網址即你的「展示級官網」，可直接放進 IG Bio／名片；留單會進中控台（含來源標記 guest-site），你親眼看見完整獲客回路。</span></p>'}
+function go2(){var d=S();var h=page(d);var b=new Blob([h],{type:'text/html;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(d.brand||'my-site')+'.html';a.click();try{if(window.SNT&&SNT.omni)SNT.omni({event:'quick_download'})}catch(e){}}
+document.addEventListener('DOMContentLoaded',function(){if(!document.getElementById('q1').value)document.getElementById('q1').focus()});
+</script>
+<script src="/assets/omni.js" defer></script>
+</body></html>

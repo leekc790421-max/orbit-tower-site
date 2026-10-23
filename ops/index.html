@@ -25,4 +25,5 @@ document.getElementById('exp')&&document.getElementById('exp').addEventListener(
 document.getElementById('csv')&&document.getElementById('csv').addEventListener('click',function(){dl('ot-leads.csv','at,type,url,fields\n'+L.map(function(d){return [d.at,d.type,d.url,'"'+JSON.stringify(d.fields||{}).replace(/"/g,'""')+'"'].join(',')}).join('\n'))});
 var cc=0;document.getElementById('clr')&&document.getElementById('clr').addEventListener('click',function(){if(++cc===1){this.textContent='再按一次確認清空';return}localStorage.removeItem('ot.leads');location.reload()});
 </script>
-<script src="https://xingdeng.tw/assets/i18n.js" defer></script></body></html>
+<script src="https://xingdeng.tw/assets/i18n.js" defer></script><script src="/assets/omni.js" defer></script>
+</body></html>

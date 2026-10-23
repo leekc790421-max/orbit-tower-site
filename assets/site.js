@@ -124,6 +124,7 @@
   });
 
   function track(name) {
+    try { document.dispatchEvent(new CustomEvent('snt:track', { detail: { name: name } })) } catch (e) { }
     try { console.log('[ot-event]', name, performance.now() | 0); } catch (e) { }
     if (window.dataLayer) window.dataLayer.push({ event: 'ot_' + name });
   }

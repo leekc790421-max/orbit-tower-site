@@ -54,6 +54,12 @@
    ]
   }
  ],
+ "crons": [
+  {
+   "path": "/api/corps?bot=radar&tick=1",
+   "schedule": "0 20 * * *"
+  }
+ ],
  "buildCommand": "node scripts/bump-sitemap.js",
  "outputDirectory": "."
 }

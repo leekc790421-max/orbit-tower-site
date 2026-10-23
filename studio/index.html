@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>星樞廣告機器人 XingShu Studio｜一鍵產出直式影片＋社群圖＋三平台文案｜光曜星樞 Orbit Tower</title>
+<meta name="description" content="免設計、免外包：填入產業與賣點，瀏覽器本機生成 9:16 宣傳影片、社群廣告圖與發文文案，下載即用。光曜星樞・Orbit Tower 出品。">
+<meta property="og:type" content="website"><meta property="og:site_name" content="光曜星樞・Orbit Tower"><meta property="og:locale" content="zh_TW"><meta property="og:title" content="星樞廣告機器人 XingShu Studio｜直式影片＋社群圖＋文案一鍵產出"><meta property="og:description" content="免設計免外包：填入產業與賣點，瀏覽器本機生成 9:16 宣傳影片、社群廣告圖與三平台發文文案。光曜星樞 Orbit Tower 出品。"><meta property="og:url" content="https://xingdeng.tw/studio"><meta property="og:image" content="https://xingdeng.tw/assets/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="星樞廣告機器人 XingShu Studio｜直式影片＋社群圖＋文案一鍵產出"><meta name="twitter:description" content="免設計免外包：填入產業與賣點，瀏覽器本機生成 9:16 宣傳影片、社群廣告圖與三平台發文文案。光曜星樞 Orbit Tower 出品。"><meta name="twitter:image" content="https://xingdeng.tw/assets/og.png"><link rel="canonical" href="https://xingdeng.tw/studio">
+<link rel="stylesheet" href="/assets/site.css"></head>
+<body>
+<main class="wrap" style="max-width:980px;padding:34px 20px 70px">
+  <a class="ghost" href="/">← 返回光曜星樞</a>
+  <h1 style="margin-top:12px">🎬 星樞廣告機器人 <span class="muted" style="font-size:.55em">XingShu Studio v1</span></h1>
+  <p class="muted">全部在你的瀏覽器內生成——零上傳、零外部 API、零月費。生成後直接下載，发到 Facebook／Instagram／Google 商家檔案就能跑第一波獲客；想讓它自己引到留單頁，用下方「一鍵架網」接上。</p>
+  <div class="card" style="padding:22px;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+    <label>產業 <select id="ind" style="width:100%;padding:10px;border-radius:10px;border:1px solid #CBD5E1">
+      <option value="餐飲">餐飲／咖啡／手搖飲</option><option value="美容">美容／醫美／沙龍</option>
+      <option value="房地產">房地產／建案</option><option value="Software">軟體／SaaS／App</option>
+      <option value="製造">製造／工廠／外銷</option><option value="顧問">顧問／課程／服務</option>
+      <option value="電商">電商／零售品牌</option></select></label>
+    <label>品牌名稱 <input id="brand" value="極光咖啡" style="width:100%;padding:10px;border-radius:10px;border:1px solid #CBD5E1"></label>
+    <label>主打賣點（一行一句，最多三句）<textarea id="sells" rows="3" style="width:100%;padding:10px;border-radius:10px;border:1px solid #CBD5E1">線上直接訂位不用排隊
+夜晚來客自動接手
+會員回購一鍵推播</textarea></label>
+    <label>CTA 行動号召 <input id="cta" value="立即預約・免費體驗場次" style="width:100%;padding:10px;border-radius:10px;border:1px solid #CBD5E1"></label>
+    <label>聯絡（電話／IG／网址任一）<input id="contact" value="IG: aurora.coffee" style="width:100%;padding:10px;border-radius:10px;border:1px solid #CBD5E1"></label>
+    <label>品牌色 <input id="color" type="color" value="#2563EB" style="width:100%;height:42px;border:1px solid #CBD5E1;border-radius:10px;background:#fff;padding:2px"></label>
+  </div>
+  <p><button class="btn btn--primary" onclick="gen()" style="padding:13px 26px;border:0;cursor:pointer;border-radius:12px;font-weight:800">⚡ 一鍵生成廣告三件套</button>
+  <span id="st" class="muted" style="margin-left:12px"></span></p>
+  <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+    <div class="card" style="padding:14px"><b>① 直式宣傳影片（約 7 秒 WebM）</b><p class="muted" style="font-size:13px">Reels／ shorts 規格 1080×1920</p><video id="pv" controls playsinline muted style="width:100%;max-width:250px;background:#000;border-radius:14px"></video><p><a id="dlv" download="ad-9x16.webm" class="btn ghost" style="display:none">⬇ 下載影片</a></p></div>
+    <div class="card" style="padding:14px"><b>② 社群廣告圖（1200×630 PNG）</b><p class="muted" style="font-size:13px">FB/IG 貼文、GP 封面通用</p><canvas id="pc" width="1200" height="630" style="width:100%;border-radius:12px"></canvas><p><a id="dlp" download="ad-banner.png" class="btn ghost">⬇ 下載圖片</a></p></div>
+    <div class="card" style="padding:14px"><b>③ 發文文案×3（即貼即用）</b><div id="copyw" style="display:grid;gap:10px;font-size:13.5px;line-height:1.7"></div><button class="ghost" onclick="cpAll()">📋 全部複製</button></div>
+  </div>
+  <div class="card" style="margin-top:22px;padding:18px;background:#0F172A;color:#E2E8F0">
+    <b>下一步：讓廣告點的進來的人有「店」可逛</b>
+    <p style="font-size:14px" class="muted">廣告拉來流量，落地頁轉換——到 <a href="/quick" style="color:#38BDF8;font-weight:800">/quick 一鍵架網</a> 30 秒生品牌站，完成「廣告→官網→留單」自動迴路。</p>
+  </div>
+</main>
+<script>
+var LIB={'餐飲':{hook:'午晚高峰，訂位與外賣誰在漏？',bullets:['線上訂位自動開','熟客回購自動推','深夜訂單自動接'],tags:'#餐飲行銷 #線上訂位 #熟客經營'},
+'美容':{hook:'客戶滑過妳的作品，然後沒然後？',bullets:['預約線上一鍵完成','案例牆自動更新','到診提醒少放鳥'],tags:'#美容行銷 #預約系統 #客戶回購'},
+'房地產':{hook:'看屋率低的真相：客戶在夜間找不到人。',bullets:['24H 線上接待','建案故事可走進','來客意願自動分級'],tags:'#建案行銷 #看房預約 #數位接待'},
+'Software':{hook:'官網只有功能表，沒有說服力。',bullets:['多語產品導覽','Demo 授權自動寄','表單直入 CRM'],tags:'#SaaS增长 #產品頁 #线索培育'},
+'製造':{hook:'國外問詢半夜來，回覆慢半拍＝單飛了。',bullets:['多語業務永不睡','型錄即點即看','詢盤自動分派'],tags:'#外銷获客 #工廠直營 #跨境業務'},
+'顧問':{hook:'專業很deep，轉換很shallow？',bullets:['痛點測驗前置','課程方案即見','案例即開即讀'],tags:'#知識變現 #顧問行銷 #報名轉換'},
+'電商':{hook:'廣告點進來，三秒內抓不住人就走了。',bullets:['主題式落地頁','夜間客服不打烊','回購自動喚醒'],tags:'#電商轉換 #品牌站 #回購經營'},
+'_def':{hook:'名號被看見，訂單要進來。',bullets:['專業門面一分鐘上線','顧客來訊自動接','名單自動入中控'],tags:'#數位轉型 #自動獲客'}};
+function V(id){return document.getElementById(id).value.trim()}
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(function(c){return c+c}).join('');var n=parseInt(h,16);return [n>>16&255,n>>8&255,n&255]}
+function gen(){
+  var ind=V('ind'),brand=V('brand')||'你的品牌',sells=V('sells').split('\n').filter(Boolean).slice(0,3),cta=V('cta')||'立即聯繫',contact=V('contact')||'',col=V('color');
+  var D=LIB[ind]||LIB._def; if(sells.length===3){D={hook:D.hook,bullets:sells,tags:D.tags}}
+  document.getElementById('st').textContent='生成中…';
+  // ② banner
+  var cv=document.getElementById('pc'),x=cv.getContext('2d'),rgb=hex2rgb(col);
+  var g=x.createLinearGradient(0,0,1200,630);g.addColorStop(0,'rgb('+rgb.join(',')+')');g.addColorStop(1,'#0B132B');
+  x.fillStyle=g;x.fillRect(0,0,1200,630);
+  x.fillStyle='rgba(255,255,255,.08)';for(var i=0;i<7;i++){x.beginPath();x.arc(980+i*22,90+i*30,130-i*13,0,7);x.fill()}
+  x.fillStyle='#fff';x.font='800 72px system-ui';x.fillText(brand,70,180);
+  x.fillStyle='rgba(255,255,255,.75)';x.font='400 30px system-ui';x.fillText('× 光曜星樞 AI 數位總部',72,232);
+  x.font='600 40px system-ui';x.fillStyle='#E2E8F0';x.fillText(D.hook.slice(0,22),70,330);if(D.hook.length>22)x.fillText(D.hook.slice(22,44),70,382);
+  var yy=452;D.bullets.forEach(function(b){x.fillStyle='#7DD3FC';x.font='600 30px system-ui';x.fillText('✦',70,yy);x.fillStyle='#fff';x.fillText(b.slice(0,24),110,yy);yy+=52});
+  x.fillStyle='#F0C265';x.font='800 42px system-ui';x.fillText('▸ '+cta,70,600);
+  x.fillStyle='rgba(255,255,255,.65)';x.font='400 26px system-ui';x.fillText(contact,760,600);
+  var a=document.getElementById('dlp');a.href=cv.toDataURL('image/png');
+  // ③ 文案
+  var t=D.tags;
+  var posts=['【'+brand+'】'+D.hook+'\n現在，'+D.bullets[0]+'。\n'+cta+'（'+contact+'）\n'+t,'#你上次找'+ind+'，是因為什麼卡住？\n'+brand+' 把 '+D.bullets[1]+' 交給系統自動運作，不再等人手動接。\n留「體驗」兩字，我們從你的痛点開始。 '+t,'門面、接待、名單三段同時上線：\n·'+D.bullets[0]+'\n·'+D.bullets[1]+'\n·'+D.bullets[2]+'\n——光曜星樞・Orbit Tower 為 '+brand+' 打造。 '+t];
+  var w=document.getElementById('copyw');w.innerHTML='';
+  posts.forEach(function(p,i){var d=document.createElement('div');d.style.cssText='background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:10px 12px;white-space:pre-wrap';d.textContent=(i+1)+'. '+(i===0?'Facebook／IG 貼文':i===1?'小紅書／IG 軟文':'Google 商家檔案')+'\n'+p;w.appendChild(d)});
+  window.__posts=posts;
+  // ① 影片
+  vid(D,brand,col,cta,contact);
+  document.getElementById('st').textContent='✅ 三件套就緒（瀏覽器本機產出）';
+  try{if(window.SNT&&SNT.omni)SNT.omni({event:'studio_gen'})}catch(e){}
+}
+function cpAll(){try{navigator.clipboard.writeText((window.__posts||[]).join('\n\n——\n\n'));alert('已複製三段文案')}catch(e){}}
+function vid(D,brand,col,cta,contact){
+  var cv=document.createElement('canvas');cv.width=1080;cv.height=1920;var x=cv.getContext('2d');
+  var st=cv.captureStream(30),rec;
+  var chunks=[];try{rec=new MediaRecorder(st,{mimeType:'video/webm'})}catch(e){rec=new MediaRecorder(st)}
+  rec.ondataavailable=function(e){if(e.data.size)chunks.push(e.data)};
+  rec.onstop=function(){var b=new Blob(chunks,{type:'video/webm'});var a=document.getElementById('dlv');a.href=URL.createObjectURL(b);a.style.display='inline-block';var v=document.getElementById('pv');v.src=a.href};
+  var rgb=hex2rgb(col),t0=performance.now(),scene=4200; // 三幕
+  function ease(s,e,p){p=Math.max(0,Math.min(1,(p-s)/(e-s)));return 1-Math.pow(1-p,3)}
+  function draw(now){
+    var el=now-t0,p;var g=x.createLinearGradient(0,0,0,1920);g.addColorStop(0,'#0B132B');g.addColorStop(1,'rgb('+rgb.map(function(c){return Math.round(c*.35)}).join(',')+')');
+    x.fillStyle=g;x.fillRect(0,0,1080,1920);x.textAlign='center';
+    if(el<1400){p=ease(0,1400,el);x.fillStyle='rgba(255,255,255,'+(p*.9)+')';x.font='800 84px system-ui';x.fillText('「'+D.hook.slice(0,16)+'」',540,760+p*40);x.font='400 44px system-ui';x.fillStyle='rgba(226,232,240,.85)';x.fillText(D.hook.slice(16),540,900)}
+    else if(el<3000){p=0;x.font='700 60px system-ui';D.bullets.forEach(function(b,i){var t=(el-1400)-i*420,q=ease(0,500,t);x.fillStyle='rgba(255,255,255,'+(.25+.75*q)+')';x.fillText('✦ '+b,540,720+i*150)});x.fillStyle='#F0C265';x.font='800 66px system-ui';x.fillText(brand,540,1300)}
+    else if(el<scene){p=ease(3000,scene,el);x.fillStyle='rgba(240,194,101,'+(.4+.6*p)+')';x.font='800 78px system-ui';x.fillText('▸ '+cta,540,950);x.fillStyle='rgba(255,255,255,.8)';x.font='400 40px system-ui';x.fillText(contact,540,1080);x.font='600 34px system-ui';x.fillStyle='rgba(255,255,255,.4)';x.fillText('光曜星樞・Orbit Tower 驅動',540,1160)}
+    else return;
+    requestAnimationFrame(draw)
+  }
+  rec.start();requestAnimationFrame(draw);setTimeout(function(){try{rec.stop()}catch(e){}},scene+250);
+}
+</script>
+<script src="/assets/omni.js" defer></script>
+</body></html>

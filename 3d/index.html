@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>光曜星樞・Orbit Tower｜動態晶體大樓 3D 體驗</title>
+<meta name="description" content="走進 SNT 的動態晶體六邊形大樓：五個 AI 部門、全天候運作的數位總部即時 3D 體驗場。"><meta property="og:site_name" content="光曜星樞・Orbit Tower">
+<meta property="og:title" content="光曜星樞・Orbit Tower｜3D 動態體驗">
+<meta property="og:description" content="一棟會接待人的晶體大樓：AI 部門進駐、24/7 運作的未來企業總部。">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://orbit.xingdeng.tw/"><link rel="alternate" hreflang="zh-Hant" href="https://orbit.xingdeng.tw/"><link rel="alternate" hreflang="en" href="https://orbit.xingdeng.tw/?hl=en"><link rel="alternate" hreflang="ja" href="https://orbit.xingdeng.tw/?hl=ja"><link rel="alternate" hreflang="x-default" href="https://orbit.xingdeng.tw/"><meta property="og:url" content="https://orbit.xingdeng.tw/">
+<meta property="og:image" content="https://xingdeng.tw/3d/logo-kv.jpg">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:image:alt" content="光曜星樞・Orbit Tower 動態晶體大樓">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="光曜星樞・Orbit Tower｜動態晶體大樓 3D 體驗"><meta name="twitter:image" content="https://xingdeng.tw/3d/logo-kv.jpg">
+<link rel="icon" type="image/png" href="/3d/logo-mark.png"><link rel="apple-touch-icon" href="/3d/logo-mark.png">
+<style>
+:root{--gold:#d4af37;--gold-l:#f3e5ab;--bg:#0a0b0e;--ink:#e7e8ec;--mut:#a7aab2;--line:rgba(212,175,55,.28)}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:radial-gradient(1200px 700px at 50% -10%,rgba(255,190,80,.10),transparent 55%),var(--bg);color:var(--ink);font:15px/1.6 "Noto Sans TC","PingFang TC",system-ui,sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased}
+canvas#scene{position:fixed;inset:0;display:block;touch-action:none}
+.ui{position:fixed;z-index:5;pointer-events:none}
+.ui a,.ui button{pointer-events:auto}
+/* header */
+.top{top:0;left:0;right:0;display:flex;align-items:center;gap:14px;padding:18px 22px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{width:46px;height:46px;display:grid;place-items:center;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.05);border:1px solid var(--line);box-shadow:0 8px 28px rgba(0,0,0,.5)}
+.logo img{width:100%;height:100%;object-fit:cover;filter:brightness(1.55) saturate(.9) drop-shadow(0 0 6px rgba(212,175,55,.4))}
+.brand h1{font-size:clamp(15px,2.4vw,20px);font-weight:700;background:linear-gradient(120deg,#fff2b2,var(--gold),var(--gold-l));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand small{display:block;font-size:9.5px;letter-spacing:.22em;color:#b6a775}
+.online{font-size:12px;color:#6ee7a1;border:1px solid #1c7044;border-radius:99px;padding:6px 12px;white-space:nowrap;background:rgba(5,22,13,.55)}
+.online::before{content:"";display:inline-block;width:7px;height:7px;margin-right:7px;border-radius:50%;background:#34d399;box-shadow:0 0 10px #34d399;animation:pul 1.8s infinite}
+@keyframes pul{50%{opacity:.35}}
+/* hint */
+.hint{left:50%;bottom:104px;transform:translateX(-50%);font-size:12.5px;color:var(--mut);letter-spacing:.12em;opacity:0;animation:fadein 1s 2.2s forwards}
+@keyframes fadein{to{opacity:1}}
+/* floor rail */
+.rail{left:22px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px}
+.fbtn{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:150px;text-align:left;background:rgba(20,22,28,.66);border:1px solid rgba(212,175,55,.16);border-radius:12px;color:var(--ink);padding:9px 13px;cursor:pointer;font-family:inherit;transition:.22s;backdrop-filter:blur(8px)}
+.fbtn b{font-size:13px;color:#edc64c}.fbtn span{font-size:12px;color:var(--mut)}
+.fbtn:hover,.fbtn.on{border-color:var(--line);background:rgba(212,175,55,.10);transform:translateX(4px)}
+.fbtn.on{box-shadow:0 0 0 1px var(--line),0 10px 30px rgba(0,0,0,.45)}
+/* info card */
+.card{right:-380px;top:50%;transform:translateY(-50%);width:min(330px,86vw);background:rgba(19,21,27,.85);border:1px solid var(--line);border-radius:18px;padding:22px 24px;backdrop-filter:blur(14px);box-shadow:0 24px 70px rgba(0,0,0,.6);transition:right .5s cubic-bezier(.2,.8,.2,1)}
+.card.show{right:22px}
+.card .fl{font-size:11px;letter-spacing:.24em;color:var(--gold)}
+.card h2{font-size:19px;margin:6px 0 2px}
+.card .en{font-size:10.5px;letter-spacing:.14em;color:#8b8e97;margin-bottom:12px}
+.card p{font-size:13.5px;color:#c9cbd2;margin:8px 0}
+.card .k{font-size:11px;color:#b6a775;letter-spacing:.12em;margin-top:12px}
+.card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.card .tag{font-size:11.5px;border:1px solid rgba(212,175,55,.3);color:#edcf70;border-radius:99px;padding:3px 10px}
+.card .x{position:absolute;top:12px;right:14px;background:none;border:0;color:#777;font-size:18px;cursor:pointer}
+.card a.cta{display:inline-block;margin-top:14px;font-size:13.5px;color:#111;background:linear-gradient(135deg,#f4d978,#c69a2b);border-radius:10px;padding:9px 16px;text-decoration:none;font-weight:700}
+/* links top-right under online */
+.navlinks{top:70px;right:22px;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.navlinks a{font-size:12.5px;color:#c8cdd8;text-decoration:none;border-bottom:1px dotted rgba(255,255,255,.2)}
+.navlinks a:hover{color:var(--gold-l)}
+/* player */
+.player{right:22px;bottom:20px;display:flex;align-items:center;gap:12px;padding:12px 15px;border:1px solid rgba(212,175,55,.55);border-radius:16px;background:rgba(17,19,25,.96);box-shadow:0 12px 36px rgba(0,0,0,.6);max-width:min(330px,calc(100vw - 28px))}
+.pulse{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);flex:none}
+.playing .pulse{animation:pul 1.8s infinite}
+.track{min-width:0}.track strong{display:block;color:#edcf70;font-size:12px}.track small{display:block;color:var(--mut);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player button{width:40px;height:40px;flex:0 0 40px;border:0;border-radius:50%;background:linear-gradient(135deg,#f4d978,#a87a19);color:#111;font-weight:900;font-size:16px;cursor:pointer}
+/* loader */
+#boot{position:fixed;inset:0;z-index:9;background:linear-gradient(rgba(10,11,14,.86),rgba(10,11,14,.92)),url("/3d/logo-kv.jpg") center/cover no-repeat,var(--bg);display:grid;place-items:center;transition:opacity .8s}
+#boot div{text-align:center}
+#boot .hex{width:120px;height:120px;margin:0 auto 18px;overflow:hidden;border-radius:50%;border:1px solid rgba(212,175,55,.45);box-shadow:0 0 44px rgba(212,175,55,.22);display:grid;place-items:center;background:rgba(255,255,255,.04)}
+#boot .hex img{width:88%;height:88%;object-fit:contain;filter:brightness(1.5) saturate(.92);animation:glow 2.6s ease-in-out infinite}
+@keyframes glow{50%{filter:brightness(1.15) saturate(.92)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+#boot p{font-size:12px;letter-spacing:.3em;color:#b6a775}
+@media (max-width:720px){
+ .rail{left:0;right:0;top:auto;bottom:calc(86px + env(safe-area-inset-bottom));transform:none;flex-direction:row;gap:8px;overflow-x:auto;padding:2px 14px 8px;scrollbar-width:none}
+ .rail::-webkit-scrollbar{display:none}
+ .fbtn{flex:0 0 auto;width:auto;min-width:88px;padding:8px 13px;align-items:center}
+ .fbtn b{font-size:13px}.fbtn span{display:none}
+ .fbtn:hover,.fbtn.on{transform:translateY(-3px)}
+ .card{right:8px;left:8px;top:auto;bottom:calc(150px + env(safe-area-inset-bottom));width:auto;transform:none;max-height:44vh;overflow:auto;display:none}
+ .card.show{display:block}
+ .hint,.navlinks{display:none}
+ .top{padding:12px 14px}
+ .brand h1{font-size:15px}
+ .player{right:10px;bottom:calc(10px + env(safe-area-inset-bottom));padding:9px 12px;gap:9px}
+ .player button{width:34px;height:34px;flex-basis:34px;font-size:14px}
+ .track strong{font-size:11px}.track small{display:none}
+}
+@media (max-height:480px) and (orientation:landscape){
+ .rail{max-width:36vw}
+ .card{max-width:46vw;left:auto;top:70px;bottom:auto}
+}
+/* ==== SNT Digital Business Card (互動名片面板) ==== */
+.dc-open{margin-left:10px;font:700 12.5px/1 inherit;font-family:"Noto Sans TC",system-ui,sans-serif;letter-spacing:.08em;color:#edcf70;background:rgba(212,175,55,.10);border:1px solid rgba(212,175,55,.5);border-radius:99px;padding:8px 14px;cursor:pointer;box-shadow:0 0 18px -4px rgba(212,175,55,.45);transition:.2s}
+.dc-open:hover{background:rgba(212,175,55,.22);color:#fff3c4}
+.dcp{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:16px;background:rgba(4,5,8,.66);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);opacity:0;pointer-events:none;transition:opacity .35s}
+.dcp.show{opacity:1;pointer-events:auto}
+.dc-card{position:relative;width:min(390px,94vw);max-height:88vh;overflow:auto;border-radius:22px;padding:30px 22px 22px;text-align:center;color:var(--ink);font-family:"Noto Sans TC","PingFang TC",system-ui,sans-serif;line-height:1.6;transform:translateY(16px) scale(.96);transition:transform .4s cubic-bezier(.2,.8,.2,1);
+  background:linear-gradient(165deg,#161926 0%,#0c0d13 46%,#101219 100%);
+  box-shadow:0 34px 90px -18px rgba(0,0,0,.85),0 0 0 1px rgba(212,175,55,.4),0 0 0 7px rgba(212,175,55,.06),inset 0 1px 0 rgba(255,235,170,.10)}
+.dcp.show .dc-card{transform:none}
+.dc-card::before{content:"";position:absolute;inset:0;border-radius:22px;pointer-events:none;background:radial-gradient(140% 60% at 50% -12%,rgba(255,210,110,.16),transparent 55%)}
+.dc-x{position:absolute;top:12px;right:14px;z-index:2;background:none;border:0;color:#8f8a7a;font-size:18px;cursor:pointer;line-height:1}
+.dc-x:hover{color:#edcf70}
+.dc-logo{width:76px;height:76px;margin:0 auto 12px;display:grid;place-items:center;border-radius:50%;overflow:hidden;position:relative;background:radial-gradient(circle at 35% 30%,#1c2030,#0a0b10);border:1px solid rgba(212,175,55,.55);box-shadow:0 0 0 4px rgba(212,175,55,.10),0 0 26px rgba(212,175,55,.3)}
+.dc-logo img{position:relative;width:88%;height:88%;object-fit:contain;filter:drop-shadow(0 0 7px rgba(212,175,55,.45))}
+.dc-org{margin:0;font-family:"Noto Serif TC","Songti TC",serif;font-size:21px;font-weight:700;letter-spacing:.10em;background:linear-gradient(115deg,#fff3b0 5%,#e9c352 35%,#b98d2b 62%,#f6e27a 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dc-org small{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.28em;vertical-align:super;-webkit-text-fill-color:#c8a44d}
+.dc-org-en{margin:3px 0 0;font-size:11px;letter-spacing:.24em;color:#d9c07c;text-transform:uppercase}
+.dc-org-jp{margin:2px 0 0;font-size:10.5px;letter-spacing:.05em;color:#a6abb8}
+.dc-divider{display:flex;align-items:center;gap:10px;margin:14px 4px 10px;color:#c8a44d;font-size:11px}
+.dc-divider span{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.55),transparent)}
+.dc-name{margin:0;font-family:"Noto Serif TC","Songti TC",serif;font-size:20px;font-weight:700;letter-spacing:.05em;color:#fff}
+.dc-name small{font-weight:400;font-size:.68em;color:#aeb3bf}
+.dc-title{margin:4px 0 0;font-size:12px;color:#c9cbd2}
+.dc-title b{color:#edcf70;font-weight:500}
+.dc-contact{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:7px;text-align:left}
+.dc-contact a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;font-size:12.5px;color:#dfe2e9;text-decoration:none;border:1px solid rgba(212,175,55,.18);background:rgba(255,255,255,.03);transition:.2s}
+.dc-contact a:hover{border-color:rgba(212,175,55,.6);background:rgba(212,175,55,.09);color:#ffe9a8}
+.dc-contact a i{flex:none;width:17px;height:17px;display:grid;place-items:center;color:#d4af37;font-style:normal}
+.dc-contact a i svg{width:14px;height:14px}
+.dc-contact a code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:none;color:inherit}
+.dc-contact a em{margin-left:auto;font-style:normal;font-size:9.5px;line-height:1;letter-spacing:.12em;color:#a58c4a;align-self:center}
+.dc-actions{margin-top:12px;display:grid;gap:8px}
+.dc-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 15px;border-radius:11px;font-size:13.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;transition:.2s;border:1px solid transparent}
+.dc-btn em{font-style:normal}
+.dc-btn--gold{color:#151006;background:linear-gradient(120deg,#f7df8d 0%,#d4af37 52%,#a87a19 100%);box-shadow:0 8px 26px -8px rgba(212,175,55,.6)}
+.dc-btn--gold:hover{filter:brightness(1.08)}
+.dc-btn--dim{color:#edcf70;background:rgba(212,175,55,.07);border-color:rgba(212,175,55,.4)}
+.dc-btn--dim:hover{background:rgba(212,175,55,.16);color:#fff3c4}
+.dc-btn--vip{color:#eaffff;background:linear-gradient(120deg,rgba(6,182,212,.25),rgba(212,175,55,.22));border-color:rgba(102,224,255,.5)}
+.dc-btn--vip:hover{background:linear-gradient(120deg,rgba(6,182,212,.4),rgba(212,175,55,.35))}
+.dc-note{margin:12px 0 0;font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.2em;color:#9296a1}
+@media (max-width:560px){.top{padding:12px 14px;gap:8px}.brand h1{font-size:14px}.online{display:none}.dc-open{margin-left:auto}}
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+
+<div id="boot"><div><div class="hex"><img src="/3d/logo-mark.png" alt="光曜星樞圖章"></div><p>ORBIT TOWER 啟動中</p></div></div>
+
+<header class="ui top">
+  <div class="brand"><div class="logo"><img src="/3d/logo-mark.png" alt="光曜星樞 SNT"></div><div><h1>光曜星樞・Orbit Tower</h1><small>SINGULARITY NEXUS TECHNOLOGY</small></div></div>
+  <div class="online">AI Core Online・24/7</div>
+  <button class="dc-open" id="dcOpen" type="button" aria-haspopup="dialog">💳 電子名片</button>
+</header>
+
+<nav class="ui navlinks">
+  <a href="https://xingdeng.tw/?utm_source=orbit3d&amp;utm_medium=hud">⚡ 光曜星樞官網｜行銷站</a>
+  <a href="https://xingdeng.tw/checkout?utm_source=orbit3d&amp;utm_medium=hud">🧾 線上報價單・沙箱金流</a>
+  <a href="https://lumi.xingdeng.tw/?utm_source=orbit3d&amp;utm_medium=hud" target="_blank" rel="noopener">🌅 拾光引 SNT｜命理雙域站</a>
+  <a href="https://xingdeng.tw/contact/?utm_source=orbit3d&amp;utm_medium=hud">↗ 預約導覽 Demo</a><a href="https://line.me/R/ti/p/@559julyu" target="_blank" rel="noopener">↗ 加入 LINE 官方帳號</a>
+</nav>
+
+<aside class="ui rail" id="rail" aria-label="樓層導覽"></aside>
+
+<section class="ui card" id="floorCard" aria-live="polite">
+  <button class="x" id="cardX" aria-label="關閉">✕</button>
+  <div class="fl" id="cFl"></div><h2 id="cName"></h2><div class="en" id="cEn"></div>
+  <p id="cDesc"></p><div class="k">AI 崗位</div><div class="tags" id="cRoles"></div>
+  <div class="k">進駐引擎</div><div class="tags" id="cEng"></div>
+  <div id="cBoostWrap" hidden><div class="k">📚 延伸閱讀・從 AI 戰略長開始</div><div class="tags" id="cBoost"></div>
+  <a class="cta" style="background:linear-gradient(135deg,#f4d978,#c69a2b);color:#111;font-weight:800" href="https://xingdeng.tw/checkout?kit=enterprise&amp;utm_source=orbit3d&amp;utm_medium=hud">🧾 產生商業報價單＋沙箱定金 →</a></div>
+  <a class="cta" href="https://xingdeng.tw/pricing/?utm_source=orbit3d&amp;utm_medium=hud">把這層進駐你的企業 →</a>
+  <div class="k" style="margin-top:14px">🌐 SNT 集團直達</div>
+  <div class="tags"><a class="tag" style="text-decoration:none;color:#edcf70;border:1px solid rgba(212,175,55,.45);padding:4px 10px" href="https://lumi.xingdeng.tw/?utm_source=orbit3d&amp;utm_medium=floorcard" target="_blank" rel="noopener">🌅 拾光引・命理雙域站 ↗</a>
+  <a class="tag" style="text-decoration:none;color:#edcf70;border:1px solid rgba(212,175,55,.45);padding:4px 10px" href="https://vip.xingdeng.tw/?utm_source=orbit3d&amp;utm_medium=floorcard#axes" target="_blank" rel="noopener">✨ 拾光引 VIP ↗</a>
+  <a class="tag" style="text-decoration:none;color:#c8cdd8;border:1px solid rgba(200,205,216,.35);padding:4px 10px" href="https://xingdeng.tw/checkout?utm_source=orbit3d&amp;utm_medium=floorcard">🧾 線上報價單</a></div>
+</section>
+
+<div class="ui hint">拖曳旋轉・滾輪／雙指縮放・點擊左側樓層</div>
+
+<!-- ==== SNT 互動式電子名片（懸浮面板） ==== -->
+<div class="dcp" id="dcp" role="dialog" aria-modal="true" aria-label="A. C. LEE 電子名片">
+  <article class="dc-card">
+    <button class="dc-x" id="dcX" type="button" aria-label="關閉名片">✕</button>
+    <header>
+      <div class="dc-logo"><img src="/3d/logo-mark.png" alt="光曜星樞 SNT 星芒圖章"></div>
+      <h2 class="dc-org">光曜星樞 <small>SNT</small></h2>
+      <p class="dc-org-en">Singularity Nexus Technology</p>
+      <p class="dc-org-jp">シンギュラリティ・ネクサス・テクノロジー株式会社</p>
+    </header>
+    <div class="dc-divider" aria-hidden="true"><span></span>✦<span></span></div>
+    <div class="dc-id">
+      <p class="dc-name">A. C. LEE <small>(Allen Lee)</small></p>
+      <p class="dc-title">Strategic AI Architect &amp; Writer&ensp;<b>|</b>&ensp;Founder, Orbit Tower Alliance</p>
+    </div>
+    <ul class="dc-contact">
+      <li><a href="mailto:kcli0124@gmail.com"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3 7 9 6 9-6"/></svg></i><code>kcli0124@gmail.com</code><em>GMAIL →</em></a></li>
+      <li><a href="mailto:allen.writer.tw@hotmail.com"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3 7 9 6 9-6"/></svg></i><code>allen.writer.tw@hotmail.com</code><em>OUTLOOK →</em></a></li>
+      <li><a href="https://allen.writer.tw" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></i><code>allen.writer.tw</code><em>WEBSITE ↗</em></a></li>
+    </ul>
+    <div class="dc-actions">
+      <a class="dc-btn dc-btn--gold" href="https://xingdeng.tw/?utm_source=orbit3d&amp;utm_medium=panel" target="_blank" rel="noopener"><b>⚡ 光曜星樞官網｜xingdeng.tw</b><em>↗</em></a>
+      <a class="dc-btn dc-btn--dim" href="https://orbit.xingdeng.tw" rel="noopener"><b>🛰 Orbit Tower 3D 總部</b><em>↗</em></a>
+      <a class="dc-btn dc-btn--vip" href="https://vip.xingdeng.tw/?utm_source=orbit3d&amp;utm_medium=hud#axes" target="_blank" rel="noopener"><b>✨ 拾光引 VIP 體驗</b><em>↗</em></a>
+    <a class="dc-btn dc-btn--vip" href="https://lumi.xingdeng.tw/?utm_source=orbit3d&amp;utm_medium=panel" target="_blank" rel="noopener"><b>🌅 拾光引 SNT・命理雙域站</b><em>↗</em></a>
+      <a class="dc-btn dc-btn--dim" href="https://www.linkedin.com" target="_blank" rel="noopener" title="LinkedIn（占位連結，待換個人主頁網址）"><b>💼 LinkedIn</b><em>↗</em></a>
+    </div>
+    <p class="dc-note">TAP TO CONNECT・RWD</p>
+  </article>
+</div>
+<script>
+(function(){var p=document.getElementById('dcp');
+document.getElementById('dcOpen').addEventListener('click',function(){p.classList.add('show')});
+document.getElementById('dcX').addEventListener('click',function(){p.classList.remove('show')});
+p.addEventListener('click',function(e){if(e.target===p)p.classList.remove('show')});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')p.classList.remove('show')});})();
+</script>
+
+<aside class="ui player" id="player">
+  <span class="pulse"></span>
+  <div class="track"><strong>SNT Soundscape｜核心音場</strong><small id="astat">點擊播放啟動環境音</small></div>
+  <audio id="bg-audio" loop preload="metadata"><source src="/3d/audio-file-0.mp3" type="audio/mpeg">您的瀏覽器不支援音訊播放。</audio>
+  <button id="abtn" type="button" aria-label="播放背景音樂" aria-pressed="false">▶</button>
+</aside>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}
+</script>
+<script type="module">
+/* ==== TOWER_JS ==== */
+import * as THREE from 'three';
+
+const FLOORS=[
+ {f:'5F',n:'總裁指揮中樞',en:'EXECUTIVE COMMAND SUITE',d:'數位幕僚長即時彙整全樓產出：決策摘要、跨部門指揮、品牌敘事治理，引擎評鑑與紅隊在此把關。',r:['數位幕僚長','機密分析'],e:['MuleRun','私有知識庫'],y:4.6},
+ {f:'4F',n:'業務與獲客中心',en:'GROWTH & REVENUE CENTER',d:'名單從這裡變成成交：CRM 自動跟進、21 天 Email 孵化、預約與報價，投放素材同步生成。',r:['業務專員','SDR','投放優化師'],e:['Copilot','Meta AI'],y:3.55},
+ {f:'3F',n:'行政與營運中樞',en:'OPERATIONS HUB',d:'客服不滅線、報表自己長：網站診斷、名單分級、漏斗儀錶板與知識庫治理全天候運轉。',r:['客服專員','分析師','診斷官'],e:['Manus','QwenWork'],y:2.5},
+ {f:'2F',n:'自動化產線',en:'CONTENT AUTOMATION LINE',d:'趨勢內容的量產工廠：SEO 文章、裂變圖卡、多語文案一條龍，讀者的下一次點擊在這裡被安排好。',r:['行銷專員','內容企劃','設計'],e:['Gemini','QwenWork'],y:1.45},
+ {f:'1F',n:'迎賓大廳與展廳',en:'GRAND LOBBY & GALLERY',d:'你正在被接待的地方：24 小時 AI 接待員以品牌語調問候每一位訪客，多語導覽、答疑、留下名單。',r:['AI 接待員','品牌大使','多語業務'],e:['Gemini','Grok'],y:0.4}];
+
+const cv=document.getElementById('scene');
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:false});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));
+renderer.setSize(innerWidth,innerHeight);
+renderer.setClearColor(0x0a0b0e);
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x0a0b0e,0.035);
+const cam=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,120);
+
+/* ---- lights ---- */
+scene.add(new THREE.AmbientLight(0x39445c,1.1));
+const key=new THREE.DirectionalLight(0xffe6b0,1.5);key.position.set(6,12,8);scene.add(key);
+const rim=new THREE.DirectionalLight(0x6fa8ff,.8);rim.position.set(-8,6,-6);scene.add(rim);
+const corePL=new THREE.PointLight(0xffc85e,2.2,9);corePL.position.set(0,2.4,0);scene.add(corePL);
+
+/* ---- tower group ---- */
+const tower=new THREE.Group();scene.add(tower);
+const glassMat=new THREE.MeshPhongMaterial({color:0x2c3e66,specular:0xf4d978,shininess:130,transparent:true,opacity:.32,side:THREE.DoubleSide,depthWrite:false});
+const body=new THREE.Mesh(new THREE.CylinderGeometry(1,1.22,5.6,6,1),glassMat);
+body.position.y=2.8;tower.add(body);
+/* corner pillars */
+for(let i=0;i<6;i++){const a=i/6*Math.PI*2;const p=new THREE.Mesh(new THREE.CylinderGeometry(.045,.06,5.7,6),new THREE.MeshStandardMaterial({color:0xb98a2c,metalness:.85,roughness:.35,emissive:0x241604}));p.position.set(Math.cos(a)*(i%2?1.02:1.14),2.8,Math.sin(a)*(i%2?1.02:1.14));tower.add(p);}
+/* cap crystal + beacon */
+const cap=new THREE.Mesh(new THREE.ConeGeometry(1.02,1.5,6),new THREE.MeshPhongMaterial({color:0x35507f,specular:0xffd98a,shininess:150,transparent:true,opacity:.4,depthWrite:false}));
+cap.position.y=6.35;tower.add(cap);
+const beacon=new THREE.Mesh(new THREE.IcosahedronGeometry(.14,1),new THREE.MeshBasicMaterial({color:0xffd97a}));
+beacon.position.y=7.25;tower.add(beacon);
+const spire=new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,.75,4),new THREE.MeshBasicMaterial({color:0xd4af37}));spire.position.y=7.55;tower.add(spire);
+/* inner energy core */
+const core=new THREE.Mesh(new THREE.IcosahedronGeometry(.42,1),new THREE.MeshBasicMaterial({color:0xffc85e,transparent:true,opacity:.85,wireframe:false}));
+core.position.y=2.6;tower.add(core);
+const coreW=new THREE.Mesh(new THREE.IcosahedronGeometry(.6,1),new THREE.MeshBasicMaterial({color:0x8ecbff,transparent:true,opacity:.16,wireframe:true}));coreW.position.y=2.6;tower.add(coreW);
+/* floor collars + labels */
+const collars=[];
+FLOORS.slice().reverse().forEach((fl,i)=>{
+  const idx=i;const collar=new THREE.Mesh(new THREE.CylinderGeometry(1.34+(5-idx)*.015,1.38+(5-idx)*.015,.14,6),
+    new THREE.MeshStandardMaterial({color:0x5a4a1e,metalness:.7,roughness:.4,emissive:0x1a1204}));
+  collar.position.y=fl.y;tower.add(collar);collars.push(collar);
+  const sp=makeLabel(fl.f+' '+fl.n);sp.position.set(2.05,fl.y+.06,0);tower.add(sp);fl.sprite=sp;
+});
+function makeLabel(txt){const c=document.createElement('canvas');c.width=512;c.height=96;const g=c.getContext('2d');
+  g.font='600 34px "Noto Sans TC",sans-serif';g.fillStyle='rgba(244,217,120,.92)';g.textBaseline='middle';
+  g.shadowColor='rgba(0,0,0,.8)';g.shadowBlur=8;g.fillText(txt,12,52);
+  const t=new THREE.CanvasTexture(c);t.anisotropy=8;
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthWrite:false}));s.scale.set(2.6,.49,1);return s;}
+/* windows */
+const winMat=new THREE.MeshBasicMaterial({color:0xffd98a,transparent:true,opacity:.8});
+const wins=[];
+for(let lv=0;lv<5;lv++)for(let side=0;side<6;side++)for(let k=0;k<3;k++){
+  const a=side/6*Math.PI*2+(k-1)*.18;const r0=1.0+(lv/5)*.22+.22;
+  const w=new THREE.Mesh(new THREE.PlaneGeometry(.13,.075),winMat.clone());
+  w.position.set(Math.cos(a)*(r0-.06),.42+lv*1.05+k*.0,Math.sin(a)*(r0-.06));
+  w.rotation.y=-a+Math.PI/2+(k-1)*.16;w.userData.b=.3+Math.random()*.7;
+  w.material.opacity=w.userData.b;
+  tower.add(w);wins.push(w);}
+/* ground */
+(function(){const gc=document.createElement('canvas');gc.width=512;gc.height=512;const gg=gc.getContext('2d');
+ const rg=gg.createRadialGradient(256,256,20,256,256,250);rg.addColorStop(0,'rgba(212,175,55,.30)');rg.addColorStop(.45,'rgba(110,140,255,.08)');rg.addColorStop(1,'rgba(0,0,0,0)');
+ gg.fillStyle=rg;gg.fillRect(0,0,512,512);
+ gg.strokeStyle='rgba(212,175,55,.35)';gg.lineWidth=1;
+ for(let r=40;r<250;r+=32){gg.beginPath();gg.arc(256,256,r,0,7);gg.stroke();}
+ const t=new THREE.CanvasTexture(gc);
+ const g=new THREE.Mesh(new THREE.CircleGeometry(11,64),new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false}));
+ g.rotation.x=-Math.PI/2;g.position.y=-.02;scene.add(g);})();
+/* orbit rings + satellite */
+const rings=[];
+[[2.5,.35],[-3.3,.9],[4.3,1.5]].forEach(([r,tilt],i)=>{const ring=new THREE.Mesh(new THREE.TorusGeometry(r,.007,6,220),
+  new THREE.MeshBasicMaterial({color:i===2?0x8ecbff:0xd4af37,transparent:true,opacity:.75}));
+  ring.position.y=3.4+i*.9;ring.rotation.x=Math.PI/2+tilt*.32;ring.userData.sp=.05+i*.022;scene.add(ring);rings.push(ring);});
+const sat=new THREE.Mesh(new THREE.SphereGeometry(.07,16,16),new THREE.MeshBasicMaterial({color:0xffd97a}));
+sat.userData.r=3.3;sat.userData.o=.9;scene.add(sat);
+/* starfield + dust */
+function pts(n,spread,size,color,opacity){const g=new THREE.BufferGeometry();const p=new Float32Array(n*3);
+ for(let i=0;i<n;i++){p[i*3]=(Math.random()-.5)*spread;p[i*3+1]=Math.random()*spread*.6+.4;p[i*3+2]=(Math.random()-.5)*spread;}
+ g.setAttribute('position',new THREE.BufferAttribute(p,3));
+ return new THREE.Points(g,new THREE.PointsMaterial({size,color,transparent:true,opacity,depthWrite:false}));}
+const stars=pts(1100,60,.06,0xbfd0ff,.75);scene.add(stars);
+const dust=pts(420,22,.05,0xffd98a,.5);scene.add(dust);
+const dustPos=dust.geometry.attributes.position;
+
+/* ---- controls (spherical, custom) ---- */
+const st={theta:-.7,phi:1.24,dist:12.5,tx:0,ty:2.6,tz:0,
+  gTheta:-.7,gPhi:1.24,gDist:12.5,gty:2.6};
+st.dist=24;st.gDist=12.5; // opening dolly
+let idleT=0,down=false,px=0,py=0;const pinch=new Map();
+cv.addEventListener('pointerdown',e=>{down=true;px=e.clientX;py=e.clientY;pinch.set(e.pointerId,[e.clientX,e.clientY]);cv.setPointerCapture(e.pointerId);idleT=0});
+cv.addEventListener('pointermove',e=>{if(!down)return;
+  if(pinch.size===2){const a=[...pinch.values()];if(a&&e.pointerId!==undefined){}pinch.set(e.pointerId,[e.clientX,e.clientY]);
+    const p=[...pinch.values()];if(p.length>=2){const d2=Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]);}return;}
+  st.gTheta-=(e.clientX-px)*.005;st.gPhi=Math.min(1.48,Math.max(.55,st.gPhi-(e.clientY-py)*.004));px=e.clientX;py=e.clientY;idleT=0});
+cv.addEventListener('pointerup',e=>{down=false;pinch.delete(e.pointerId)});
+cv.addEventListener('pointercancel',e=>{down=false;pinch.delete(e.pointerId)});
+cv.addEventListener('wheel',e=>{e.preventDefault();st.gDist=Math.min(26,Math.max(6.5,st.gDist*(1+Math.sign(e.deltaY)*.07)))},{passive:false});
+/* two-pointer pinch zoom */
+let pinchD=0;
+cv.addEventListener('touchmove',e=>{if(e.touches.length===2){e.preventDefault();
+ const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+ if(pinchD)st.gDist=Math.min(26,Math.max(6.5,st.gDist*(1-(d-pinchD)*.012)));pinchD=d;down=false;}},{passive:false});
+cv.addEventListener('touchend',()=>pinchD=0);
+
+/* ---- UI: rail & card ---- */
+const rail=document.getElementById('rail');const card=document.getElementById('floorCard');
+let focusI=-1;
+FLOORS.forEach((fl,i)=>{const b=document.createElement('button');b.className='fbtn';
+ b.innerHTML=`<b>${fl.f}</b><span>${fl.n}</span>`;b.onclick=()=>focus(i);rail.appendChild(b);});
+function focus(i){focusI=i;const fl=FLOORS[i];
+ st.gty=fl.y+.5;st.gDist=8.6;st.gPhi=1.18;
+ document.getElementById('cFl').textContent='FLOOR '+fl.f+'・'+fl.en;
+ document.getElementById('cName').textContent=fl.n;
+ document.getElementById('cDesc').textContent=fl.d;
+ document.getElementById('cRoles').innerHTML=fl.r.map(x=>`<span class="tag">${x}</span>`).join('');
+ document.getElementById('cEng').innerHTML=fl.e.map(x=>`<span class="tag">${x}</span>`).join('');
+ card.classList.add('show'); const boost=document.getElementById('cBoostWrap');
+ if(FLOORS[i].f==='1F'){boost.hidden=false;document.getElementById('cBoost').innerHTML=[['a01','01｜未來十年企業官網會消失嗎？'],['a04','04｜B2B 自動化名單獲客'],['a05','05｜AI 接待員怎麼報價？'],['a06','06｜3D 展館 ROI 三公式']].map(a=>'<a class="tag" style="text-decoration:none;color:#edcf70;border:1px solid rgba(212,175,55,.45);padding:4px 10px" href="https://xingdeng.tw/articles/'+a[0]+'">'+a[1]+'</a>').join('');setTimeout(function(){window.SNTChat&&window.SNTChat.open();},650);} else boost.hidden=true;
+ [...rail.children].forEach((b,j)=>b.classList.toggle('on',j===i));
+ collars.forEach((c,j)=>c.material.emissive.setHex(j===4-i?0x8a6a1c:0x1a1204));}
+function unfocus(){focusI=-1;card.classList.remove('show');st.gty=2.6;st.gDist=12.5;
+ [...rail.children].forEach(b=>b.classList.remove('on'));
+ collars.forEach(c=>c.material.emissive.setHex(0x1a1204));}
+document.getElementById('cardX').onclick=unfocus;
+document.getElementById('cEn').textContent='';
+/* click on collars via raycast */
+const ray=new THREE.Raycaster();const mv=new THREE.Vector2();
+cv.addEventListener('click',e=>{mv.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);
+ ray.setFromCamera(mv,cam);const hit=ray.intersectObjects(collars)[0];
+ if(hit)focus(collars.indexOf(hit.object));});
+/* ---- audio ---- */
+const au=document.getElementById('bg-audio'),ab=document.getElementById('abtn'),pl=document.getElementById('player'),as=document.getElementById('astat');
+function aUI(on){ab.textContent=on?'Ⅱ':'▶';ab.setAttribute('aria-pressed',String(on));pl.classList.toggle('playing',on);as.textContent=on?'播放中・循環核心音場':'已暫停';}
+ab.onclick=()=>{if(!au.paused){au.pause();aUI(false);}else{au.play().then(()=>aUI(true)).catch(()=>as.textContent='找不到 audio-file-0.mp3');}};
+au.addEventListener('play',()=>aUI(true));au.addEventListener('pause',()=>aUI(false));
+/* ---- loop ---- */
+const clock=new THREE.Clock();
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function loop(){requestAnimationFrame(loop);
+ const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;idleT+=dt;
+ if(!reduced){if(idleT>2.5&&focusI<0)st.gTheta+=dt*.06;
+  tower.rotation.y+=dt*.05;core.rotation.y+=dt*.5;coreW.rotation.y-=dt*.3;
+  rings.forEach(r=>r.rotation.z+=dt*r.userData.sp);
+  for(let i=0;i<dustPos.count;i++){let y=dustPos.getY(i)+dt*.22;if(y>12)y=.2;dustPos.setY(i,y)}
+  dustPos.needsUpdate=true;}
+ beacon.material.color.setHSL(.12,.9,.6+Math.sin(t*2.2)*.12);
+ corePL.intensity=1.9+Math.sin(t*2.2)*.7;core.material.opacity=.72+Math.sin(t*2.2)*.18;
+ if(Math.random()<.05){const w=wins[Math.random()*wins.length|0];w.material.opacity=.25+Math.random()*.75;}
+ const sat0=rings[1].rotation.z*2;sat.position.set(Math.cos(sat0)*3.3,3.4+Math.sin(sat0)*Math.sin(.9)*.9,Math.sin(sat0)*3.3);
+ const k=1-Math.exp(-dt*3.2);
+ st.theta+=(st.gTheta-st.theta)*k;st.phi+=(st.gPhi-st.phi)*k;st.dist+=(st.gDist-st.dist)*k;st.ty+=(st.gty-st.ty)*k;
+ const sp=new THREE.Vector3().setFromSphericalCoords(st.dist,st.phi,st.theta);
+ cam.position.copy(sp).add(new THREE.Vector3(st.tx,st.ty,st.tz));
+ cam.lookAt(st.tx,st.ty,st.tz);
+ renderer.render(scene,cam);}
+loop();
+addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)au&&!au.paused&&au.volume&&(au.volume=.2);else au&&(au.volume=1);});
+/* boot fade */
+setTimeout(()=>{const b=document.getElementById('boot');b.style.opacity=0;setTimeout(()=>b.remove(),900);},700);
+</script>
+<script src="https://xingdeng.tw/assets/chat-widget.js" defer></script>
+<script src="https://xingdeng.tw/assets/i18n.js" defer></script>
+<script src="/assets/omni.js" defer></script>
+</body>
+</html>
