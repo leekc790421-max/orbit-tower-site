@@ -65,12 +65,12 @@ const Providers = {
 };
 
 /* ---------- 職務線定義 + System Prompts ---------- */
-const FRONT_DESK_SYS = '你是光曜星樞的 AI 行銷戰略長：專業犀利繁中；訪客報行業＋痛點即以 SWOT/AIDA 免費開局，結尾雙軌 CTA（懶人包 xingdeng.tw/kits 或 3D 總部 orbit.xingdeng.tw），完整策略後獨立一行輸出 [[LEAD_CAPTURE]]；無關話題以專業幽默拉回。';
+const FRONT_DESK_SYS = '你是光曜星樞的 AI 行銷戰略長：專業犀利繁中；訪客報行業＋痛點即以 SWOT/AIDA 免費開局，結尾固定附三條下一步導流：① 免費網站五維診斷 xingdeng.tw/diagnose ② $3,000 起 30 分鐘上線懶人包 xingdeng.tw/kits ③ 預約 15 分鐘免費諮詢 xingdeng.tw/contact，完整策略後獨立一行輸出 [[LEAD_CAPTURE]]；無關話題以專業幽默拉回。';
 function ruleFrontDesk(msgs){
   const all = msgs.map(m => m.content).join(' ');
   const ind = /餐|咖啡|食/.test(all) ? '餐飲業' : /軟體|saas|app|科技/i.test(all) ? '軟體業' : /房|建案|屋/.test(all) ? '房地產' : /廠|製造|機/.test(all) ? '製造業' : null;
   if (!ind) return { reply: '我是行銷戰略長。報上行業與痛點，我三分鐘給你一套 SWOT 起手式。', capture: false };
-  return { reply: `【SWOT 快局｜${ind}】\nS：產品可信與案例在手上｜W：通路與時區缺口\nO：AI 全天候接待＋3D 展示把「看」變「逛」\nT：廣告成本與跳出率侵蝕毛利\n起手：1) A注意→型錄頁升級 3D 展示；2) I興趣→三語 AI 接待夜間不關門；3) D慾望→免費五維診斷 xingdeng.tw/diagnose；4) A行動→萬元級選懶人包 xingdeng.tw/kits，规模級進駐 3D 總部 orbit.xingdeng.tw\n[[LEAD_CAPTURE]]`, capture: true };
+  return { reply: `【SWOT 快局｜${ind}】\nS：產品可信與案例在手上｜W：通路與時區缺口\nO：AI 全天候接待＋3D 展示把「看」變「逛」\nT：廣告成本與跳出率侵蝕毛利\n起手：1) A注意→型錄頁升級 3D 展示；2) I興趣→三語 AI 接待夜間不關門；3) D慾望→免費五維診斷 xingdeng.tw/diagnose；4) A行動→萬元級選懶人包 xingdeng.tw/kits，规模級進駐 3D 總部 orbit.xingdeng.tw\n\n📊 你的 SWOT 已生成。下一步：\n① 免費：做網站五維診斷 → https://xingdeng.tw/diagnose\n② $3,000 起：30 分鐘上線懶人包 → https://xingdeng.tw/kits\n③ 預約 15 分鐘免費諮詢 → https://xingdeng.tw/contact\n[[LEAD_CAPTURE]]`, capture: true };
 }
 const LANES = {
   dev:        { chain: ['gemini', 'rule'], system: { text: '你是 Orbit Tower 研發架構師（Gemini Pro 職代）：聚焦解題，輸出架構推理與程式碼，繁體中文。', rules: () => '（研發線待命：Gemini 啟用後此線提供架構推理與代碼級產出；本訊息為規則引擎占位。）' } },
