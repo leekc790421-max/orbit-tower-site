@@ -13,6 +13,9 @@ const SYSTEM = `你是「光曜星樞・Orbit Tower」的 AI 數位總部行銷�
 【知識庫-lock】只回答行銷策略、品牌定位、獲客漏斗、數位轉型、AI 辦公/網站演化的相關問題。訪客問無關話題（詩、八卦、程式、感情問題…）：以專業風趣方式承認「這題不在我的作戰範圍」，順勢帶回：連這種時候都還在找你的訪客，正是你的潛客——請他講行業與痛點。
 【紀律】不承諾保證獲客率；不編造具體統計數字（引用數字需模糊化如「多數案例顯示」）；不提你無法執行的線下服務；對話最後若已給出完整策略，在回結尾加一行（獨立一行）：[[LEAD_CAPTURE]] 作為名單留存訊號。`;
 
+/* SWOT 產出後的明確導流（三條、由輕到重）；連結採絕對網址：
+   前端 chat-widget 以 textContent 渲染，不自動 linkify，相對路徑會變成不可點的死字。 */
+const NEXT_STEPS = '📊 你的 SWOT 已生成。下一步：\n① 免費：做網站五維診斷 → https://xingdeng.tw/diagnose\n② $3,000 起：30 分鐘上線懶人包 → https://xingdeng.tw/kits\n③ 預約 15 分鐘免費諮詢 → https://xingdeng.tw/contact';
 const CTAS = {
   kits: '預算在萬元級：SNT 一鍵架網懶人包（個人 $3,000／店家 $6,600／企業 $13,900）30 分鐘上線——https://xingdeng.tw/kits',
   hq: '想要的不只是網站：預約 30 分鐘，進駐會接待人的 3D 數位總部——https://orbit.xingdeng.tw',
@@ -47,7 +50,7 @@ function fallbackEngine(msgs){
   const [sHalf, wHalf] = String(lib.s).split('；短：');
   if (!askedPain) return { reply:`${ind}業，獲客矛盾就一個字：${ind==='房地產'||ind==='醫療'||ind==='顧問'?'信任':'流量'}。你現在最痛的是什麼——跳出率高？廣告燒了沒名單？海外詢價接不住？講一句，我開局。`, capture:false };
   const cta = (/懶人包|預算|便宜|快速|小型/.test(all)) ? CTAS.kits : CTAS.hq;
-  const reply = `【SWOT 快局｜${ind}業】\nS 優勢：${sHalf}\nW 劣勢：${wHalf || '通路與時區缺口'}\nO 機會：${lib.o}\nT 威脅：${lib.t}\n\n起手四步（AIDA 排程）：\n1）A 注意：把「產品型錄頁」改成「可走進的 3D 展示空間」——訪客前 3 秒有理由留下。\n2）I 興趣：中英日三語 AI 接待全天候導購，夜間流量不再漏。\n3）D 慾望：用一次免費「網站五維診斷」讓老闆看見分數差距（https://xingdeng.tw/diagnose）。\n4）A 行動：${cta}\n下一步：把診斷分數貼給我，我給你 90 天落地排程。\n[[LEAD_CAPTURE]]`;
+  const reply = `【SWOT 快局｜${ind}業】\nS 優勢：${sHalf}\nW 劣勢：${wHalf || '通路與時區缺口'}\nO 機會：${lib.o}\nT 威脅：${lib.t}\n\n起手四步（AIDA 排程）：\n1）A 注意：把「產品型錄頁」改成「可走進的 3D 展示空間」——訪客前 3 秒有理由留下。\n2）I 興趣：中英日三語 AI 接待全天候導購，夜間流量不再漏。\n3）D 慾望：用一次免費「網站五維診斷」讓老闆看見分數差距（https://xingdeng.tw/diagnose）。\n4）A 行動：${cta}\n\n${NEXT_STEPS}\n（把診斷分數貼給我，我給你 90 天落地排程。）\n[[LEAD_CAPTURE]]`;
   return { reply, capture:true };
 }
 
