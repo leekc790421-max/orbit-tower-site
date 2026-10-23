@@ -230,7 +230,108 @@ module.exports = async function handler(req, res) {
       funnel: { mode: 'local-rules 恆在線' }, seq: { mode: env.cron ? 'cron-guarded' : 'manual/open-tick', sequences: Object.keys(SEQUENCES) },
       broadcast: { mode: env.line ? 'live' : 'queued-batch（無鑰入 push_outbox 佇列，心跳自動沖刷）' }, ads: { mode: (env.meta || env.ga4) ? 'live-bridge' : 'sandbox', buffered_events: adsBuffer },
       radar: { mode: 'self-audit + 自助心跳（>24h 自動補巡檢&IndexNow）', last: lastScan ? lastScan.at : '尚未巡檢' }, omo: { mode: 'in-memory-ledger', entries: omoLedger.length } }, hit: '信標聚合計數（page/ref，無個資）', index: '收錄量探針（Google＋Bing，12h 節流）', omni: '司令部上線・POST 單调用全鏈', keys: env });
-    if (bot === 'hit') { /* 頁面信標計數：只寫聚合 (day,kind,key,n)。不存取 IP、UA 原文、cookie、個人數據 */
+    /* ── bot=board 脈搏聚合駕駛艙：三站健康 + 24h 錯誤計數 + 最後心跳（?k=OPS_SECRET）── */
+if (bot === 'board') {
+  const sec = process.env.OPS_SECRET || '';
+  if (!sec || u.searchParams.get('k') !== sec) return res.status(401).json({ ok: false, error: 'bad key' });
+  const TARGETS = [
+    { product: 'xingdeng-main', health: 'https://xingdeng.tw/api/health' },
+    { product: 'shiguangyin-vip', health: 'https://vip.xingdeng.tw/api/health' },
+    { product: 'orbit-tower-3d', health: 'https://orbit.xingdeng.tw/api/health' },
+  ];
+  const sql = neon();
+  const sites = [];
+  for (const t of TARGETS) {
+    let hv = null, herr = null;
+    try { hv = await fetch(t.health, { signal: AbortSignal.timeout(6000) }).then(r => r.json()); } catch (e) { herr = String(e.message || e).slice(0, 100); }
+    let err24 = null, lastBeat = null;
+    if (sql) { try {
+      const c = await sql`select count(*)::int n from snt_pulse where product=${t.product} and type in ('error','rejection','resource') and ts > now() - interval '24 hours'`;
+      err24 = c[0] && c[0].n;
+      const b = await sql`select ts from snt_pulse where product=${t.product} and type='beat' order by ts desc limit 1`;
+      lastBeat = b[0] && b[0].ts;
+    } catch {} }
+    sites.push({ product: t.product, health: hv, healthError: herr, errors24h: err24, lastBeat, beatAgeSec: lastBeat ? Math.round((Date.now() - new Date(lastBeat).getTime()) / 1000) : null });
+  }
+  return res.status(200).json({ ok: true, ts: new Date().toISOString(), sites, flagsTable: !!sql });
+}
+/* ── SNT 脈搏主幹 · bot=ev 事件匯流排（全集團唯一收集端）──
+   POST body {product,release,events:[{ty,path,ms,msg}]}（pulse.js / sendBeacon text/plain 相容）
+   GET  ?k=OPS_SECRET&product=&type=&since=&limit→ 即時排錯查閱
+   存 Neon snt_pulse（lazy 建表）；缺 env/驅動降級函式日誌池。 */
+if (bot === 'ev') {
+  const sec = process.env.OPS_SECRET || '';
+  if (req.method === 'POST') {
+    let d = {}; try { d = await readBody(req); } catch {}
+    const product = String(d.product || u.searchParams.get('p') || '?').slice(0, 40);
+    const release = String(d.release || '').slice(0, 20);
+    const rows = (Array.isArray(d.events) ? d.events : []).slice(0, 20).map(e => ({
+      product, release,
+      type: String(e.ty || e.type || 'custom').slice(0, 20),
+      path: String(e.path || '').slice(0, 160),
+      ms: Number(e.ms) || 0,
+      msg: String(e.msg || '').slice(0, 400),
+    }));
+    if (!rows.length) return res.status(202).json({ ok: true, accepted: 0 });
+    const sql = neon();
+    if (!sql) { rows.forEach(r => console.log('PULSE ' + JSON.stringify(r))); return res.status(202).json({ ok: true, stored: false, accepted: rows.length }); }
+    try { await sql`create table if not exists snt_pulse (id bigint generated always as identity primary key, ts timestamptz not null default now(), product text not null, type text not null, path text, msg text, ms numeric, release text)`; } catch {}
+    let stored = 0;
+    for (const r of rows) { try { await sql`insert into snt_pulse (product,type,path,msg,ms,release) values (${r.product},${r.type},${r.path},${r.msg},${r.ms},${r.release})`; stored++; } catch (e) { console.log('PULSE ' + JSON.stringify(r)); } }
+    const bad = rows.filter(r => r.type === 'error' || r.type === 'rejection');
+    if (bad.length) console.log('PULSE-ERROR ' + bad.length + '/' + product + ' :: ' + (bad[0].msg || ''));
+    return res.status(202).json({ ok: true, stored, accepted: rows.length });
+  }
+  if (req.method === 'GET') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    if (!sec) return res.status(503).json({ ok: false, error: 'OPS_SECRET env not set' });
+    if (u.searchParams.get('k') !== sec) return res.status(401).json({ ok: false, error: 'bad key' });
+    const sql = neon();
+    if (!sql) return res.status(200).json({ ok: true, stored: false, note: 'Neon 未接——查日誌池 grep PULSE', rows: [] });
+    const P = u.searchParams.get('product') || '', T = u.searchParams.get('type') || '', S = u.searchParams.get('since') || '';
+    const L = Math.min(+(u.searchParams.get('limit') || 50), 200);
+    try {
+      const r = await sql`select ts,product,type,path,msg,ms,release from snt_pulse where (coalesce(${P},'')='' or product=${P}) and (coalesce(${T},'')='' or type=${T}) and (coalesce(${S},'')='' or ts::text>=${S}) order by ts desc limit ${L}`;
+      return res.status(200).json({ ok: true, count: r.length, rows: r.map(x => ({ ...x })) });
+    } catch (e) { return res.status(200).json({ ok: false, error: String(e).slice(0, 120) }); }
+  }
+  return res.status(405).json({ ok: false });
+}
+/* ── bot=flags 熱開關（全產品輪詢即時生效：維護遮欄/公告/遠端停用元件）──
+   GET 公開（no-store, CORS*）：{maintenance,notice,kill,rev}
+   POST ?k=OPS_SECRET {set:{...}}：深合併寫入並回傳。存 Neon snt_flags 單文件。 */
+if (bot === 'flags') {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const DEF = { maintenance: false, notice: '', noticeI18n: {}, kill: { butler: false, mentor: false, orb: false }, rev: 0 };
+  const sql = neon();
+  if (req.method === 'GET') {
+    if (!sql) return res.status(200).json({ ok: true, stored: false, flags: DEF });
+    try { await sql`create table if not exists snt_flags (id text primary key, doc jsonb not null, ts timestamptz not null default now())`; } catch {}
+    try {
+      const r = await sql`select doc, ts from snt_flags where id = 'live'`;
+      if (!r.length) return res.status(200).json({ ok: true, flags: DEF });
+      return res.status(200).json({ ok: true, flags: { ...DEF, ...r[0].doc }, savedAt: r[0].ts });
+    } catch (e) { return res.status(200).json({ ok: false, flags: DEF, error: String(e).slice(0, 100) }); }
+  }
+  if (req.method === 'POST') {
+    const sec = process.env.OPS_SECRET || '';
+    if (!sec || u.searchParams.get('k') !== sec) return res.status(401).json({ ok: false, error: 'bad key' });
+    if (!sql) return res.status(503).json({ ok: false, error: 'Neon 未接，無法持久化' });
+    let d = {}; try { d = await readBody(req); } catch {}
+    const set = d && d.set && typeof d.set === 'object' ? d.set : null;
+    if (!set) return res.status(400).json({ ok: false, error: 'set{} required' });
+    try {
+      const cur0 = await sql`select doc from snt_flags where id='live'`;
+      const merged = { ...DEF, ...(cur0.length ? cur0[0].doc : {}), ...set, kill: { ...DEF.kill, ...((cur0[0] || {}).doc || {}).kill, ...(set.kill || {}) }, noticeI18n: { ...((cur0[0] || {}).doc || {}).noticeI18n || {}, ...(set.noticeI18n || {}) }, rev: Date.now() };
+      delete merged.savedAt;
+      const w = await sql`insert into snt_flags (id,doc,ts) values ('live',${JSON.stringify(merged)},now()) on conflict (id) do update set doc=excluded.doc, ts=now() returning id`;
+      return res.status(200).json({ ok: true, flags: merged, wrote: w.length === 1 });
+    } catch (e) { return res.status(502).json({ ok: false, error: String(e).slice(0, 140) }); }
+  }
+  return res.status(405).json({ ok: false });
+}
+if (bot === 'hit') { /* 頁面信標計數：只寫聚合 (day,kind,key,n)。不存取 IP、UA 原文、cookie、個人數據 */
       const p = String(u.searchParams.get('p') || '').slice(0, 160);
       if (!p || p.indexOf('/pool') === 0 || p.indexOf('/ops') === 0 || /\.(ico|png|jpg|svg|txt|xml|webmanifest)$/.test(p)) return res.status(204).end();
       const sp = neon(); if (!sp) return res.status(204).end();

@@ -3,6 +3,8 @@ module.exports = async function handler(req, res) {
   const env = (k) => !!process.env[k] && String(process.env[k]).length > 0;
   res.setHeader('Cache-Control', 'no-store');
   res.status(200).json({
+    schema: 'snt-health-v1',
+    product: 'xingdeng-main',
     ok: true,
     ts: new Date().toISOString(),
     version: 'ops-2026.10.15',
