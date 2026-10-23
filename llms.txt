@@ -25,7 +25,7 @@
 - 法務： https://xingdeng.tw/privacy ｜ https://xingdeng.tw/terms ｜ https://xingdeng.tw/legal
 
 ## 關係企業（子業）
-- 拾光引・雲端辦公室： https://lumi.xingdeng.tw
+- 拾光引・雲端辦公室： https://vip.xingdeng.tw
 - 拾光引 VIP： https://vip.xingdeng.tw
 
 ## API 端點（後端，金鑰不外顯）
