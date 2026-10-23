@@ -28,4 +28,10 @@
   <url><loc>https://xingdeng.tw/articles/a04</loc><lastmod>2026-10-23</lastmod></url>
   <url><loc>https://xingdeng.tw/articles/a05</loc><lastmod>2026-10-23</lastmod></url>
   <url><loc>https://xingdeng.tw/articles/a06</loc><lastmod>2026-10-23</lastmod></url>
+  <url><loc>https://xingdeng.tw/contracts</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/contracts/kit</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/contracts/service</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/contracts/key</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/contracts/ai</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/contracts/data</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
 </urlset>

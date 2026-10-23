@@ -38,3 +38,7 @@
 
 ## 語言
 - 繁中（預設/x-default）、English（?hl=en）、日本語（?hl=ja）；全站四語系 hreflang 矩陣。
+
+## 法律與合約（Legal・三語文本）
+- 制式合約中樞： https://xingdeng.tw/contracts （懶人包 T1-T3／客製與進駐／金鑰會員／AI 附加條款／個資揭露）
+- 免責聲明： https://xingdeng.tw/legal ・ 服務條款： https://xingdeng.tw/terms ・ 隱私： https://xingdeng.tw/privacy
