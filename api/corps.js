@@ -154,6 +154,40 @@ async function nurtureTick() {
   } catch (e) { return { db: false, degraded: String(e && e.message || e).slice(0, 120) }; }
 }
 
+/* ---- 收錄探針：直查搜尋引擎 site:xingdeng.tw 收錄量（＝「上榜了沒有」的證據）
+   24 小時節流、三家（Google／Bing／DuckDuckGo）→ 約 90 次/月，穩在 SerpAPI 免費 250 次內。 */
+let idxCache = null;
+const IDX_ENGINES = [['Google', 'google'], ['Bing', 'bing'], ['DuckDuckGo', 'duckduckgo']];
+async function indexProbe(force) {
+  const K = process.env.SERPAPI_KEY || '';
+  if (!K) return { ok: false, note: '未設 SERPAPI_KEY：無法代查收錄量' };
+  if (!force && idxCache && Date.now() - idxCache.at < 24 * 3600e3)
+    return Object.assign({ ok: true, cached: true, cached_at: new Date(idxCache.at).toISOString() }, idxCache.out);
+  const out = { engines: [] };
+  for (const pair of IDX_ENGINES) {
+    try {
+      const q = encodeURIComponent('site:xingdeng.tw');
+      const j = await fetch('https://serpapi.com/search.json?engine=' + pair[1] + '&q=' + q + '&num=10&hl=zh-tw&gl=tw&api_key=' + K, { signal: AbortSignal.timeout(11000) }).then(r => r.json());
+      const si = j.search_information || {};
+      const org = (j.organic_results || []).slice(0, 10);
+      // 以「結果裡真正屬本站的連結」為準：部分引擎（如 Bing）會忽略 site: 運算子而回大範圍結果，
+      // 此時 total_results 為假數（曾實測回 44,100 頁且首見為 Wikipedia），故不標為可靠。
+      const own = org.filter(x => /(^|\/\/)([a-z0-9.-]+\.)?xingdeng\.tw\//i.test(String(x.link || '')));
+      const total = Number(si.total_results || si.total_results_for_ambiguous_query || 0) || null;
+      out.engines.push({
+        engine: pair[0],
+        own_in_top10: own.length,
+        indexed_estimate: own.length ? total : null,
+        reliable: !!own.length && !!total,
+        note: !own.length ? '前 10 筆無本站結果（尚未收錄，或該引擎忽略 site: 運算子）' : (total ? null : '該引擎未回傅總數，僅計前 10 筆命中'),
+        sample: own.slice(0, 3).map(x => x.link),
+      });
+    } catch (e) { out.engines.push({ engine: pair[0], indexed_estimate: 0, error: String(e && e.message || e).slice(0, 60) }); }
+  }
+  idxCache = { at: Date.now(), out: out };
+  return Object.assign({ ok: true, probed_at: new Date(idxCache.at).toISOString() }, out);
+}
+
 /* ---- selfpulse：無外部排程依赖的自助心跳（>24h 未巡檢即補跑全站健檢＋IndexNow 提交） ---- */
 let _pulsing = false;
 async function selfPulse() {
@@ -195,7 +229,31 @@ module.exports = async function handler(req, res) {
     if (bot === 'status' || bot === '') return res.status(200).json({ ok: true, corps: 'v27', bots: {
       funnel: { mode: 'local-rules 恆在線' }, seq: { mode: env.cron ? 'cron-guarded' : 'manual/open-tick', sequences: Object.keys(SEQUENCES) },
       broadcast: { mode: env.line ? 'live' : 'queued-batch（無鑰入 push_outbox 佇列，心跳自動沖刷）' }, ads: { mode: (env.meta || env.ga4) ? 'live-bridge' : 'sandbox', buffered_events: adsBuffer },
-      radar: { mode: 'self-audit + 自助心跳（>24h 自動補巡檢&IndexNow）', last: lastScan ? lastScan.at : '尚未巡檢' }, omo: { mode: 'in-memory-ledger', entries: omoLedger.length } }, omni: '司令部上線・POST 單调用全鏈', keys: env });
+      radar: { mode: 'self-audit + 自助心跳（>24h 自動補巡檢&IndexNow）', last: lastScan ? lastScan.at : '尚未巡檢' }, omo: { mode: 'in-memory-ledger', entries: omoLedger.length } }, hit: '信標聚合計數（page/ref，無個資）', index: '收錄量探針（Google＋Bing，12h 節流）', omni: '司令部上線・POST 單调用全鏈', keys: env });
+    if (bot === 'hit') { /* 頁面信標計數：只寫聚合 (day,kind,key,n)。不存取 IP、UA 原文、cookie、個人數據 */
+      const p = String(u.searchParams.get('p') || '').slice(0, 160);
+      if (!p || p.indexOf('/pool') === 0 || p.indexOf('/ops') === 0 || /\.(ico|png|jpg|svg|txt|xml|webmanifest)$/.test(p)) return res.status(204).end();
+      const sp = neon(); if (!sp) return res.status(204).end();
+      const d = new Date(); const day = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+      let rh = ''; try { const rr = String(u.searchParams.get('r') || ''); if (rr) rh = (new URL(rr).hostname || '').replace(/^www\./, '').slice(0, 80); } catch (e) { }
+      try {
+        await sp`CREATE TABLE IF NOT EXISTS hits (day integer NOT NULL, kind text NOT NULL, key text NOT NULL, n integer NOT NULL DEFAULT 0, updated_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY (day, kind, key))`;
+        await sp`INSERT INTO hits (day, kind, key, n) VALUES (${day}, 'page', ${p}, 1) ON CONFLICT (day, kind, key) DO UPDATE SET n = hits.n + 1, updated_at = now()`;
+        if (rh && !/xingdeng\.tw$/.test(rh)) await sp`INSERT INTO hits (day, kind, key, n) VALUES (${day}, 'ref', ${rh}, 1) ON CONFLICT (day, kind, key) DO UPDATE SET n = hits.n + 1, updated_at = now()`;
+      } catch (e) { }
+      return res.status(204).end();
+    }
+    if (bot === 'index') { /* 收錄量：任何人可讀快取；主動偵測需中控台憑證（否則會被刷爆 SerpAPI 額度） */
+      const force = u.searchParams.get('probe') === '1';
+      if (force) {
+        const KW0 = process.env.WEBHOOK_SECRET || '';
+        const sig0 = require('crypto').createHmac('sha256', KW0).update('ot-pool').digest('hex');
+        const ck = String(req.headers.cookie || '').match(/ot_pool=([a-f0-9]{64})/);
+        const authed = !!KW0 && (u.searchParams.get('key') === KW0 || !!(ck && ck[1] === sig0));
+        if (!authed) return res.status(401).json({ ok: false, needKey: true, note: '主動偵測需憑證；快取值可巨觀讀取' });
+      }
+      return res.status(200).json(Object.assign({ bot: 'index-v1' }, await indexProbe(force)));
+    }
     if (bot === 'pool') { /* 口袋客源池後端：?key 通行碼換 httpOnly cookie，名單永不出現在公開端點 */
       const KW = process.env.WEBHOOK_SECRET || '';
       if (!KW) return res.status(200).json({ ok: false, note: 'console-not-armed' });
@@ -210,7 +268,21 @@ module.exports = async function handler(req, res) {
       try {
         const rows = await sp`SELECT id, kind, email, company, industry, funnel_tier, funnel_score, nurture_seq, nurture_step, order_status, amount, currency, page, at FROM leads ORDER BY at DESC LIMIT 80`;
         if (fresh) res.setHeader('Set-Cookie', 'ot_pool=' + sig + '; HttpOnly; SameSite=Lax; Path=/; Max-Age=604800');
-        return res.status(200).json({ ok: true, leads: rows });
+        // 流量：day＝YYYYMMDD 整數；kind 僅 page／ref（信標聚合，無任何個資）
+        let tr = null;
+        try {
+          const dn = ms => { const x = new Date(ms); return x.getFullYear() * 10000 + (x.getMonth() + 1) * 100 + x.getDate(); };
+          const day = dn(Date.now()), day7 = dn(Date.now() - 6 * 864e5);
+          const [v, refs, tops, trend] = await Promise.all([
+            sp`SELECT COALESCE(sum(n), 0)::int AS n FROM hits WHERE day = ${day} AND kind = 'page'`,
+            sp`SELECT key AS k, sum(n)::int AS n FROM hits WHERE day = ${day} AND kind = 'ref' GROUP BY 1 ORDER BY 2 DESC LIMIT 10`,
+            sp`SELECT key AS path, sum(n)::int AS n FROM hits WHERE kind = 'page' AND day >= ${day7} GROUP BY 1 ORDER BY 2 DESC LIMIT 10`,
+            sp`SELECT day, sum(n)::int AS n FROM hits WHERE kind = 'page' AND day >= ${day7} GROUP BY 1 ORDER BY 1`,
+          ]);
+          tr = { views_today: v[0].n, refs, tops, trend };
+        } catch (e) { tr = { note: 'hits 表尚未就緒（首次到訪會自動建表）' }; }
+        const idx = idxCache ? Object.assign({ cached: true }, idxCache.out) : { note: '尚未偵測：?bot=index&probe=1 或直接按中控台「查收錄」' };
+        return res.status(200).json({ ok: true, leads: rows, traffic: tr, indexed: idx });
       } catch (e) { return res.status(200).json({ ok: false, error: String(e.message || e).slice(0, 120) }); }
     }
     if (bot === 'site') { /* one-click deploy: stateless render, XSS-safe */

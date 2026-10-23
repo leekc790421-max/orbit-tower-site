@@ -14,6 +14,12 @@ body{margin:0;background:#0B132B;color:#E2E8F0;font:15px/1.6 -apple-system,Blink
 .empty,.locked{text-align:center;color:#64748B;padding:70px 30px;font-size:14px}.locked input{width:90%;background:#101A2E;border:1px solid #1E293B;color:#fff;border-radius:10px;padding:13px;font-size:16px;margin:16px 0}
 .locked button{background:#00E5FF;color:#00363F;border:0;border-radius:10px;padding:12px 28px;font-weight:800}
 .sum{position:fixed;bottom:10px;right:14px;background:#1C2541;border:1px solid #00E5FF55;color:#E2E8F0;border-radius:99px;padding:10px 18px;font-size:13px;cursor:pointer;z-index:9}
+.tr{margin:10px 14px 0;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,#101A2E,#0d253d);border:1px solid #1e3a5f}
+.trrow{display:flex;align-items:baseline;gap:8px}.trrow b{font-size:26px;color:#00E5FF;line-height:1}.trrow span{font-size:12px;color:#9BA7C0}
+.trbars{margin-left:auto;display:flex;align-items:flex-end;gap:3px;height:26px}.trbars i{display:block;width:6px;background:#5EEAD4;border-radius:2px;opacity:.85}
+.trl{margin-top:7px;font-size:12px;line-height:1.55;color:#CBD5E1}.trl2{color:#9BA7C0;font-size:11.5px}
+.trn{font-size:12px;color:#F0C265}.tbtn{margin-left:auto;background:#0d253d;border:1px solid #00E5FF;color:#00E5FF;border-radius:8px;padding:4px 10px;font-size:11.5px;cursor:pointer}.tbtn:disabled{opacity:.55}.trn2{color:#4ADE80;font-size:15px}
+
 </style></head><body>
 <div class="hd"><b>🛰 星樞・口袋客源池</b><span class="badge" id="live" style="background:#182234;color:#64748B">連線中</span><small>60s 自動刷新</small></div>
 <div id="app"><div class="locked" id="gate"><div>這頁只有拿通行碼的人看得到。</div><input id="keyin" type="password" placeholder="通行碼" autocomplete="off"><br><button onclick="enter()">解鎖</button><div id="err" style="color:#F0C265;margin-top:12px"></div></div></div>
@@ -24,7 +30,7 @@ function q(){return new URLSearchParams(location.search)}
 function enter(){var k=document.getElementById('keyin').value.trim();if(!k)return;fetch('/api/corps?bot=pool&key='+encodeURIComponent(k),{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(d){if(!d.ok){document.getElementById('err').textContent='通行碼不對';return}S.ok=1;try{sessionStorage.setItem('otpool','1')}catch(e){}boot(1)}).catch(function(){document.getElementById('err').textContent='網路異常'})}
 function load(){fetch('/api/corps?bot=pool',{credentials:'same-origin'}).then(function(r){if(r.status===401)throw 0;return r.json()}).then(function(d){S.ok=1;boot(0,d)}).catch(function(){S.ok=0===S.ok?0:0;});}
 function boot(usedKey,d){ if(!d){ load(); if(!S.ok && !usedKey){ setTimeout(function(){ if(!S.ok) load(); },600);} return; } render(d);}
-function render(d){S.data=d;var a=document.getElementById('app');a.innerHTML='<div class="chips" id="chips"></div><div id="rows"></div>';
+function render(d){S.data=d;var a=document.getElementById('app');a.innerHTML='<div id="tr"></div><div class="chips" id="chips"></div><div id="rows"></div>';document.getElementById('tr').innerHTML=trHTML(d.traffic,d.indexed);
  var tiers=[['','全部'],['hot','HOT'],['warm','WARM'],['cold','COLD'],['order-paid','已成交']];
  var ch=document.getElementById('chips');tiers.forEach(function(t){var b=document.createElement('button');b.textContent=t[0]===''?t[1]:t[1].toUpperCase();b.className=t[0]===S.tier?'on':'';b.onclick=function(){S.tier=t[0];render(S.data)};ch.appendChild(b)});
  var lv=document.getElementById('live');lv.textContent='● 即時';lv.style.color='#4ADE80';
@@ -33,6 +39,35 @@ function render(d){S.data=d;var a=document.getElementById('app');a.innerHTML='<d
  ld.forEach(function(x){var r=document.createElement('div');var paid=x.kind==='order-paid';var cls='row'+(x.funnel_tier==='hot'?' hot':'');r.className=cls;
   r.innerHTML='<span class="score">'+(x.funnel_score!=null?x.funnel_score:'–')+'</span><h4>'+esc(x.company||x.email||'無名名單')+'</h4><div>'+tierb(x,paid)+(x.industry?'<span class="badge" style="background:#182234;color:#9BA7C0">'+esc(x.industry)+'</span>':'')+'<div class="meta">'+esc(x.email||'')+'・'+fTime(x.at)+'<br>來源 '+esc((x.page||'').slice(0,28))+(x.nurture_seq&&x.nurture_seq!=='paid::done'?'・養客 '+esc(orEmpty(x.nurture_seq))+' '+(x.nurture_step||0)+'/'+(x.nurture_seq==='hot-48h'?3:x.nurture_seq==='warm-7d'?4:1):'')+(x.amount!=null?'・NT$'+x.amount:'')+'</div></div>';w.appendChild(r)});
  document.getElementById('sumbtn').style.display=S.data.leads.length?'block':'none'}
+function trHTML(t,ix){var h='';
+ if(t&&!t.note){
+  var rs=(t.refs||[]).map(function(x){return esc(x.k)+' ×'+x.n}).join('　');
+  var tp=(t.tops||[]).slice(0,6).map(function(x){return esc(String(x.path||'/').slice(0,24))+' ×'+x.n}).join('　');
+  var ns=(t.trend||[]).map(function(x){return x.n});var mx=Math.max.apply(null,ns.concat([1]));
+  var bars=(t.trend||[]).slice(-7).map(function(x){var hh=Math.max(3,Math.round(x.n/mx*26));return '<i title="'+x.day+'：'+x.n+'" style="height:'+hh+'px"></i>'}).join('');
+  h+='<div class="tr"><div class="trrow"><b>'+(t.views_today||0)+'</b><span>今日到訪</span>'+(bars?'<em class="trbars">'+bars+'</em>':'')+'</div>';
+  h+='<div class="trl">↗ 外部來源：'+(rs||'直接進站為主')+'</div>';
+  h+='<div class="trl trl2">近七日熱頁：'+(tp||'尚無紀錄')+'</div></div>';
+ } else if(t&&t.note){ h+='<div class="tr"><span class="trn">'+esc(t.note)+'</span></div>'; }
+ if(ix){
+  if(ix.note){ h+='<div class="tr"><div class="trl">📈 收錄狀態：尚未偵測<button class="tbtn" onclick="probeIdx(this)">查收錄</button></div></div>'; return h; }
+  var rows='';var en=ix.engines||[];
+  for(var q=0;q<en.length;q++){var e=en[q];
+   rows+='<div class="trl">'+esc(e.engine)+'：';
+   if(e.error) rows+='<span class="trn">'+esc(e.error)+'</span>';
+   else if(e.reliable) rows+='<b class="trn2">'+Number(e.indexed_estimate).toLocaleString()+'</b> 頁已收錄<span class="trl2">（前 10 筆命中 '+e.own_in_top10+'）</span>';
+   else if(e.own_in_top10) rows+='<b class="trn2">'+e.own_in_top10+'</b> 頁命中<span class="trl2">（此引擎未回傅總數，不估算）</span>';
+   else rows+='<span class="trn">前 10 筆 0 命中＝尚未收錄</span>';
+   if(e.sample&&e.sample.length) rows+='・'+esc(String(e.sample[0]).replace(/^https?:\/\//,'').slice(0,30));
+   rows+='</div>';
+  }
+  h+='<div class="tr"><div class="trrow"><span>搜尋引擎收錄量（site:xingdeng.tw）</span><button class="tbtn" onclick="probeIdx(this)">重新偵測</button></div>';
+  h+=rows;
+  h+= ix.cached ? '<div class="trl trl2">快取值（24h 節流，三家約 90 次/月，穩在免費額度內）</div>' : '<div class="trl trl2">剛偵測完</div>';
+  h+='</div>';
+ }
+ return h}
+function probeIdx(b){if(b){b.disabled=1;b.textContent='偵測中…'}fetch('/api/corps?bot=index&probe=1',{credentials:'same-origin'}).then(function(){load()}).catch(function(){load()})}
 function tierb(x,paid){var t=x.funnel_tier||'cold';return paid?'<span class="badge b-paid">✅ 成交 '+esc(String(x.currency||'').toUpperCase())+'</span>':'<span class="badge b-'+t+'">'+t.toUpperCase()+'</span>'}
 function orEmpty(s){return s==='hot-48h'?'48h快攻':s==='warm-7d'?'7日養客':s==='cold-30d'?'內容池':s==='omo-24h'?'線下接住':s}
 function fTime(s){try{var d=new Date(s),n=new Date();var diff=(n-d)/6e4;if(diff<60)return Math.max(1,Math.round(diff))+' 分鐘前';if(diff<1440)return Math.round(diff/60)+' 小時前';return d.toLocaleDateString('zh-TW')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}catch(e){return s}}

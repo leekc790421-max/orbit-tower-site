@@ -110,3 +110,19 @@
   setTimeout(exitHook, 70000);
   document.addEventListener('mouseout', function (e) { if (!e.relatedTarget && e.clientY < 4) exitHook(); });
 })();
+
+/* ---- 到訪信標（聚合計數，零個資）----
+   只送 pathname 與 referrer 的「來源域」；後端寫入 hits(day,kind,key,n) 聚合行。
+   不送 IP／UA 原文／cookie／裝置指紋；中控台與內部頁不計，避免自測污染真數。
+   失誤安全：任何異常靜默吞掉，絕不影響頁面。 */
+(function () {
+  try {
+    if (window.__OT_HIT) return; window.__OT_HIT = 1;
+    var p = location.pathname || '/';
+    if (/^\/(pool|ops)(\/|$)/.test(p)) return;
+    if (location.hostname.indexOf('localhost') > -1 || location.hostname.indexOf('127.0.0.1') > -1) return;
+    var q = '/api/corps?bot=hit&p=' + encodeURIComponent(p.slice(0, 160)) + '&r=' + encodeURIComponent(document.referrer || '').slice(0, 200);
+    if (navigator.sendBeacon) { try { if (navigator.sendBeacon(q)) return; } catch (e) { } }
+    fetch(q, { method: 'POST', mode: 'no-cors', keepalive: true }).catch(function () { });
+  } catch (e) { }
+})();
