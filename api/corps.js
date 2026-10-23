@@ -196,6 +196,23 @@ module.exports = async function handler(req, res) {
       funnel: { mode: 'local-rules 恆在線' }, seq: { mode: env.cron ? 'cron-guarded' : 'manual/open-tick', sequences: Object.keys(SEQUENCES) },
       broadcast: { mode: env.line ? 'live' : 'queued-batch（無鑰入 push_outbox 佇列，心跳自動沖刷）' }, ads: { mode: (env.meta || env.ga4) ? 'live-bridge' : 'sandbox', buffered_events: adsBuffer },
       radar: { mode: 'self-audit + 自助心跳（>24h 自動補巡檢&IndexNow）', last: lastScan ? lastScan.at : '尚未巡檢' }, omo: { mode: 'in-memory-ledger', entries: omoLedger.length } }, omni: '司令部上線・POST 單调用全鏈', keys: env });
+    if (bot === 'pool') { /* 口袋客源池後端：?key 通行碼換 httpOnly cookie，名單永不出現在公開端點 */
+      const KW = process.env.WEBHOOK_SECRET || '';
+      if (!KW) return res.status(200).json({ ok: false, note: 'console-not-armed' });
+      const sig = require('crypto').createHmac('sha256', KW).update('ot-pool').digest('hex');
+      const qk = u.searchParams.get('key') || '';
+      let authed = false, fresh = false;
+      if (qk === KW) { authed = true; fresh = true; }
+      else { const m = String(req.headers.cookie || '').match(/ot_pool=([a-f0-9]{64})/); if (m && m[1] === sig) authed = true; }
+      if (!authed) return res.status(401).json({ ok: false, needKey: true });
+      const sp = neon();
+      if (!sp) return res.status(200).json({ ok: true, leads: [], note: 'db-off' });
+      try {
+        const rows = await sp`SELECT id, kind, email, company, industry, funnel_tier, funnel_score, nurture_seq, nurture_step, order_status, amount, currency, page, at FROM leads ORDER BY at DESC LIMIT 80`;
+        if (fresh) res.setHeader('Set-Cookie', 'ot_pool=' + sig + '; HttpOnly; SameSite=Lax; Path=/; Max-Age=604800');
+        return res.status(200).json({ ok: true, leads: rows });
+      } catch (e) { return res.status(200).json({ ok: false, error: String(e.message || e).slice(0, 120) }); }
+    }
     if (bot === 'site') { /* one-click deploy: stateless render, XSS-safe */
       try {
         const raw = (u.searchParams.get('d') || '').replace(/\+| /g, m => (m === ' ' ? '+' : m)).replace(/-/g, '+').replace(/_/g, '/');

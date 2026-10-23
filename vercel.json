@@ -52,12 +52,34 @@
      "value": "noindex"
     }
    ]
+  },
+  {
+   "source": "/pool",
+   "headers": [
+    {
+     "key": "X-Robots-Tag",
+     "value": "noindex"
+    }
+   ]
+  },
+  {
+   "source": "/pool/",
+   "headers": [
+    {
+     "key": "X-Robots-Tag",
+     "value": "noindex"
+    }
+   ]
   }
  ],
  "crons": [
   {
    "path": "/api/corps?bot=radar&tick=1",
    "schedule": "0 20 * * *"
+  },
+  {
+   "path": "/api/corps?bot=seq&tick=1",
+   "schedule": "30 20 * * *"
   }
  ],
  "buildCommand": "node scripts/bump-sitemap.js",

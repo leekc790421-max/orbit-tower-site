@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>星樞・口袋客源池</title><link rel="icon" href="/assets/logo-mark.png">
+<style>
+body{margin:0;background:#0B132B;color:#E2E8F0;font:15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans TC',sans-serif;padding-bottom:40px}
+.hd{position:sticky;top:0;background:rgba(11,19,43,.92);backdrop-filter:blur(10px);padding:14px 16px;border-bottom:1px solid #00E5FF33;display:flex;align-items:center;gap:10px}
+.hd b{font-size:16px}.hd small{color:#5EEAD4;font-size:11px;margin-left:auto}
+.chips{display:flex;gap:8px;padding:12px 16px;overflow-x:auto}.chips button{flex:0 0 auto;background:#12203a;border:1px solid #1e3a5f;color:#9BA7C0;border-radius:99px;padding:7px 14px;font-size:12.5px;cursor:pointer}.chips button.on{border-color:#00E5FF;color:#00E5FF;background:#0d253d}
+.row{margin:10px 14px;padding:14px;border-radius:14px;background:#101A2E;border:1px solid #1E293B}
+.row.hot{border-color:#F0C26588}.row h4{margin:0;font-size:15px}.row .meta{color:#8D919A;font-size:12px;margin-top:5px}
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:700;margin-left:6px}
+.b-hot{background:#3a2f12;color:#F0C265}.b-warm{background:#0d2f3a;color:#5EEAD4}.b-cold{background:#182234;color:#8D919A}.b-paid{background:#123a22;color:#4ADE80}
+.score{float:right;font-weight:800;color:#00E5FF;font-size:17px}
+.empty,.locked{text-align:center;color:#64748B;padding:70px 30px;font-size:14px}.locked input{width:90%;background:#101A2E;border:1px solid #1E293B;color:#fff;border-radius:10px;padding:13px;font-size:16px;margin:16px 0}
+.locked button{background:#00E5FF;color:#00363F;border:0;border-radius:10px;padding:12px 28px;font-weight:800}
+.sum{position:fixed;bottom:10px;right:14px;background:#1C2541;border:1px solid #00E5FF55;color:#E2E8F0;border-radius:99px;padding:10px 18px;font-size:13px;cursor:pointer;z-index:9}
+</style></head><body>
+<div class="hd"><b>🛰 星樞・口袋客源池</b><span class="badge" id="live" style="background:#182234;color:#64748B">連線中</span><small>60s 自動刷新</small></div>
+<div id="app"><div class="locked" id="gate"><div>這頁只有拿通行碼的人看得到。</div><input id="keyin" type="password" placeholder="通行碼" autocomplete="off"><br><button onclick="enter()">解鎖</button><div id="err" style="color:#F0C265;margin-top:12px"></div></div></div>
+<div class="sum" id="sumbtn" style="display:none" onclick="copySum()">📋 複製今日摘要</div>
+<script>
+var S={tier:'',data:null}
+function q(){return new URLSearchParams(location.search)}
+function enter(){var k=document.getElementById('keyin').value.trim();if(!k)return;fetch('/api/corps?bot=pool&key='+encodeURIComponent(k),{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(d){if(!d.ok){document.getElementById('err').textContent='通行碼不對';return}S.ok=1;try{sessionStorage.setItem('otpool','1')}catch(e){}boot(1)}).catch(function(){document.getElementById('err').textContent='網路異常'})}
+function load(){fetch('/api/corps?bot=pool',{credentials:'same-origin'}).then(function(r){if(r.status===401)throw 0;return r.json()}).then(function(d){S.ok=1;boot(0,d)}).catch(function(){S.ok=0===S.ok?0:0;});}
+function boot(usedKey,d){ if(!d){ load(); if(!S.ok && !usedKey){ setTimeout(function(){ if(!S.ok) load(); },600);} return; } render(d);}
+function render(d){S.data=d;var a=document.getElementById('app');a.innerHTML='<div class="chips" id="chips"></div><div id="rows"></div>';
+ var tiers=[['','全部'],['hot','HOT'],['warm','WARM'],['cold','COLD'],['order-paid','已成交']];
+ var ch=document.getElementById('chips');tiers.forEach(function(t){var b=document.createElement('button');b.textContent=t[0]===''?t[1]:t[1].toUpperCase();b.className=t[0]===S.tier?'on':'';b.onclick=function(){S.tier=t[0];render(S.data)};ch.appendChild(b)});
+ var lv=document.getElementById('live');lv.textContent='● 即時';lv.style.color='#4ADE80';
+ var ld=(d.leads||[]).filter(function(x){return S.tier==='x'?false:!S.tier||(x.funnel_tier||x.kind)===S.tier||x.kind==='order-paid'&&S.tier==='order-paid'});
+ var w=document.getElementById('rows');if(!ld.length){w.innerHTML='<div class="empty">'+(S.tier?'這個分眾暫時是空的':'還空著的——等第一張真單，它會自己跑進來')+'</div>';return}
+ ld.forEach(function(x){var r=document.createElement('div');var paid=x.kind==='order-paid';var cls='row'+(x.funnel_tier==='hot'?' hot':'');r.className=cls;
+  r.innerHTML='<span class="score">'+(x.funnel_score!=null?x.funnel_score:'–')+'</span><h4>'+esc(x.company||x.email||'無名名單')+'</h4><div>'+tierb(x,paid)+(x.industry?'<span class="badge" style="background:#182234;color:#9BA7C0">'+esc(x.industry)+'</span>':'')+'<div class="meta">'+esc(x.email||'')+'・'+fTime(x.at)+'<br>來源 '+esc((x.page||'').slice(0,28))+(x.nurture_seq&&x.nurture_seq!=='paid::done'?'・養客 '+esc(orEmpty(x.nurture_seq))+' '+(x.nurture_step||0)+'/'+(x.nurture_seq==='hot-48h'?3:x.nurture_seq==='warm-7d'?4:1):'')+(x.amount!=null?'・NT$'+x.amount:'')+'</div></div>';w.appendChild(r)});
+ document.getElementById('sumbtn').style.display=S.data.leads.length?'block':'none'}
+function tierb(x,paid){var t=x.funnel_tier||'cold';return paid?'<span class="badge b-paid">✅ 成交 '+esc(String(x.currency||'').toUpperCase())+'</span>':'<span class="badge b-'+t+'">'+t.toUpperCase()+'</span>'}
+function orEmpty(s){return s==='hot-48h'?'48h快攻':s==='warm-7d'?'7日養客':s==='cold-30d'?'內容池':s==='omo-24h'?'線下接住':s}
+function fTime(s){try{var d=new Date(s),n=new Date();var diff=(n-d)/6e4;if(diff<60)return Math.max(1,Math.round(diff))+' 分鐘前';if(diff<1440)return Math.round(diff/60)+' 小時前';return d.toLocaleDateString('zh-TW')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}catch(e){return s}}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function copySum(){if(!S.data)return;var l=S.data.leads;var h=l.filter(function(x){return x.funnel_tier==='hot'||x.kind==='order-paid'});
+ var t='【星樞客源池摘要】'+new Date().toLocaleString('zh-TW')+'\n共 '+l.length+' 張名單；HOT/成交：'+h.length+'\n'+h.slice(0,8).map(function(x){return '⚡ '+(x.company||x.email)+'・分數'+(x.funnel_score!=null?x.funnel_score:'-')+'・'+(x.kind==='order-paid'?'已成交 '+('NT$'+(x.amount||0)):orEmptys(x))}).join('\n');
+ (navigator.clipboard&&navigator.clipboard.writeText(t))?navigator.clipboard.writeText(t).then(function(){alert('已複製，貼進任何对话框即可')}):prompt('複製：',t)}
+function orEmptys(x){return '來源'+(x.page||'')}
+function tick(){var d=S.data;if(S.ok&&d){loadTrue()}}
+function loadTrue(){fetch('/api/corps?bot=pool',{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(d){render(d)}).catch(function(){var lv=document.getElementById('live');lv.textContent='● 斷線重試';lv.style.color='#F0C265'})}
+if(q().get('key')){document.getElementById('keyin').value=q().get('key');history.replaceState(null,'',location.pathname)}else{setTimeout(function(){load()},50)}
+setInterval(function(){if(S.ok)loadTrue()},60000);
+var _r=render;render=function(d){S.ok=1;_r(d)};
+</script></body></html>
