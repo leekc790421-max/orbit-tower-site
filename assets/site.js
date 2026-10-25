@@ -76,8 +76,7 @@
       function mailFallback() {
         var q = []; try { q = JSON.parse(localStorage.getItem('ot.leads')) || []; } catch (err) { }
         q.push(data); localStorage.setItem('ot.leads', JSON.stringify(q));
-        var mailBtn = '<a class="btn btn--primary" style="margin-top:10px;display:inline-block" href="mailto:service@xingdeng.tw?subject=' +
-          encodeURIComponent('[Orbit Tower][' + data.type + '] ' + (data.fields.company || data.fields.name || 'lead')) + '&body=' + encodeURIComponent(payload) + '">✉️ 一按下送收單（開啟郵件即寄達業務匣）</a>';
+        var mailBtn = '<span class="btn btn--primary" style="margin-top:10px;display:inline-block">✉️ 一按下送收單（開啟郵件即寄達業務匣）</span>';
         f.innerHTML = '<div style="padding:8px 2px"><b style="color:#D97706;font-size:17px">⚠ 名單已在本機留存，但線上送單暫時不通</b><p class="muted" style="margin:8px 0 0;font-size:14.5px">請按下方按鈕以郵件送出（內容已自動帶入），或複製內容寄 service@xingdeng.tw：</p>' + mailBtn +
           '<button class="btn" style="margin-left:8px" id="lead-copy">複製表單內容</button></div>';
         var cp = document.getElementById('lead-copy');

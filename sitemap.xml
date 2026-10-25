@@ -1,37 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://xingdeng.tw/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-<url><loc>https://xingdeng.tw/articles</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-<url><loc>https://xingdeng.tw/reports</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-<url><loc>https://xingdeng.tw/diagnose</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://xingdeng.tw/3d</loc><changefreq>weekly</changefreq><priority>0.95</priority></url>
-<url><loc>https://xingdeng.tw/orbit-tower</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-<url><loc>https://xingdeng.tw/kits</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-<url><loc>https://xingdeng.tw/departments</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://xingdeng.tw/pricing</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-<url><loc>https://xingdeng.tw/faq</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://xingdeng.tw/about</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://xingdeng.tw/contact</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://xingdeng.tw/privacy</loc><changefreq>weekly</changefreq><priority>0.4</priority></url>
-<url><loc>https://xingdeng.tw/terms</loc><changefreq>weekly</changefreq><priority>0.4</priority></url>
-<url><loc>https://xingdeng.tw/legal</loc><changefreq>weekly</changefreq><priority>0.4</priority></url>
-<url><loc>https://xingdeng.tw/articles/a01</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://xingdeng.tw/articles/a02</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://xingdeng.tw/articles/a03</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://xingdeng.tw/articles/a07</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://xingdeng.tw/articles/a08</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://xingdeng.tw/articles/a09</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://xingdeng.tw/try/</loc><lastmod>2026-10-23</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url><url><loc>https://xingdeng.tw/studio</loc><lastmod>2026-10-23</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-<url><loc>https://xingdeng.tw/quick</loc><lastmod>2026-10-23</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
-  <url><loc>https://xingdeng.tw/checkout</loc><lastmod>2026-10-23</lastmod></url>
-  <url><loc>https://xingdeng.tw/demo</loc><lastmod>2026-10-23</lastmod></url>
-  <url><loc>https://xingdeng.tw/articles/a04</loc><lastmod>2026-10-23</lastmod></url>
-  <url><loc>https://xingdeng.tw/articles/a05</loc><lastmod>2026-10-23</lastmod></url>
-  <url><loc>https://xingdeng.tw/articles/a06</loc><lastmod>2026-10-23</lastmod></url>
-  <url><loc>https://xingdeng.tw/contracts</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
-  <url><loc>https://xingdeng.tw/contracts/kit</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
-  <url><loc>https://xingdeng.tw/contracts/service</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
-  <url><loc>https://xingdeng.tw/contracts/key</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
-  <url><loc>https://xingdeng.tw/contracts/ai</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
-  <url><loc>https://xingdeng.tw/contracts/data</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/</loc><lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://xingdeng.tw/3d</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://xingdeng.tw/orbit3d</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://xingdeng.tw/quick</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://xingdeng.tw/articles</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://xingdeng.tw/reports</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://xingdeng.tw/diagnose</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://xingdeng.tw/orbit-tower</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://xingdeng.tw/kits</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://xingdeng.tw/pricing</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://xingdeng.tw/try/</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://xingdeng.tw/studio</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://xingdeng.tw/demo</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://xingdeng.tw/departments</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://xingdeng.tw/about</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/faq</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/contact</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/checkout</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/articles/a01</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/articles/a02</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/articles/a03</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/articles/a04</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/articles/a05</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/articles/a06</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/articles/a07</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/articles/a08</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/articles/a09</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://xingdeng.tw/kits/preview/enterprise</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://xingdeng.tw/kits/preview/personal</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://xingdeng.tw/kits/preview/shop</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://xingdeng.tw/contracts</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/contracts/kit</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/contracts/service</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/contracts/key</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/contracts/ai</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/contracts/data</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://xingdeng.tw/legal</loc><lastmod>2026-10-25</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://xingdeng.tw/privacy</loc><lastmod>2026-10-25</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://xingdeng.tw/terms</loc><lastmod>2026-10-25</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
 </urlset>
