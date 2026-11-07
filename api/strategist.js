@@ -69,12 +69,37 @@ module.exports = async function handler(req,res){
       : JSON.parse((await new Promise(r=>{const c=[];req.on('data',x=>c.push(x));req.on('end',()=>r(Buffer.concat(c).toString('utf8')))}))||'{}');
   } catch { return res.status(400).json({error:'json required'}); }
   const msgs = Array.isArray(body.messages) ? body.messages.slice(-12) : [{role:'user',content:String(body.message||'').slice(0,2000)}];
-  /* 【強制降級穩健版 2026-10-15】Rule Engine Lock：
-     繞過外部 Gemini fetch（不再讀鑰、不再發任何網路請求），直接回本地規則智慧應答。
-     避開外部 API 權限／403；brain 恆為 rule-engine-v1。
-     要恢復真 LLM：把本區塊改回讀 GEMINI_API_KEY＋fetch generateContent 的分支。 */
-  const {reply,capture} = fallbackEngine(msgs);
-  res.status(200).json({ok:true,reply,capture,brain:'rule-engine-v1'});
+
+  /* 解鎖（2026-11-07）：優先呼叫 Gemini LLM；失敗自動降級到規則引擎。
+     同時支援 GEMINI_API_KEY 與 GEMINI_API 兩種變數名。 */
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_API;
+  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  if (apiKey) {
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 18000);
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: SYSTEM }] },
+          contents: msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.content).slice(0, 4000) }] })),
+          generationConfig: { temperature: 0.7, maxOutputTokens: 1400 }
+        }),
+        signal: ctrl.signal
+      });
+      clearTimeout(timer);
+      const j = await r.json();
+      const text = j?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (r.ok && text) {
+        const capture = /\[\[LEAD_CAPTURE\]\]/.test(text);
+        return res.status(200).json({ ok: true, reply: text.replace(/\[\[LEAD_CAPTURE\]\]/g, '').trim(), capture, brain: 'gemini-' + model });
+      }
+    } catch (e) { /* 降級到規則引擎 */ }
+  }
+  /* 降級：規則引擎 */
+  const {reply, capture} = fallbackEngine(msgs);
+  res.status(200).json({ok:true, reply, capture, brain:'rule-engine-v1'});
 };
 
-// SYSTEM prompt 全文保留供前端展示與文件；線上回應目前由規則引擎產出（GEMINI_API_KEY 已鎖定不參與調度）
+// SYSTEM prompt 全文保留供前端展示與文件；線上回應優先呼叫 Gemini LLM，失敗降級到規則引擎。

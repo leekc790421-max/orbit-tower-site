@@ -17,14 +17,13 @@ async function hopFetch(url, opts, ms) {
 const Providers = {
   gemini: {
     name: 'gemini', model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
-    /* 【強制降級穩健版 2026-10-15】rule engine lock：
-       外部 API 權限不穩（403）期間一律鎖死 ready=false，調度器永走規則引擎降級鏈。
-       要恢復真 LLM：改回 ready: () => !!process.env.GEMINI_API_KEY。 */
-    ready: () => false,
+    /* 解鎖：同時支援 GEMINI_API_KEY 與 GEMINI_API 兩種變數名（不同 project 命名不同）。
+       若 401/403 持續，斷路器會自動把 ready 降為 false，不會無限重試。 */
+    ready: () => !!(process.env.GEMINI_API_KEY || process.env.GEMINI_API),
     async chat(msgs, system, ms = 18000) {
-
+      const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_API;
       const r = await hopFetch(`https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
         body: JSON.stringify({ system_instruction: { parts: [{ text: sysText(system) }] }, contents: msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.content).slice(0, 4000) }] })), generationConfig: { temperature: .7, maxOutputTokens: 1400 } })
       }, ms);
       const j = await r.json(); const text = j?.candidates?.[0]?.content?.parts?.[0]?.text;
