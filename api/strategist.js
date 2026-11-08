@@ -111,14 +111,14 @@ module.exports = async function handler(req,res){
           model: zaiModel,
           messages: [{ role: 'system', content: SYSTEM }, ...msgs.map(m => ({ role: m.role, content: String(m.content).slice(0, 4000) }))],
           temperature: 0.7,
-          max_tokens: 1400
+          max_tokens: 800
         }),
         signal: ctrl.signal
       });
       clearTimeout(timer);
       const j = await r.json();
       const text = j?.choices?.[0]?.message?.content;
-      if (r.ok && text) {
+      if (r.ok && text && text.trim().length > 10) {
         const capture = /\[\[LEAD_CAPTURE\]\]/.test(text);
         return res.status(200).json({ ok: true, reply: text.replace(/\[\[LEAD_CAPTURE\]\]/g, '').trim(), capture, brain: 'zai-' + zaiModel });
       }
