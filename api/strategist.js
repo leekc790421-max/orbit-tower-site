@@ -105,7 +105,7 @@ module.exports = async function handler(req,res){
       const zaiModel = process.env.ZAI_MODEL || 'glm-4.5-flash';
       console.error('[debug] calling Z.ai model:', zaiModel);
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 18000);
+      const timer = setTimeout(() => ctrl.abort(), 28000);
       const r = await fetch('https://api.z.ai/api/paas/v4/chat/completions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${zaiKey}` },
@@ -113,7 +113,7 @@ module.exports = async function handler(req,res){
           model: zaiModel,
           messages: [{ role: 'system', content: SYSTEM }, ...msgs.map(m => ({ role: m.role, content: String(m.content).slice(0, 4000) }))],
           temperature: 0.7,
-          max_tokens: 800
+          max_tokens: 600
         }),
         signal: ctrl.signal
       });
