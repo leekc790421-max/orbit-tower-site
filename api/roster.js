@@ -30,6 +30,7 @@ function crewDef() {
     { id:'copilot', name:'GitHub Copilot', role:'開發職（IDE 工具，非線上客服）', floors:['產線'], kind:'dev_tool', status:'dev_tool', note:'其運行時職務由 Gemini 鏈代板' },
     { id:'manus', name:'Manus', role:'政務代班・自動化跑批', floors:['3F 備援'], kind:'honorary', status:'honorary', note:'名譽職員：待接 API／Webhook 即轉正式編制' },
     { id:'mulerun', name:'MuleRun', role:'數位幕僚長・工作流編排', floors:['5F'], kind:'honorary', status:'honorary', note:'名譽職員：待外部 Agent 連線資訊' },
+    { id:'zai', name:'Z.ai (GLM)', role:'數位幕僚長・工作流編排・多語對話', floors:['5F'], kind:'staff', prepared: !!(process.env.ZAI_API_KEY || process.env.Z_AI_API_KEY), probeUrl: 'https://api.z.ai/api/paas/v4/models', header: () => ({ Authorization: 'Bearer ' + sysText(process.env.ZAI_API_KEY || process.env.Z_AI_API_KEY) }), note:'Z.ai GLM-4.5-flash(免費額度可用),OpenAI 相容端點' },
     { id:'funnel', name:'名單分流機器人', role:'商業情報・AIDA 熱度分流', floors:['2F','1F'], kind:'staff', status:'online', note:'本地規則評分（零金鑰恆在線）：leads 入池即打分分流' },
     { id:'sequence', name:'排程序列機器人', role:'業務跟進・EDM/LINE 養客序列', floors:['2F'], kind:'staff', status:'online', note:'/api/corps?bot=seq・沙箱恆在線，掛 RESEND/LINE 鑰即轉真發送' },
     { id:'broadcast', name:'廣播推播機器人', role:'4F 社群爆點・分眾推送廣播', floors:['4F'], kind:'staff', status:'online', note:'/api/corps?bot=broadcast・沙箱預演，掛 LINE 鑰走官方 push' },

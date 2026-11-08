@@ -59,6 +59,21 @@ const Providers = {
       return text;
     }
   },
+  /* Z.ai (GLM) — OpenAI 相容端點,作為 Gemini 之外的備援主力 */
+  zai: {
+    name: 'zai', model: process.env.ZAI_MODEL || 'glm-4.5-flash',
+    ready: () => !!(process.env.ZAI_API_KEY || process.env.Z_AI_API_KEY),
+    async chat(msgs, system, ms = 18000) {
+      const apiKey = process.env.ZAI_API_KEY || process.env.Z_AI_API_KEY;
+      const r = await hopFetch('https://api.z.ai/api/paas/v4/chat/completions', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+        body: JSON.stringify({ model: this.model, messages: [{ role: 'system', content: sysText(system) }, ...msgs.map(m => ({ role: m.role, content: m.content }))], temperature: 0.7, max_tokens: 1400 })
+      }, ms);
+      const j = await r.json(); const text = j?.choices?.[0]?.message?.content;
+      if (!r.ok || !text) throw new Error(`zai ${r.status} ${(j?.error?.message || j?.error?.code || '').toString().slice(0, 120)}`);
+      return text;
+    }
+  },
   /* 規則引擎：各職務線的下限保障（永不中斷線） */
   rule: { name: 'rule', model: 'snt-rule-engine', ready: () => true, async chat(msgs, system) { const o = (system.rules || (() => '（調度器：此職務線離線待命）'))(msgs); return typeof o === 'string' ? o : (o && o.reply) || '（規則引擎空轉）'; } }
 };
@@ -72,10 +87,10 @@ function ruleFrontDesk(msgs){
   return { reply: `【SWOT 快局｜${ind}】\nS：產品可信與案例在手上｜W：通路與時區缺口\nO：AI 全天候接待＋3D 展示把「看」變「逛」\nT：廣告成本與跳出率侵蝕毛利\n起手：1) A注意→型錄頁升級 3D 展示；2) I興趣→三語 AI 接待夜間不關門；3) D慾望→免費五維診斷 xingdeng.tw/diagnose；4) A行動→萬元級選懶人包 xingdeng.tw/kits，规模級進駐 3D 總部 orbit.xingdeng.tw\n\n📊 你的 SWOT 已生成。下一步：\n① 免費：做網站五維診斷 → https://xingdeng.tw/diagnose\n② $3,000 起：30 分鐘上線懶人包 → https://xingdeng.tw/kits\n③ 預約 15 分鐘免費諮詢 → https://xingdeng.tw/contact\n[[LEAD_CAPTURE]]`, capture: true };
 }
 const LANES = {
-  dev:        { chain: ['gemini', 'rule'], system: { text: '你是 Orbit Tower 研發架構師（Gemini Pro 職代）：聚焦解題，輸出架構推理與程式碼，繁體中文。', rules: () => '（研發線待命：Gemini 啟用後此線提供架構推理與代碼級產出；本訊息為規則引擎占位。）' } },
+  dev:        { chain: ['gemini', 'zai', 'rule'], system: { text: '你是 Orbit Tower 研發架構師（Gemini Pro 職代）：聚焦解題，輸出架構推理與程式碼，繁體中文。', rules: () => '（研發線待命：Gemini/Z.ai 啟用後此線提供架構推理與代碼級產出；本訊息為規則引擎占位。）' } },
   finance:    { chain: ['llama', 'rule'], system: { text: '你是財會稽核員（Llama 私有部署模式）：只輸出嚴格 JSON（schema: {subject,period,items:[{label,amount,currency}],flags:[strings],verdict}）；嚴禁編造數字，缺資料時於 flags 註明。', rules: () => JSON.stringify({ subject: null, period: null, items: [], flags: ['llama-private-not-attached'], verdict: 'awaiting-private-model' }) } },
   promo:      { chain: ['grok', 'rule'], system: { text: '你是 xAI Grok 坐鎮的社群爆點組：貼近即時聲量、語氣犀利、產出 3 版促銷文案＋1 個梗圖腳本；但不得造假數據、不碰政治與歧視話題。', rules: (msgs) => { const t = String((msgs.slice(-1)[0] || {}).content || '本品'); return `【促銷骨架（Grok 上線前規則版）】\n1. 直擊痛點版：「${t}——還在花錢買没人逛的官網？」\n2. 反差版：「別人還在改 Banner，你已經在接待半夜三點的客戶。」\n3. 數字版：「停留 2–3 倍、名單不漏夜—這才是 2026 的門面。」`; } } },
-  front_desk: { chain: ['gemini', 'rule'], system: { text: FRONT_DESK_SYS, rules: ruleFrontDesk } },
+  front_desk: { chain: ['gemini', 'zai', 'rule'], system: { text: FRONT_DESK_SYS, rules: ruleFrontDesk } },
 };
 const laneKey = (req) => [req.socket?.remoteAddress || 'anon', req.url].join('|');
 

@@ -70,7 +70,7 @@ module.exports = async function handler(req,res){
   } catch { return res.status(400).json({error:'json required'}); }
   const msgs = Array.isArray(body.messages) ? body.messages.slice(-12) : [{role:'user',content:String(body.message||'').slice(0,2000)}];
 
-  /* 解鎖（2026-11-07）：優先呼叫 Gemini LLM；失敗自動降級到規則引擎。
+  /* 解鎖（2026-11-07）：優先 Gemini → 失敗降級 Z.ai (GLM) → 失敗降級規則引擎。
      同時支援 GEMINI_API_KEY 與 GEMINI_API 兩種變數名。 */
   const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_API;
   const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -94,6 +94,33 @@ module.exports = async function handler(req,res){
       if (r.ok && text) {
         const capture = /\[\[LEAD_CAPTURE\]\]/.test(text);
         return res.status(200).json({ ok: true, reply: text.replace(/\[\[LEAD_CAPTURE\]\]/g, '').trim(), capture, brain: 'gemini-' + model });
+      }
+    } catch (e) { /* 降級到 Z.ai */ }
+  }
+  /* Z.ai (GLM) 備援 */
+  const zaiKey = process.env.ZAI_API_KEY || process.env.Z_AI_API_KEY;
+  if (zaiKey) {
+    try {
+      const zaiModel = process.env.ZAI_MODEL || 'glm-4.5-flash';
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 18000);
+      const r = await fetch('https://api.z.ai/api/paas/v4/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${zaiKey}` },
+        body: JSON.stringify({
+          model: zaiModel,
+          messages: [{ role: 'system', content: SYSTEM }, ...msgs.map(m => ({ role: m.role, content: String(m.content).slice(0, 4000) }))],
+          temperature: 0.7,
+          max_tokens: 1400
+        }),
+        signal: ctrl.signal
+      });
+      clearTimeout(timer);
+      const j = await r.json();
+      const text = j?.choices?.[0]?.message?.content;
+      if (r.ok && text) {
+        const capture = /\[\[LEAD_CAPTURE\]\]/.test(text);
+        return res.status(200).json({ ok: true, reply: text.replace(/\[\[LEAD_CAPTURE\]\]/g, '').trim(), capture, brain: 'zai-' + zaiModel });
       }
     } catch (e) { /* 降級到規則引擎 */ }
   }
