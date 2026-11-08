@@ -78,8 +78,8 @@
    "schedule": "7 0 * * *"
   },
   {
-   "path": "/api/corps?bot=pulse",
-   "schedule": "7 1 * * *"
+   "path": "/api/health?mode=ceo-check",
+   "schedule": "0 1 * * *"
   },
   {
    "path": "/api/corps?bot=pulse",
