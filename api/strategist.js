@@ -99,6 +99,7 @@ module.exports = async function handler(req,res){
   }
   /* Z.ai (GLM) 備援 */
   const zaiKey = process.env.ZAI_API_KEY || process.env.Z_AI_API_KEY;
+  console.error('[strategist] ZAI key present:', !!zaiKey, 'gemini key present:', !!apiKey);
   if (zaiKey) {
     try {
       const zaiModel = process.env.ZAI_MODEL || 'glm-4.5-flash';
@@ -122,7 +123,7 @@ module.exports = async function handler(req,res){
         const capture = /\[\[LEAD_CAPTURE\]\]/.test(text);
         return res.status(200).json({ ok: true, reply: text.replace(/\[\[LEAD_CAPTURE\]\]/g, '').trim(), capture, brain: 'zai-' + zaiModel });
       }
-    } catch (e) { /* 降級到規則引擎 */ }
+    } catch (e) { console.error('[strategist] Z.ai failed:', String(e).slice(0,200)); /* 降級到規則引擎 */ }
   }
   /* 降級：規則引擎 */
   const {reply, capture} = fallbackEngine(msgs);
