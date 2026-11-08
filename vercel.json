@@ -171,5 +171,13 @@
   }
  ],
  "buildCommand": "node scripts/bump-sitemap.js",
- "outputDirectory": "."
+ "outputDirectory": ".",
+ "functions": {
+  "api/strategist.js": {
+   "maxDuration": 30
+  },
+  "api/ai-router.js": {
+   "maxDuration": 30
+  }
+ }
 }
