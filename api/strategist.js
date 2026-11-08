@@ -99,9 +99,11 @@ module.exports = async function handler(req,res){
   }
   /* Z.ai (GLM) 備援 */
   const zaiKey = process.env.ZAI_API_KEY || process.env.Z_AI_API_KEY;
+  console.error('[debug] zaiKey present:', !!zaiKey, 'gemini present:', !!apiKey);
   if (zaiKey) {
     try {
       const zaiModel = process.env.ZAI_MODEL || 'glm-4.5-flash';
+      console.error('[debug] calling Z.ai model:', zaiModel);
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), 18000);
       const r = await fetch('https://api.z.ai/api/paas/v4/chat/completions', {
@@ -117,12 +119,14 @@ module.exports = async function handler(req,res){
       });
       clearTimeout(timer);
       const j = await r.json();
+      console.error('[debug] Z.ai response status:', r.status, 'body keys:', Object.keys(j || {}));
       const text = j?.choices?.[0]?.message?.content;
+      console.error('[debug] Z.ai text length:', text?.length, 'preview:', String(text||'').slice(0,80));
       if (r.ok && text && text.trim().length > 10) {
         const capture = /\[\[LEAD_CAPTURE\]\]/.test(text);
         return res.status(200).json({ ok: true, reply: text.replace(/\[\[LEAD_CAPTURE\]\]/g, '').trim(), capture, brain: 'zai-' + zaiModel });
       }
-    } catch (e) { /* 降級到規則引擎 */ }
+    } catch (e) { console.error('[debug] Z.ai exception:', String(e).slice(0,200)); /* 降級到規則引擎 */ }
   }
   /* 降級：規則引擎 */
   const {reply, capture} = fallbackEngine(msgs);
