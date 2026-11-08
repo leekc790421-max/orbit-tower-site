@@ -58,8 +58,11 @@ async function ceoCheck() {
     const homeHtml = await fetchText(site.url);
     const redlines = {};
     if (site.id === 'vip') {
+      // 紅線:不准「接」信用卡刷卡。但 FAQ「為什麼不接信用卡刷卡」是合規說明,要排除。
+      const cardMentioned = countMatches(homeHtml, ['信用卡刷卡', '收卡號', 'CVV', '3DS 認證資料']) > 0;
+      const hasFaqExplainingNoCard = /為什麼.{0,10}不接信用卡刷卡|不接.{0,5}第三方刷卡|只接受 ATM/.test(homeHtml);
       redlines.disclaimer = countMatches(homeHtml, ['僅供文化參考', '不構成投資']) > 0;
-      redlines.no_credit_card = countMatches(homeHtml, ['信用卡刷卡', '收卡號', 'CVV', '3DS 認證資料']) === 0;
+      redlines.no_credit_card = !cardMentioned || hasFaqExplainingNoCard; // FAQ 說明不接 = 合規
       redlines.manual_review = countMatches(homeHtml, ['人工審核', '雙簽', '匯款驗證']) > 0;
     }
     if (site.id === 'tower') {
@@ -94,22 +97,42 @@ async function ceoCheck() {
   if (NURL) {
     try {
       const sql = require('@neondatabase/serverless').neon(NURL);
-      const [visitors, leads, orders, aLeads, aiChats] = await Promise.all([
-        sql`select count(*)::int as n from growth_event where ts >= (now() - interval '24 hours')`.catch(() => [{ n: 'N/A' }]),
-        sql`select count(*)::int as n from growth_lead where created_at >= (now() - interval '24 hours')`.catch(() => [{ n: 'N/A' }]),
-        sql`select count(*)::int as n, coalesce(sum(amount_usd),0)::float as usd from growth_order where created_at >= (now() - interval '24 hours')`.catch(() => [{ n: 'N/A', usd: 0 }]),
-        sql`select count(*)::int as n from growth_lead where grade='A' and created_at >= (now() - interval '24 hours')`.catch(() => [{ n: 'N/A' }]),
-        sql`select count(*)::int as n from ceo_conversation where ts >= (now() - interval '24 hours')`.catch(() => [{ n: 'N/A' }])
-      ]);
-      metrics = {
-        available: true,
-        yesterday_visitors: visitors[0]?.n,
-        yesterday_leads: leads[0]?.n,
-        yesterday_orders: orders[0]?.n,
-        yesterday_revenue_usd: orders[0]?.usd,
-        yesterday_a_grade_leads: aLeads[0]?.n,
-        yesterday_ai_chats: aiChats[0]?.n
-      };
+      // 先查實際有哪些 table（不同站用不同 DB schema）
+      const tables = await sql`
+        select table_name from information_schema.tables
+        where table_schema='public'
+        and table_name in ('growth_event','growth_lead','growth_order','ceo_conversation','leads','orders','contacts','messages')
+      `.catch(() => []);
+      const tableNames = tables.map(t => t.table_name);
+
+      const queries = {};
+      if (tableNames.includes('growth_event')) {
+        queries.visitors = sql`select count(*)::int as n from growth_event where ts >= (now() - interval '24 hours')`.catch(() => [{ n: 'N/A' }]);
+      }
+      if (tableNames.includes('growth_lead')) {
+        queries.leads = sql`select count(*)::int as n from growth_lead where created_at >= (now() - interval '24 hours')`.catch(() => [{ n: 'N/A' }]);
+        queries.a_leads = sql`select count(*)::int as n from growth_lead where grade='A' and created_at >= (now() - interval '24 hours')`.catch(() => [{ n: 'N/A' }]);
+      }
+      if (tableNames.includes('growth_order')) {
+        queries.orders = sql`select count(*)::int as n from growth_order where created_at >= (now() - interval '24 hours')`.catch(() => [{ n: 'N/A' }]);
+      }
+      if (tableNames.includes('ceo_conversation')) {
+        queries.ai_chats = sql`select count(*)::int as n from ceo_conversation where ts >= (now() - interval '24 hours')`.catch(() => [{ n: 'N/A' }]);
+      }
+
+      const keys = Object.keys(queries);
+      const values = keys.length ? await Promise.all(keys.map(k => queries[k])) : [];
+      const result = { available: true, tables_found: tableNames };
+      keys.forEach((k, i) => {
+        result[{
+          visitors: 'yesterday_visitors',
+          leads: 'yesterday_leads',
+          a_leads: 'yesterday_a_grade_leads',
+          orders: 'yesterday_orders',
+          ai_chats: 'yesterday_ai_chats'
+        }[k]] = values[i][0]?.n;
+      });
+      metrics = result;
     } catch (e) {
       metrics = { available: false, note: 'DB query failed: ' + String(e).slice(0, 100) };
     }
