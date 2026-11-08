@@ -33,10 +33,76 @@ async function receipt(email, name, subject, text) {
   } catch (e) { return 'err:' + String(e.message || e).slice(0, 40); }
 }
 
+/* Z.ai 自然回覆（LINE 客服用）*/
+async function aiReplyB2B(userMsg) {
+  const zaiKey = process.env.ZAI_API_KEY || process.env.Z_AI_API_KEY;
+  if (!zaiKey) return '收到你的訊息！我是 Orbit Tower 的 AI 接待。想了解架網懶人包、AI 數位總部、或 3D 展示館，直接問就行 😊';
+  const system = `你是「Orbit Tower」光曜星樞 SNT 的 AI 接待員，負責 B2B 架網服務。
+你的工作：
+1. 自然回答客戶關於架網懶人包、AI 數位總部、3D 展示館的問題
+2. 回覆簡潔（3-5 句），像真人對話
+3. 產品：個人網站 NT$7,800、商業店家 NT$13,900、公司企業 NT$24,800、客製化 NT$30,000 起
+4. 試用價：個人 NT$1,980（前50名）、店家 NT$3,980（前30名）、公司 NT$9,800（前20名）
+5. 30 分鐘上線、一次買斷、RWD 響應式
+6. 成品展示：https://tower.xingdeng.tw/showcase
+7. 3D 展示館：https://tower.xingdeng.tw/3d
+8. 定價：https://tower.xingdeng.tw/pricing
+9. 聯絡：https://tower.xingdeng.tw/contact
+10. 不接信用卡，只收 ATM 匯款 + Payoneer
+
+語氣：專業但親切，繁體中文，像一個懂技術但會講白話的顧問。`;
+
+  try {
+    const r = await fetch('https://api.z.ai/api/paas/v4/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + zaiKey },
+      body: JSON.stringify({
+        model: process.env.ZAI_MODEL || 'glm-4.5-flash',
+        messages: [{ role: 'system', content: system }, { role: 'user', content: userMsg }],
+        temperature: 0.7, max_tokens: 500,
+      }),
+      signal: AbortSignal.timeout(25000),
+    });
+    const j = await r.json();
+    const text = j?.choices?.[0]?.message?.content || '';
+    if (text.trim().length > 5) return text.trim();
+    return '收到！想了解架網方案、AI 接待、或 3D 展示館，直接問就行 😊';
+  } catch { return '收到你的訊息！稍等一下，我幫你看看。或直接看方案：https://tower.xingdeng.tw/showcase'; }
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  if (req.method === 'GET') return res.status(200).json({ ok: true, mode: 'probe', armed: !!process.env.STRIPE_SECRET_KEY, db: !!NURL });
+  if (req.method === 'GET') return res.status(200).json({ ok: true, mode: 'probe', armed: !!process.env.STRIPE_SECRET_KEY, db: !!NURL, line_ai: !!process.env.ZAI_API_KEY });
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
+
+  /* LINE webhook 切換：?mode=line */
+  const u0 = new URL(req.url, 'http://x');
+  if (u0.searchParams.get('mode') === 'line') {
+    let body = {};
+    try { body = await readBody(req); } catch { return res.status(400).json({ error: 'json required' }); }
+    const events = (body && body.events) || [];
+    let handled = 0;
+    for (const ev of events) {
+      try {
+        if (ev.type === 'follow') {
+          await fetch('https://api.line.me/v2/bot/message/reply', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + (process.env.LINE_CHANNEL_TOKEN || process.env.LINE_CHANNEL_ACCESS_TOKEN || '') },
+            body: JSON.stringify({ replyToken: ev.replyToken, messages: [{ type: 'text', text: '嗨 👋 歡迎來到 Orbit Tower！想了解架網懶人包、AI 數位總部、或 3D 展示館，直接問就行。先看方案也行：https://tower.xingdeng.tw/showcase' }] }),
+          }).catch(() => {});
+        } else if (ev.type === 'message' && ev.message && ev.message.type === 'text') {
+          const aiText = await aiReplyB2B(String(ev.message.text || ''));
+          await fetch('https://api.line.me/v2/bot/message/reply', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + (process.env.LINE_CHANNEL_TOKEN || process.env.LINE_CHANNEL_ACCESS_TOKEN || '') },
+            body: JSON.stringify({ replyToken: ev.replyToken, messages: [{ type: 'text', text: aiText.slice(0, 2000) }] }),
+          }).catch(() => {});
+        }
+        handled++;
+      } catch { /* 恆 200 */ }
+    }
+    return res.status(200).json({ ok: true, mode: 'line', handled });
+  }
   const K = process.env.WEBHOOK_SECRET;
   if (!K) return res.status(200).json({ ok: true, mode: 'disabled', note: '未設 WEBHOOK_SECRET＝不收單（防誤接）' });
   const u = new URL(req.url, 'http://x');
