@@ -1,0 +1,7 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {"@type":"Organization","@id":"https://tower.xingdeng.tw/#org","name":"Orbit Tower 懶人包","url":"https://tower.xingdeng.tw","description":"30 分鐘快速架站,NT$3,000-13,900 透明定價。從需求到上線,一站搞定。","foundingDate":"2026","founder":{"@type":"Person","name":"A.c LEE"}},
+    {"@type":"WebSite","@id":"https://tower.xingdeng.tw/#website","url":"https://tower.xingdeng.tw","name":"Orbit Tower 懶人包","publisher":{"@id":"https://tower.xingdeng.tw/#org"},"inLanguage":["zh-Hant","zh-CN","en"]}
+  ]
+}
