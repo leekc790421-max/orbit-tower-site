@@ -1,4 +1,4 @@
-/* 光曜星樞・全站語系基底 v2（繁中 base → EN/JA chrome 級翻譯）
+/* 光曦星閣・全站語系基底 v2（繁中 base → EN/JA chrome 級翻譯）
    範圍：導覽列／頁尾／HUD 連結／CTA／指揮中樞共同介面元素；策略長對話與 3D 場景
    內容文字不受影響（引擎各走各的多語處理）。
    路由協定（hreflang 語意矩陣對應）：
@@ -55,7 +55,7 @@
     'AI Core Online・24/7': { en: 'AI Core Online・24/7', ja: 'AIコア稼働中・24/7' },
     '行銷站｜未來趨勢文章': { en: 'Official Site・Future Insights', ja: '公式サイト・トレンド記事' },
     '預約導覽 Demo': { en: 'Book a Guided Demo', ja: 'デモ予約' },
-    '光曜星樞官網｜行銷站': { en: 'SNT Official Site', ja: '光曜星樞公式サイト' },
+    '光曦星閣官網｜行銷站': { en: 'SNT Official Site', ja: '光曦星閣公式サイト' },
     '線上報價單・沙箱金流': { en: 'Online Quote・Sandbox Pay', ja: 'オンライン見積・サンドボックス決済' },
     '拾光引 SNT｜命理雙域站': { en: 'LumiGuide SNT｜Destiny Suite', ja: '拾光引 SNT｜命理ツインサイト' },
     '拾光引 SNT・命理雙域站': { en: 'LumiGuide SNT・Destiny Suite', ja: '拾光引 SNT・命理ツインサイト' },
@@ -75,9 +75,9 @@
     '官網': { en: 'Site', ja: '公式サイト' }, '3D 總部': { en: '3D HQ', ja: '3D本社' }, '報價單': { en: 'Quote', ja: '見積' },
     '光曜 Orbit Tower｜3D 數位總部 →': { en: 'Orbit Tower｜3D Digital HQ →', ja: 'Orbit Tower｜3Dデジタル本部 →' },
     '官網｜xingdeng.tw': { en: 'Official｜xingdeng.tw', ja: '公式サイト｜xingdeng.tw' },
-    '光曜星樞官網｜xingdeng.tw': { en: 'SNT Official｜xingdeng.tw', ja: '光曜星樞公式サイト｜xingdeng.tw' },
+    '光曦星閣官網｜xingdeng.tw': { en: 'SNT Official｜xingdeng.tw', ja: '光曦星閣公式サイト｜xingdeng.tw' },
     '電子名片': { en: 'Digital Business Card', ja: '電子名刺' },
-    '光曜星樞 官網': { en: 'SNT Official Site', ja: '光曜星樞公式サイト' },
+    '光曦星閣 官網': { en: 'SNT Official Site', ja: '光曦星閣公式サイト' },
     '回報價工具': { en: 'Quote Tool', ja: '見積ツール' }, '人工諮詢': { en: 'Talk to a Human', ja: '人工相談' },
     '收單台（本機）': { en: 'Leads Console (local)', ja: 'リードコンソール（ローカル）' },
     '匯出 JSON': { en: 'Export JSON', ja: 'JSON出力' }, '匯出 CSV': { en: 'Export CSV', ja: 'CSV出力' },

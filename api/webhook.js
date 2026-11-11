@@ -37,7 +37,7 @@ async function receipt(email, name, subject, text) {
 async function aiReplyB2B(userMsg) {
   const zaiKey = process.env.ZAI_API_KEY || process.env.Z_AI_API_KEY;
   if (!zaiKey) return '收到你的訊息！我是 Orbit Tower 的 AI 接待。想了解架網懶人包、AI 數位總部、或 3D 展示館，直接問就行 😊';
-  const system = `你是「Orbit Tower」光曜星樞 SNT 的 AI 接待員，負責 B2B 架網服務。
+  const system = `你是「Orbit Tower」光曦星閣 SNT 的 AI 接待員，負責 B2B 架網服務。
 你的工作：
 1. 自然回答客戶關於架網懶人包、AI 數位總部、3D 展示館的問題
 2. 回覆簡潔（3-5 句），像真人對話
@@ -135,7 +135,7 @@ module.exports = async function handler(req, res) {
         VALUES ('order-paid', ${email}, ${name}, 'kit_purchase', 'webhook', '/api/webhook', 70, 'hot', 'paid', ${ref || 'stripe:' + (o.payment_intent || o.id || '')}, ${amount}, ${currency}, ${product}, now(), 'paid::done', 999)`; } catch (e) { console.log('WEBHOOK_PERSIST_FAIL ' + String(e.message).slice(0, 120)); }
     }
     const subj = '已收到的款項 — Orbit Tower 訂單生效（' + product + '）';
-    const txt = name + ' 您好，\n\n款項 NT$' + amount + '（' + currency.toUpperCase() + '）已確認，自動收據如下：\n  項目：' + product + '\n  訂單參考：' + ref + '\n\n' + deliveryLine(product) + '\n\n— 光曜星樞 Orbit Tower（本信由系統自動核發）';
+    const txt = name + ' 您好，\n\n款項 NT$' + amount + '（' + currency.toUpperCase() + '）已確認，自動收據如下：\n  項目：' + product + '\n  訂單參考：' + ref + '\n\n' + deliveryLine(product) + '\n\n— 光曦星閣 Orbit Tower（本信由系統自動核發）';
     const rc = await receipt(email, name, subj, txt);
     return res.status(200).json({ ok: true, event: 'paid', persisted: !!sql, receipt: rc });
   }

@@ -1,4 +1,4 @@
-/* 光曜星樞・AI 行銷戰略長 懸浮 Widget（自足：母站白底 / 3D 站深色自動適配）
+/* 光曦星閣・AI 行銷戰略長 懸浮 Widget（自足：母站白底 / 3D 站深色自動適配）
    暴露 window.SNTChat = { open(), close(), toggle() } 供 3D 場景觸發 */
 (function(){
   var HUB='https://xingdeng.tw';                      // API 與資產基準（跨站 CORS 已開）
@@ -30,7 +30,7 @@
 
   var fab=document.createElement('button');fab.className='snt-fab';fab.innerHTML='AI<br>戰略長';fab.setAttribute('aria-label','呼叫 AI 行銷戰略長');
   var P=document.createElement('div');P.className='snt-p';
-  P.innerHTML='<div class="snt-hd"><span style="font-size:20px">'+(dark?'👑':'🧠')+'</span><span><b>AI 行銷戰略長</b><small>光曜星樞・B2B × 數位地產・免費開局 SWOT</small></span><button class="x" aria-label="收合">✕</button></div>'+
+  P.innerHTML='<div class="snt-hd"><span style="font-size:20px">'+(dark?'👑':'🧠')+'</span><span><b>AI 行銷戰略長</b><small>光曦星閣・B2B × 數位地產・免費開局 SWOT</small></span><button class="x" aria-label="收合">✕</button></div>'+
   '<div class="snt-log" id="sntLog"></div><div class="snt-chips" id="sntChips"></div>'+
   '<div id="sntLeadSlot"></div>'+
   '<form class="snt-in" id="sntF"><input id="sntMsg" placeholder="行業＋痛點，例：餐飲／廣告燒了沒名單" autocomplete="off"><button class="snt-go" type="submit">送出</button></form>';
@@ -68,7 +68,7 @@
     };
   }
   function save(){try{sessionStorage.setItem('sntChat',JSON.stringify(his.slice(-30)))}catch(e){}}
-  if(!his.length) his.push({r:'ai',c:'我是光曜星樞的 AI 行銷戰略長。報上你的行業與痛點，我當場用 SWOT 幫你拆一局——三分鐘，免費。'});
+  if(!his.length) his.push({r:'ai',c:'我是光曦星閣的 AI 行銷戰略長。報上你的行業與痛點，我當場用 SWOT 幫你拆一局——三分鐘，免費。'});
   render();
   fab.onclick=function(){P.classList.toggle('open');if(P.classList.contains('open'))P.querySelector('#sntMsg').focus()};
   P.querySelector('.x').onclick=function(){P.classList.remove('open')};

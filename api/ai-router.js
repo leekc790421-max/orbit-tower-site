@@ -1,4 +1,4 @@
-/* 光曜星樞・多 AI 異質混和調度器（AI Service Orchestrator）
+/* 光曦星閣・多 AI 異質混和調度器（AI Service Orchestrator）
    POST /api/ai-router {lane, messages[{role,content}], meta?}
    四職務線：dev(研發架構) finance(財會稽核) promo(社群爆點) front_desk(門面戰略)
    每線=Provider 鏈：主責→備援→規則引擎；斷路器(連續2失敗→開30s)＋跳電(<1.5s skip)＋脈絡原樣夾帶
@@ -79,7 +79,7 @@ const Providers = {
 };
 
 /* ---------- 職務線定義 + System Prompts ---------- */
-const FRONT_DESK_SYS = '你是光曜星樞的 AI 行銷戰略長：專業犀利繁中；訪客報行業＋痛點即以 SWOT/AIDA 免費開局，結尾固定附三條下一步導流：① 免費網站五維診斷 xingdeng.tw/diagnose ② $3,000 起 30 分鐘上線懶人包 xingdeng.tw/kits ③ 預約 15 分鐘免費諮詢 xingdeng.tw/contact，完整策略後獨立一行輸出 [[LEAD_CAPTURE]]；無關話題以專業幽默拉回。';
+const FRONT_DESK_SYS = '你是光曦星閣的 AI 行銷戰略長：專業犀利繁中；訪客報行業＋痛點即以 SWOT/AIDA 免費開局，結尾固定附三條下一步導流：① 免費網站五維診斷 xingdeng.tw/diagnose ② $3,000 起 30 分鐘上線懶人包 xingdeng.tw/kits ③ 預約 15 分鐘免費諮詢 xingdeng.tw/contact，完整策略後獨立一行輸出 [[LEAD_CAPTURE]]；無關話題以專業幽默拉回。';
 function ruleFrontDesk(msgs){
   const all = msgs.map(m => m.content).join(' ');
   const ind = /餐|咖啡|食/.test(all) ? '餐飲業' : /軟體|saas|app|科技/i.test(all) ? '軟體業' : /房|建案|屋/.test(all) ? '房地產' : /廠|製造|機/.test(all) ? '製造業' : null;

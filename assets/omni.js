@@ -6,7 +6,7 @@
   var API = '/api/corps?bot=';
   var PERSONA = 'reception', hist = [], leadDone = false, engaged = false;
   var WELCOMES = {
-    reception: '【星樞接待總監】您好，歡迎蒞臨光曜星樞。報上產業＋一句痛點，我當場給您一套 SWOT 起手式。',
+    reception: '【星樞接待總監】您好，歡迎蒞臨光曦星閣。報上產業＋一句痛點，我當場給您一套 SWOT 起手式。',
     architect: '【首席 AI 架構師】想評估官網升級成「3D 展示＋多語 AI 接待」的技術路徑？給我產業與現有瓶頸。',
     growth: '【商務成長顧問】獲客、轉換、回購——現在最卡哪段？一句現況，我還您第一週動作。'
   };
@@ -27,7 +27,7 @@
     document.body.insertAdjacentHTML('beforeend',
       '<div id="orbit-tower-widget" style="position:fixed;bottom:24px;right:24px;z-index:999999;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,sans-serif;">' +
       '<div id="orbit-chat-box" style="display:none;width:min(360px,calc(100vw - 32px));height:min(520px,calc(100vh - 140px));background:#080D1A;border:1px solid #00E5FF;border-radius:18px;box-shadow:0 12px 48px rgba(0,0,0,.8);flex-direction:column;overflow:hidden;margin-bottom:12px;">' +
-      '<div style="background:#0F172A;padding:12px 16px;border-bottom:1px solid rgba(0,229,255,.3);"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:bold;color:#FFF;">光曜星樞・AI 接待中心</div><div style="font-size:11px;color:#F0C265;" id="otw-status">24/7 自動接待・rule-engine 實答 <span id="otw-social"></span></div></div><button onclick="toggleOrbitChat()" aria-label="收合" style="background:none;border:none;color:#8D919A;font-size:18px;cursor:pointer;">✕</button></div>' +
+      '<div style="background:#0F172A;padding:12px 16px;border-bottom:1px solid rgba(0,229,255,.3);"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:bold;color:#FFF;">光曦星閣・AI 接待中心</div><div style="font-size:11px;color:#F0C265;" id="otw-status">24/7 自動接待・rule-engine 實答 <span id="otw-social"></span></div></div><button onclick="toggleOrbitChat()" aria-label="收合" style="background:none;border:none;color:#8D919A;font-size:18px;cursor:pointer;">✕</button></div>' +
       '<div id="otw-personas" style="display:flex;gap:6px;margin-top:10px;"><button class="otw-p on" data-p="reception">接待總監</button><button class="otw-p" data-p="architect">AI 架構師</button><button class="otw-p" data-p="growth">成長顧問</button></div></div>' +
       '<div id="orbit-msg-list" style="flex:1;padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;font-size:12.5px;"></div><div id="otw-capture-slot"></div>' +
       '<div style="background:#0F172A;padding:12px;border-top:1px solid rgba(0,229,255,.2);display:flex;gap:6px;"><input id="orbit-lead-input" placeholder="行業＋痛點，例：餐飲／廣告燒了沒訂位" style="flex:1;min-width:0;background:#1E293B;border:1px solid #334155;color:#FFF;padding:9px 10px;border-radius:8px;font-size:12px;"><button id="otw-send" style="background:#00E5FF;color:#00363F;border:none;padding:0 14px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:12px;">送出</button></div></div>' +

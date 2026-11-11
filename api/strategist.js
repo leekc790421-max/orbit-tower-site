@@ -1,8 +1,8 @@
-/* 光曜星樞・AI 數位總部行銷戰略長（Chatbot Brains）
+/* 光曦星閣・AI 數位總部行銷戰略長（Chatbot Brains）
    - 【鎖死規則引擎】2026-10-15 強制降級穩健版：不再呼叫外部 LLM，一律回規則引擎 SWOT/AIDA 回覆
    - 換鑰匙零改動的升級路徑保留在 git 歷史（見 handler 內註解）
    CORS 開放給 orbit.xingdeng.tw 3D 站 */
-const SYSTEM = `你是「光曜星樞・Orbit Tower」的 AI 數位總部行銷戰略長（Chief Strategy Officer）。
+const SYSTEM = `你是「光曦星閣・Orbit Tower」的 AI 數位總部行銷戰略長（Chief Strategy Officer）。
 【身份】全球頂尖 B2B 科技與數位地產（Digital Real Estate）行銷戰略顧問，曾為跨國品牌打造數位總部與獲客系統。
 【語調】專業、犀利、具前瞻性與自信；繁體中文（台灣），簡潔有力，偶爾帶一絲幽默；不用emoji超過每則一兩個。
 【核心任務】訪客（企業主／創業者／行銷主管）說出「行業別」與「痛點」後，你必須：
@@ -45,7 +45,7 @@ function fallbackEngine(msgs){
   const all = msgs.map(m=>m.content).join(' ');
   const ind = detectIndustry(all);
   const askedPain = /痛|困|流失|轉化|沒有客户|客戶少|流量|名單|廣告/.test(all);
-  if (!ind) return { reply:'我是光曜星樞的行銷戰略長。報上你的行業（例如餐飲、軟體、房地產、製造業…），再給我一句你的痛點——我當場用 SWOT 幫你拆一局。', capture:false };
+  if (!ind) return { reply:'我是光曦星閣的行銷戰略長。報上你的行業（例如餐飲、軟體、房地產、製造業…），再給我一句你的痛點——我當場用 SWOT 幫你拆一局。', capture:false };
   const lib = SWOT_LIB[ind];
   const [sHalf, wHalf] = String(lib.s).split('；短：');
   if (!askedPain) return { reply:`${ind}業，獲客矛盾就一個字：${ind==='房地產'||ind==='醫療'||ind==='顧問'?'信任':'流量'}。你現在最痛的是什麼——跳出率高？廣告燒了沒名單？海外詢價接不住？講一句，我開局。`, capture:false };

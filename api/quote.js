@@ -68,7 +68,7 @@ module.exports = async function handler(req, res) {
   const validTo = new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10);
   const quote = {
     ok: true, no: quoteNo(), issued: new Date().toISOString().slice(0, 10), validTo,
-    seller: { name: 'SNT 光曜星樞・Orbit Tower', domain: 'xingdeng.tw', contact: 'service@xingdeng.tw' },
+    seller: { name: 'SNT 光曦星閣・Orbit Tower', domain: 'xingdeng.tw', contact: 'service@xingdeng.tw' },
     customer: { email, name: String(b.name || '').slice(0, 80) || '貴公司窗口', company: String(b.company || '').slice(0, 120) || '（未填）', country: String(b.country || '').slice(0, 60) || 'TW' },
     item: { id: item.kind === 'kit' ? b.item.toUpperCase() : b.item.toUpperCase(), kind: item.kind, fullName: item.name, unit: item.unit, note: item.note },
     lines: [{ desc: item.name + '（' + item.note + '）', qty, unit_price: item.price, amount: subtotal }],

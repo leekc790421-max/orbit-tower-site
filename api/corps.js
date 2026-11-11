@@ -42,7 +42,7 @@ const SEQUENCES = {
     { at: '2d', via: 'email', subject: '樣板公開試玩：30 秒看到您的新門面', body: '/try 試玩區直連結。' },
     { at: '5d', via: 'line', body: '本週名額還剩兩席免費診斷，要幫您留一席嗎？' },
     { at: '7d', via: 'email', subject: '公開優惠本期倒數', body: 'T1/T2/T3 對照＋報價單產生連結。' } ] },
-  'cold-30d': { desc: '冷名單內容養客（每週一則）', steps: [{ at: 'weekly', via: 'email', subject: '本週趨勢速讀｜光曜星樞', body: 'Content Engine 精選一則＋soft CTA。' }] },
+  'cold-30d': { desc: '冷名單內容養客（每週一則）', steps: [{ at: 'weekly', via: 'email', subject: '本週趨勢速讀｜光曦星閣', body: 'Content Engine 精選一則＋soft CTA。' }] },
   'omo-24h': { desc: '線下掃碼客 24 小時接住', steps: [
     { at: '0m', via: 'web', body: '掃碼落地→/try 試玩區（omo 碼已綁）。' },
     { at: '20h', via: 'line', body: '前幾天展場聊到的需求，我整理成一頁了——現在傳給您？' } ] },
@@ -133,7 +133,7 @@ async function nurtureTick() {
         if (!process.env.RESEND_API_KEY) { out.waiting++; continue; }
         const rr = await fetch('https://api.resend.com/emails', { method: 'POST', signal: AbortSignal.timeout(4000),
           headers: { 'content-type': 'application/json', Authorization: 'Bearer ' + process.env.RESEND_API_KEY },
-          body: JSON.stringify({ from: process.env.RESEND_FROM || 'Orbit Tower <growth@xingdeng.tw>', to: [row.email], subject: st.subject || 'Orbit Tower', text: (st.body || '') + '\n\n— 光曜星樞 Orbit Tower·AI 戰略長自動寄送（回 STOP 停止）' }) })
+          body: JSON.stringify({ from: process.env.RESEND_FROM || 'Orbit Tower <growth@xingdeng.tw>', to: [row.email], subject: st.subject || 'Orbit Tower', text: (st.body || '') + '\n\n— 光曦星閣 Orbit Tower·AI 戰略長自動寄送（回 STOP 停止）' }) })
           .then(r => r.ok ? { ok: true } : { ok: false, error: 'HTTP ' + r.status }).catch(e => ({ ok: false, error: String(e.message || e).slice(0, 80) }));
         await s`INSERT INTO nurture_log (lead_id, seq, step, via, status, err) VALUES (${row.id}, ${row.nurture_seq}, ${i}, 'email', ${rr.ok ? 'sent' : 'failed'}, ${rr.ok ? null : rr.error})`;
         if (rr.ok) { await s`UPDATE leads SET nurture_step = ${i + 1}, nurtured_at = now() WHERE id = ${row.id}`; out.sent.push({ to: row.email, seq: row.nurture_seq, step: i }); }
