@@ -1,4 +1,4 @@
-/* Orbit Tower 共用互動：分享 / 收藏 / 表單 / 風琴 / 導覽 */
+/* 光曦星軌 共用互動：分享 / 收藏 / 表單 / 風琴 / 導覽 */
 (function () {
   'use strict';
   var $ = function (s, c) { return (c || document).querySelector(s); };
@@ -71,7 +71,7 @@
         url: location.href,
         fields: {} };
       $$('input,textarea,select', f).forEach(function (i) { if (i.name && i.type !== 'checkbox') data.fields[i.name] = i.value; });
-      var payload = ['【Orbit Tower 收單】類型：' + data.type, '時間：' + data.at, '來源頁：' + data.url, '─── 表單欄位 ───']
+      var payload = ['【光曦星軌 收單】類型：' + data.type, '時間：' + data.at, '來源頁：' + data.url, '─── 表單欄位 ───']
         .concat(Object.keys(data.fields).map(function (k) { return k + '：' + data.fields[k]; })).join('\n');
       function mailFallback() {
         var q = []; try { q = JSON.parse(localStorage.getItem('ot.leads')) || []; } catch (err) { }

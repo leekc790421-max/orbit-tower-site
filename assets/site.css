@@ -1,4 +1,4 @@
-/* Orbit Tower — 企業藍 × 白底 × Glass UI 設計系統 (Growth Engine V2) */
+/* 光曦星軌 — 企業藍 × 白底 × Glass UI 設計系統 (Growth Engine V2) */
 :root{
   --primary:#2563EB;--primary-d:#1D4ED8;--primary-dd:#1E40AF;
   --cyan:#06B6D4;--bg:#FFFFFF;--section:#F8FAFC;--text:#0F172A;--muted:#475569;--faint:#94A3B8;
@@ -193,3 +193,19 @@ tr:hover td{background:var(--section)}
  .h60{padding:14px 16px}
 }
 @media (max-width:400px){ .nav__in{gap:8px} .brand small{display:none} }
+
+/* === nav 修復:防擠換行 + 下拉選單(2026-11-09) === */
+.nav__links{gap:2px !important;flex-wrap:nowrap !important}
+.nav__link,.nav__links>a:not(.btn){font-size:13.5px !important;padding:8px 10px !important;white-space:nowrap !important}
+.nav__more{position:relative;display:flex;align-items:center}
+.nav__more-btn{background:transparent;border:1px solid var(--card-line);color:var(--muted);font-size:13.5px;padding:8px 12px;border-radius:99px;cursor:pointer;transition:.18s;font-family:inherit;white-space:nowrap}
+.nav__more-btn:hover{background:var(--section);color:var(--primary);border-color:var(--primary)}
+.nav__dropdown{position:absolute;top:calc(100% + 6px);right:0;min-width:200px;background:#fff;border:1px solid var(--card-line);border-radius:12px;box-shadow:0 24px 40px -18px rgba(15,23,42,.25);padding:6px;display:none;flex-direction:column;gap:2px;z-index:100}
+.nav__more:hover .nav__dropdown,.nav__more:focus-within .nav__dropdown{display:flex}
+.nav__dropdown a{font-size:13.5px;color:var(--muted);padding:8px 14px;border-radius:8px;transition:.15s;white-space:nowrap}
+.nav__dropdown a:hover{background:var(--section);color:var(--primary)}
+.nav__cta{white-space:nowrap !important}
+@media (max-width:768px){
+  .nav__more{display:none}
+  .nav__links .nav__link:nth-child(n+5){display:none}
+}

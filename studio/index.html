@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>星樞廣告機器人 XingShu Studio｜一鍵產出直式影片＋社群圖＋三平台文案｜光曦星閣 Orbit Tower</title>
-<meta name="description" content="免設計、免外包：填入產業與賣點，瀏覽器本機生成 9:16 宣傳影片、社群廣告圖與發文文案，下載即用。光曦星閣・Orbit Tower 出品。">
-<meta property="og:type" content="website"><meta property="og:site_name" content="光曦星閣・Orbit Tower"><meta property="og:locale" content="zh_TW"><meta property="og:title" content="星樞廣告機器人 XingShu Studio｜直式影片＋社群圖＋文案一鍵產出"><meta property="og:description" content="免設計免外包：填入產業與賣點，瀏覽器本機生成 9:16 宣傳影片、社群廣告圖與三平台發文文案。光曦星閣 Orbit Tower 出品。"><meta property="og:url" content="https://xingdeng.tw/studio"><meta property="og:image" content="https://xingdeng.tw/assets/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="星樞廣告機器人 XingShu Studio｜直式影片＋社群圖＋文案一鍵產出"><meta name="twitter:description" content="免設計免外包：填入產業與賣點，瀏覽器本機生成 9:16 宣傳影片、社群廣告圖與三平台發文文案。光曦星閣 Orbit Tower 出品。"><meta name="twitter:image" content="https://xingdeng.tw/assets/og.png"><link rel="canonical" href="https://xingdeng.tw/studio">
+<title>星樞廣告機器人 XingShu Studio｜一鍵產出直式影片＋社群圖＋三平台文案｜光曦星閣 光曦星軌</title>
+<meta name="description" content="免設計、免外包：填入產業與賣點，瀏覽器本機生成 9:16 宣傳影片、社群廣告圖與發文文案，下載即用。光曦星閣・光曦星軌 出品。">
+<meta property="og:type" content="website"><meta property="og:site_name" content="光曦星閣・光曦星軌"><meta property="og:locale" content="zh_TW"><meta property="og:title" content="星樞廣告機器人 XingShu Studio｜直式影片＋社群圖＋文案一鍵產出"><meta property="og:description" content="免設計免外包：填入產業與賣點，瀏覽器本機生成 9:16 宣傳影片、社群廣告圖與三平台發文文案。光曦星閣 光曦星軌 出品。"><meta property="og:url" content="https://xingdeng.tw/studio"><meta property="og:image" content="https://xingdeng.tw/assets/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="星樞廣告機器人 XingShu Studio｜直式影片＋社群圖＋文案一鍵產出"><meta name="twitter:description" content="免設計免外包：填入產業與賣點，瀏覽器本機生成 9:16 宣傳影片、社群廣告圖與三平台發文文案。光曦星閣 光曦星軌 出品。"><meta name="twitter:image" content="https://xingdeng.tw/assets/og.png"><link rel="canonical" href="https://xingdeng.tw/studio">
 <link rel="stylesheet" href="/assets/site.css"></head>
 <body>
 <main class="wrap" style="max-width:980px;padding:34px 20px 70px">
@@ -67,7 +67,7 @@ function gen(){
   var a=document.getElementById('dlp');a.href=cv.toDataURL('image/png');
   // ③ 文案
   var t=D.tags;
-  var posts=['【'+brand+'】'+D.hook+'\n現在，'+D.bullets[0]+'。\n'+cta+'（'+contact+'）\n'+t,'#你上次找'+ind+'，是因為什麼卡住？\n'+brand+' 把 '+D.bullets[1]+' 交給系統自動運作，不再等人手動接。\n留「體驗」兩字，我們從你的痛点開始。 '+t,'門面、接待、名單三段同時上線：\n·'+D.bullets[0]+'\n·'+D.bullets[1]+'\n·'+D.bullets[2]+'\n——光曦星閣・Orbit Tower 為 '+brand+' 打造。 '+t];
+  var posts=['【'+brand+'】'+D.hook+'\n現在，'+D.bullets[0]+'。\n'+cta+'（'+contact+'）\n'+t,'#你上次找'+ind+'，是因為什麼卡住？\n'+brand+' 把 '+D.bullets[1]+' 交給系統自動運作，不再等人手動接。\n留「體驗」兩字，我們從你的痛点開始。 '+t,'門面、接待、名單三段同時上線：\n·'+D.bullets[0]+'\n·'+D.bullets[1]+'\n·'+D.bullets[2]+'\n——光曦星閣・光曦星軌 為 '+brand+' 打造。 '+t];
   var w=document.getElementById('copyw');w.innerHTML='';
   posts.forEach(function(p,i){var d=document.createElement('div');d.style.cssText='background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:10px 12px;white-space:pre-wrap';d.textContent=(i+1)+'. '+(i===0?'Facebook／IG 貼文':i===1?'小紅書／IG 軟文':'Google 商家檔案')+'\n'+p;w.appendChild(d)});
   window.__posts=posts;
@@ -90,7 +90,7 @@ function vid(D,brand,col,cta,contact){
     x.fillStyle=g;x.fillRect(0,0,1080,1920);x.textAlign='center';
     if(el<1400){p=ease(0,1400,el);x.fillStyle='rgba(255,255,255,'+(p*.9)+')';x.font='800 84px system-ui';x.fillText('「'+D.hook.slice(0,16)+'」',540,760+p*40);x.font='400 44px system-ui';x.fillStyle='rgba(226,232,240,.85)';x.fillText(D.hook.slice(16),540,900)}
     else if(el<3000){p=0;x.font='700 60px system-ui';D.bullets.forEach(function(b,i){var t=(el-1400)-i*420,q=ease(0,500,t);x.fillStyle='rgba(255,255,255,'+(.25+.75*q)+')';x.fillText('✦ '+b,540,720+i*150)});x.fillStyle='#F0C265';x.font='800 66px system-ui';x.fillText(brand,540,1300)}
-    else if(el<scene){p=ease(3000,scene,el);x.fillStyle='rgba(240,194,101,'+(.4+.6*p)+')';x.font='800 78px system-ui';x.fillText('▸ '+cta,540,950);x.fillStyle='rgba(255,255,255,.8)';x.font='400 40px system-ui';x.fillText(contact,540,1080);x.font='600 34px system-ui';x.fillStyle='rgba(255,255,255,.4)';x.fillText('光曦星閣・Orbit Tower 驅動',540,1160)}
+    else if(el<scene){p=ease(3000,scene,el);x.fillStyle='rgba(240,194,101,'+(.4+.6*p)+')';x.font='800 78px system-ui';x.fillText('▸ '+cta,540,950);x.fillStyle='rgba(255,255,255,.8)';x.font='400 40px system-ui';x.fillText(contact,540,1080);x.font='600 34px system-ui';x.fillStyle='rgba(255,255,255,.4)';x.fillText('光曦星閣・光曦星軌 驅動',540,1160)}
     else return;
     requestAnimationFrame(draw)
   }

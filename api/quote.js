@@ -6,9 +6,9 @@ const CATALOG = {
   T1: { kind: 'kit',  name: 'SNT 一鍵架網懶人包・T1 個人版 Starter',    price: 3000,  unit: '一次性', note: '作品集＋服務項目＋三語 AI 接待骨架' },
   T2: { kind: 'kit',  name: 'SNT 一鍵架網懶人包・T2 店家版 Business',   price: 6600,  unit: '一次性', note: '商品動線＋收款框＋來客分析＋七語系' },
   T3: { kind: 'kit',  name: 'SNT 一鍵架網懶人包・T3 企業版 Flagship',   price: 13900, unit: '一次性', note: '關於／服務／案例骨架＋AI 部門入駐位' },
-  R1: { kind: 'plan', name: 'Orbit Tower 訂閱・R1 數位接待員 Starter',  price: 3500,  unit: '月',     note: '24/7 AI 前台接待・單語系' },
-  R2: { kind: 'plan', name: 'Orbit Tower 訂閱・R2 AI 行銷團隊 Pro',     price: 9800,  unit: '月',     note: '內容引擎＋名單養化＋多語接待' },
-  R3: { kind: 'plan', name: 'Orbit Tower 訂閱・R3 雲端 AI 辦公室 Enterprise', price: 300000, unit: '專案', note: '3D 總部進駐＋AI 部門全編制（此為基準價，成交依需求訪談）' },
+  R1: { kind: 'plan', name: '光曦星軌 訂閱・R1 數位接待員 Starter',  price: 3500,  unit: '月',     note: '24/7 AI 前台接待・單語系' },
+  R2: { kind: 'plan', name: '光曦星軌 訂閱・R2 AI 行銷團隊 Pro',     price: 9800,  unit: '月',     note: '內容引擎＋名單養化＋多語接待' },
+  R3: { kind: 'plan', name: '光曦星軌 訂閱・R3 雲端 AI 辦公室 Enterprise', price: 300000, unit: '專案', note: '3D 總部進駐＋AI 部門全編制（此為基準價，成交依需求訪談）' },
 };
 
 function quoteNo() {
@@ -68,7 +68,7 @@ module.exports = async function handler(req, res) {
   const validTo = new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10);
   const quote = {
     ok: true, no: quoteNo(), issued: new Date().toISOString().slice(0, 10), validTo,
-    seller: { name: 'SNT 光曦星閣・Orbit Tower', domain: 'xingdeng.tw', contact: 'service@xingdeng.tw' },
+    seller: { name: 'SNT 光曦星閣・光曦星軌', domain: 'xingdeng.tw', contact: 'service@xingdeng.tw' },
     customer: { email, name: String(b.name || '').slice(0, 80) || '貴公司窗口', company: String(b.company || '').slice(0, 120) || '（未填）', country: String(b.country || '').slice(0, 60) || 'TW' },
     item: { id: item.kind === 'kit' ? b.item.toUpperCase() : b.item.toUpperCase(), kind: item.kind, fullName: item.name, unit: item.unit, note: item.note },
     lines: [{ desc: item.name + '（' + item.note + '）', qty, unit_price: item.price, amount: subtotal }],

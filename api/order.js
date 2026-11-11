@@ -27,7 +27,7 @@ async function readBody(req) {
 const AUTH = v => 'Be' + 'arer ' + v;   // 執行期組裝，來源碼不含明文 scheme
 
 async function stripeSandbox(secret, b) {
-  const line = encodeURIComponent((b.desc || 'Orbit Tower order') + ' x' + (b.qty || 1));
+  const line = encodeURIComponent((b.desc || '光曦星軌 order') + ' x' + (b.qty || 1));
   const amt = Number(b.amount || 0) * 100;
   const r = await fetch('https://api.stripe.com/v1/checkout/sessions', {
     method: 'POST',
@@ -36,7 +36,7 @@ async function stripeSandbox(secret, b) {
       + '&success_url=' + encodeURIComponent(b.successUrl || 'https://xingdeng.tw/checkout/confirm?paid=1')
       + '&cancel_url=' + encodeURIComponent(b.cancelUrl || 'https://xingdeng.tw/checkout')
       + '&line_items[0][price_data][currency]=twd'
-      + '&line_items[0][price_data][product_data][name]=' + encodeURIComponent(b.desc || 'Orbit Tower')
+      + '&line_items[0][price_data][product_data][name]=' + encodeURIComponent(b.desc || '光曦星軌')
       + '&line_items[0][price_data][unit_amount]=' + Math.round(amt)
       + '&line_items[0][quantity]=' + (b.qty || 1)
       + '&client_reference_id=' + encodeURIComponent(b.ref || '')
@@ -57,7 +57,7 @@ async function paypalSandbox(clientId, clientSecret, b) {
     method: 'POST',
     headers: { Authorization: AUTH(t.access_token), 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      intent: 'CAPTURE', purchase_units: [{ reference_id: b.ref || '', description: b.desc || 'Orbit Tower', amount: { currency_code: 'TWD', value: String(((b.amount || 0) / 1).toFixed(0)) } }],
+      intent: 'CAPTURE', purchase_units: [{ reference_id: b.ref || '', description: b.desc || '光曦星軌', amount: { currency_code: 'TWD', value: String(((b.amount || 0) / 1).toFixed(0)) } }],
       application_context: { return_url: b.successUrl || 'https://xingdeng.tw/checkout/confirm?paid=1', cancel_url: b.cancelUrl || 'https://xingdeng.tw/checkout' }
     })
   }).then(r => r.json());
@@ -75,7 +75,7 @@ async function paypalLive(clientId, clientSecret, b) {
   if (!t.access_token) throw new Error('paypal-live token fail');
   const o = await fetch('https://api-m.paypal.com/v2/checkout/orders', {
     method: 'POST', headers: { Authorization: AUTH(t.access_token), 'Content-Type': 'application/json' },
-    body: JSON.stringify({ intent: 'CAPTURE', purchase_units: [{ reference_id: b.ref || '', description: b.desc || 'Orbit Tower', amount: { currency_code: 'TWD', value: String((b.amount || 0).toFixed(0)) } }],
+    body: JSON.stringify({ intent: 'CAPTURE', purchase_units: [{ reference_id: b.ref || '', description: b.desc || '光曦星軌', amount: { currency_code: 'TWD', value: String((b.amount || 0).toFixed(0)) } }],
       application_context: { return_url: b.successUrl || 'https://xingdeng.tw/checkout/confirm?paid=1&mode=live', cancel_url: b.cancelUrl || 'https://xingdeng.tw/checkout' } })
   }).then(r => r.json());
   const link = (o.links || []).find(l => l.rel === 'payer-action' || l.rel === 'approve');
@@ -114,14 +114,14 @@ module.exports = async function handler(req, res) {
       let s;
       if (stripeKey.startsWith('sk_live_')) s = await stripeSandbox(stripeKey, { ...b, ref: refL });
       else s = await paypalLive(paypalCid, paypalSecret, { ...b, ref: refL });
-      await syncLead({ ref: refL, email: b.email, company: b.company, desc: String(b.desc || 'Orbit Tower 方案'), amount: Number(b.amount || 0), provider: (stripeKey.startsWith('sk_live_') ? 'stripe' : 'paypal') + '-live', status: 'payment_session_created' });
+      await syncLead({ ref: refL, email: b.email, company: b.company, desc: String(b.desc || '光曦星軌 方案'), amount: Number(b.amount || 0), provider: (stripeKey.startsWith('sk_live_') ? 'stripe' : 'paypal') + '-live', status: 'payment_session_created' });
       console.log('ORDER ' + JSON.stringify({ ref: refL, mode: 'live', amount: Number(b.amount || 0) }));
       return res.status(200).json({ ok: true, order: refL, provider: stripeKey.startsWith('sk_live_') ? 'stripe' : 'paypal', mode: 'live', payUrl: s.payUrl });
     } catch (e) { return res.status(502).json({ ok: false, mode: 'live', error: String(e.message || e).slice(0, 160) }); }
   }
 
   const amount = Number(b.amount || 0);
-  const desc = String(b.desc || 'Orbit Tower 方案');
+  const desc = String(b.desc || '光曦星軌 方案');
   const ref = orderId();
 
   try {

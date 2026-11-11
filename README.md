@@ -1,4 +1,4 @@
-# Orbit Tower 行銷站（orbit-tower-site）
+# 光曦星軌 行銷站（orbit-tower-site）
 
 > 下一代企業數位總部 **AI-Powered Digital Headquarters** — 依《Growth Engine V2》規格實作的靜態多頁行銷站與 Content Engine 內容系統。
 

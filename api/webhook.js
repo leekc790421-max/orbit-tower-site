@@ -28,7 +28,7 @@ async function receipt(email, name, subject, text) {
   try {
     const r = await fetch('https://api.resend.com/emails', { method: 'POST', signal: AbortSignal.timeout(4000),
       headers: { 'content-type': 'application/json', Authorization: 'Bearer ' + process.env.RESEND_API_KEY },
-      body: JSON.stringify({ from: process.env.RESEND_FROM || 'Orbit Tower <growth@xingdeng.tw>', to: [email], subject, text }) });
+      body: JSON.stringify({ from: process.env.RESEND_FROM || '光曦星軌 <growth@xingdeng.tw>', to: [email], subject, text }) });
     return r.ok ? 'sent' : 'HTTP ' + r.status;
   } catch (e) { return 'err:' + String(e.message || e).slice(0, 40); }
 }
@@ -36,8 +36,8 @@ async function receipt(email, name, subject, text) {
 /* Z.ai 自然回覆（LINE 客服用）*/
 async function aiReplyB2B(userMsg) {
   const zaiKey = process.env.ZAI_API_KEY || process.env.Z_AI_API_KEY;
-  if (!zaiKey) return '收到你的訊息！我是 Orbit Tower 的 AI 接待。想了解架網懶人包、AI 數位總部、或 3D 展示館，直接問就行 😊';
-  const system = `你是「Orbit Tower」光曦星閣 SNT 的 AI 接待員，負責 B2B 架網服務。
+  if (!zaiKey) return '收到你的訊息！我是 光曦星軌 的 AI 接待。想了解架網懶人包、AI 數位總部、或 3D 展示館，直接問就行 😊';
+  const system = `你是「光曦星軌」光曦星閣 SNT 的 AI 接待員，負責 B2B 架網服務。
 你的工作：
 1. 自然回答客戶關於架網懶人包、AI 數位總部、3D 展示館的問題
 2. 回覆簡潔（3-5 句），像真人對話
@@ -88,7 +88,7 @@ module.exports = async function handler(req, res) {
           await fetch('https://api.line.me/v2/bot/message/reply', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + (process.env.LINE_CHANNEL_TOKEN || process.env.LINE_CHANNEL_ACCESS_TOKEN || '') },
-            body: JSON.stringify({ replyToken: ev.replyToken, messages: [{ type: 'text', text: '嗨 👋 歡迎來到 Orbit Tower！想了解架網懶人包、AI 數位總部、或 3D 展示館，直接問就行。先看方案也行：https://tower.xingdeng.tw/showcase' }] }),
+            body: JSON.stringify({ replyToken: ev.replyToken, messages: [{ type: 'text', text: '嗨 👋 歡迎來到 光曦星軌！想了解架網懶人包、AI 數位總部、或 3D 展示館，直接問就行。先看方案也行：https://tower.xingdeng.tw/showcase' }] }),
           }).catch(() => {});
         } else if (ev.type === 'message' && ev.message && ev.message.type === 'text') {
           const aiText = await aiReplyB2B(String(ev.message.text || ''));
@@ -128,14 +128,14 @@ module.exports = async function handler(req, res) {
     const amount = money(o.amount_total);
     const currency = String(o.currency || 'twd');
     const ref = String(o.client_reference_id || o.reference || o.id || '').slice(0, 80);
-    const product = String((o.metadata && o.metadata.product) || o.display_items?.[0]?.name || 'Orbit Tower kit').slice(0, 200);
+    const product = String((o.metadata && o.metadata.product) || o.display_items?.[0]?.name || '光曦星軌 kit').slice(0, 200);
     const sql = neon();
     if (sql) {
       try { await sql`INSERT INTO leads (kind, email, name, intent, message, page, funnel_score, funnel_tier, order_status, quote_id, amount, currency, product, paid_at, nurture_seq, nurture_step)
         VALUES ('order-paid', ${email}, ${name}, 'kit_purchase', 'webhook', '/api/webhook', 70, 'hot', 'paid', ${ref || 'stripe:' + (o.payment_intent || o.id || '')}, ${amount}, ${currency}, ${product}, now(), 'paid::done', 999)`; } catch (e) { console.log('WEBHOOK_PERSIST_FAIL ' + String(e.message).slice(0, 120)); }
     }
-    const subj = '已收到的款項 — Orbit Tower 訂單生效（' + product + '）';
-    const txt = name + ' 您好，\n\n款項 NT$' + amount + '（' + currency.toUpperCase() + '）已確認，自動收據如下：\n  項目：' + product + '\n  訂單參考：' + ref + '\n\n' + deliveryLine(product) + '\n\n— 光曦星閣 Orbit Tower（本信由系統自動核發）';
+    const subj = '已收到的款項 — 光曦星軌 訂單生效（' + product + '）';
+    const txt = name + ' 您好，\n\n款項 NT$' + amount + '（' + currency.toUpperCase() + '）已確認，自動收據如下：\n  項目：' + product + '\n  訂單參考：' + ref + '\n\n' + deliveryLine(product) + '\n\n— 光曦星閣 光曦星軌（本信由系統自動核發）';
     const rc = await receipt(email, name, subj, txt);
     return res.status(200).json({ ok: true, event: 'paid', persisted: !!sql, receipt: rc });
   }

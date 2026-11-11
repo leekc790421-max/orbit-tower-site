@@ -1,4 +1,4 @@
-Orbit Tower 網站部署包（靜態站・Growth Engine V2 規格實作）
+光曦星軌 網站部署包（靜態站・Growth Engine V2 規格實作）
 ─────────────────────────────────────────────
 內容
   index.html                 首頁（8 區塊：Hero／問題／解決方案／體驗／文章／報告／FAQ／終 CTA）
