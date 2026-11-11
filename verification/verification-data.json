@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Builder Home",
+    "path": "/builder",
+    "status": 200,
+    "title": "光曦星閣 Builder｜一鍵架網懶人包組裝區 | 光曦星閣 SNT",
+    "desc": "光曦星閣 Builder 是一鍵架網懶人包的組裝區：T1 個人版 NT$7,800 / T2 店家版 NT$13,900 / T3 企業版 NT$24,800。客戶主動開啟、系統被動回應、人工確認後交付。",
+    "canonical": "https://tower.xingdeng.tw/builder",
+    "jsonld": "WebApplication, Organization, Offer",
+    "og": "光曦星閣 Builder｜一鍵架網懶人包組裝區"
+  },
+  {
+    "name": "Demo",
+    "path": "/builder/demo",
+    "status": 200,
+    "title": "Demo 展示｜T1 個人版 / T2 店家版 / T3 企業版 | 光曦星閣 Builder",
+    "desc": "光曦星閣 Builder Demo 展示:T1 個人版 NT$7,800 / T2 店家版 NT$13,900 / T3 企業版 NT$24,800。三種方案實際成品預覽。",
+    "canonical": "https://tower.xingdeng.tw/builder/demo",
+    "jsonld": "ItemList, ListItem",
+    "og": "Demo 展示｜光曦星閣 Builder"
+  },
+  {
+    "name": "README",
+    "path": "/builder/readme",
+    "status": 200,
+    "title": "README｜光曦星閣懶人包安裝與使用說明 | 光曦星閣 Builder",
+    "desc": "光曦星閣一鍵架網懶人包 README:安裝流程、使用流程、支援環境(Windows 10/11、macOS 13+)、系統需求。",
+    "canonical": "https://tower.xingdeng.tw/builder/readme",
+    "jsonld": "TechArticle, Organization, SoftwareApplication",
+    "og": "README｜光曦星閣懶人包安裝與使用說明"
+  },
+  {
+    "name": "Setup Guide",
+    "path": "/builder/setup",
+    "status": 200,
+    "title": "Setup Guide｜Windows / macOS 安裝步驟 | 光曦星閣 Builder",
+    "desc": "光曦星閣懶人包 Setup Guide:Windows 10/11 與 macOS 13+ 的詳細安裝步驟說明。客戶不需寫程式、不需碰 Git。",
+    "canonical": "https://tower.xingdeng.tw/builder/setup",
+    "jsonld": "HowTo, HowToStep",
+    "og": "Setup Guide｜Windows / macOS 安裝步驟"
+  },
+  {
+    "name": "Version",
+    "path": "/builder/version",
+    "status": 200,
+    "title": "版本資訊 v5.2.0 | 光曦星閣 Builder",
+    "desc": "光曦星閣 Builder 版本資訊:v5.2.0 Tower Builder Foundation。版本歷史與變更紀錄。",
+    "canonical": "https://tower.xingdeng.tw/builder/version",
+    "jsonld": "SoftwareApplication",
+    "og": "版本資訊 v5.2.0 | 光曦星閣 Builder"
+  },
+  {
+    "name": "SHA256",
+    "path": "/builder/sha256",
+    "status": 200,
+    "title": "SHA-256 驗證說明 | 光曦星閣 Builder",
+    "desc": "光曦星閣懶人包 SHA-256 驗證說明:交付時附 CHECKSUM.sha256,客戶對 hash,對不上不准安裝。",
+    "canonical": "https://tower.xingdeng.tw/builder/sha256",
+    "jsonld": "TechArticle, Organization",
+    "og": "SHA-256 驗證說明 | 光曦星閣 Builder"
+  },
+  {
+    "name": "Warranty",
+    "path": "/builder/warranty",
+    "status": 200,
+    "title": "保固說明 | 光曦星閣 Builder",
+    "desc": "光曦星閣懶人包保固說明:服務範圍、保固範圍、不保固項目。驗收通過起 30 日保固,只修本合約範圍內的程式缺陷。",
+    "canonical": "https://tower.xingdeng.tw/builder/warranty",
+    "jsonld": "WarrantyPromise",
+    "og": "保固說明 | 光曦星閣 Builder"
+  },
+  {
+    "name": "Products",
+    "path": "/builder/packages",
+    "status": 200,
+    "title": "Products 產品專區｜T1 創業版 / T2 商務版 / T3 企業版 | 光曦星閣 Builder",
+    "desc": "光曦星閣 Builder 產品專區:T1 創業版 NT$7,800 / T2 商務版 NT$13,900 / T3 企業版 NT$24,800。三方案完整產品資訊。",
+    "canonical": "https://tower.xingdeng.tw/builder/packages",
+    "jsonld": "ItemList, ListItem",
+    "og": "Products 產品專區｜光曦星閣 Builder"
+  },
+  {
+    "name": "T1 創業版",
+    "path": "/builder/packages/t1",
+    "status": 200,
+    "title": "T1 創業版 NT$7,800｜單頁形象站懶人包 | 光曦星閣 Builder",
+    "desc": "光曦星閣 T1 創業版 NT$7,800:接案者、創作者、個人品牌適用。單頁形象站模板,含 Hero/About/Works/Contact。一次買斷,客戶主動開啟詢問、人工確認後交付。",
+    "canonical": "https://tower.xingdeng.tw/builder/packages/t1",
+    "jsonld": "Product, Brand, Offer, Organization",
+    "og": "T1 創業版 NT$7,800｜光曦星閣 Builder"
+  },
+  {
+    "name": "T2 商務版",
+    "path": "/builder/packages/t2",
+    "status": 200,
+    "title": "T2 商務版 NT$13,900｜多頁店家站懶人包 | 光曦星閣 Builder",
+    "desc": "光曦星閣 T2 商務版 NT$13,900:餐飲、工作室、實體店面適用。多頁站含首頁/產品/故事/聯絡。一次買斷,客戶主動開啟詢問、人工確認後交付。",
+    "canonical": "https://tower.xingdeng.tw/builder/packages/t2",
+    "jsonld": "Product, Brand, Offer, Organization",
+    "og": "T2 商務版 NT$13,900｜光曦星閣 Builder"
+  },
+  {
+    "name": "T3 企業版",
+    "path": "/builder/packages/t3",
+    "status": 200,
+    "title": "T3 企業版 NT$24,800｜多語多頁企業站懶人包 | 光曦星閣 Builder",
+    "desc": "光曦星閣 T3 企業版 NT$24,800:B2B 製造業、出口商適用。多語多頁站含 AI 接待員腳本、SEO/GEO 資產。一次買斷,客戶主動開啟詢問、人工確認後交付。",
+    "canonical": "https://tower.xingdeng.tw/builder/packages/t3",
+    "jsonld": "Product, Brand, Offer, Organization",
+    "og": "T3 企業版 NT$24,800｜光曦星閣 Builder"
+  }
+]
