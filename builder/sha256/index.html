@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SHA-256 驗證說明 | 光曦星閣 Builder</title>
+<meta name="description" content="光曦星閣懶人包 SHA-256 驗證說明:交付時附 CHECKSUM.sha256,客戶對 hash,對不上不准安裝。">
+<link rel="canonical" href="https://tower.xingdeng.tw/builder/sha256">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="光曦星閣">
+<meta property="og:title" content="SHA-256 驗證說明 | 光曦星閣 Builder">
+<meta property="og:description" content="交付時附 CHECKSUM.sha256,客戶對 hash,對不上不准安裝。">
+<meta property="og:url" content="https://tower.xingdeng.tw/builder/sha256">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle","headline":"光曦星閣 SHA-256 驗證說明","description":"懶人包交付完整性驗證流程","author":{"@type":"Organization","name":"光曦星閣 SNT"}}
+</script>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<nav class="nav"><div class="wrap nav__in"><a class="brand" href="/"><span class="mark"><img src="/assets/logo-mark.png" alt="光曦星閣 SNT 圖章"></span><span>光曦星閣<small>AI-Powered Digital Headquarters</small></span></a><div class="nav__links">
+<a href="/" class="nav__link">首頁</a>
+<a href="/builder" class="nav__link">Builder</a>
+<a href="/builder/demo" class="nav__link">Demo</a>
+<a href="/builder/readme" class="nav__link">README</a>
+<a href="/builder/setup" class="nav__link">Setup</a>
+<a href="/builder/version" class="nav__link">Version</a>
+<a href="/builder/warranty" class="nav__link">保固</a>
+<a href="/pricing" class="nav__link">定價</a>
+</div></div></nav>
+<main class="wrap" style="max-width:760px;padding:48px 22px 80px">
+<header style="margin-bottom:36px">
+<span style="display:inline-block;background:#E0F2FE;color:#0369A1;border-radius:99px;padding:6px 16px;font-size:12.5px;font-weight:700">BUILDER · SHA-256</span>
+<h1 style="font-size:clamp(26px,4.5vw,36px);font-weight:900;margin:18px 0 10px">SHA-256 驗證說明</h1>
+<p style="font-size:15px;opacity:.7">交付完整性驗證流程</p>
+</header>
+<section style="background:#fff;border:1px solid #00000010;border-radius:14px;padding:24px 26px;margin-bottom:22px">
+<h2 style="font-size:17px;font-weight:800;margin-bottom:12px">為什麼要驗證</h2>
+<p style="font-size:14.5px;line-height:1.8;opacity:.85">每個懶人包 ZIP 交付時,附帶一個 <code style="background:#F1F5F9;padding:2px 8px;border-radius:4px;font-size:13px">CHECKSUM.sha256</code> 檔案。客戶下載後,需對照 ZIP 的 SHA-256 雜湊值——<b>對不上就不准安裝</b>,直接聯繫客服重發。</p>
+</section>
+<section style="background:#fff;border:1px solid #00000010;border-radius:14px;padding:24px 26px;margin-bottom:22px">
+<h2 style="font-size:17px;font-weight:800;margin-bottom:12px">驗證步驟</h2>
+<ol style="font-size:14.5px;line-height:2;opacity:.85;padding-left:24px">
+<li>下載 ZIP 與 <code style="background:#F1F5F9;padding:2px 8px;border-radius:4px;font-size:13px">CHECKSUM.sha256</code> 至同一資料夾</li>
+<li>打開 <code style="background:#F1F5F9;padding:2px 8px;border-radius:4px;font-size:13px">CHECKSUM.sha256</code>,內容格式如下:</li>
+</ol>
+<pre style="background:#0F172A;color:#E2E8F0;padding:16px;border-radius:8px;font-size:12.5px;overflow-x:auto;margin:12px 0"><code>a3f5b8e2c1d4...  builder-t1-v5.2.0.zip
+f7e9a1b3c2d5...  builder-t2-v5.2.0.zip
+b2c8d4e6f1a3...  builder-t3-v5.2.0.zip</code></pre>
+<ol start="3" style="font-size:14.5px;line-height:2;opacity:.85;padding-left:24px">
+<li><b>Windows</b>:PowerShell 執行 <code style="background:#F1F5F9;padding:2px 8px;border-radius:4px;font-size:13px">Get-FileHash builder-t*.zip -Algorithm SHA256</code></li>
+<li><b>macOS / Linux</b>:終端機執行 <code style="background:#F1F5F9;padding:2px 8px;border-radius:4px;font-size:13px">shasum -a 256 builder-t*.zip</code></li>
+<li>對照輸出的雜湊值與 <code style="background:#F1F5F9;padding:2px 8px;border-radius:4px;font-size:13px">CHECKSUM.sha256</code> 內容</li>
+<li><b>完全一致</b> → 可安裝</li>
+<li><b>不一致</b> → 不要安裝,聯繫 <a href="/contact" style="color:#0369A1;font-weight:600">客服</a> 重發</li>
+</ol>
+</section>
+<section style="background:#FEE2E2;border:1px solid #FECACA;border-radius:14px;padding:20px 24px;margin-bottom:22px;font-size:13.5px;line-height:1.7;color:#991B1B">
+<p><b>❗ 對不上怎麼辦</b></p>
+<p style="margin-top:8px">雜湊值不一致代表 ZIP 在傳輸過程被竄改或損壞。<b>不要安裝</b>,立即聯繫客服重發。客服確認後會重新產生 ZIP 與新的 CHECKSUM.sha256。</p>
+</section>
+<section style="background:#F0F9FF;border-radius:14px;padding:20px 24px;font-size:13.5px;line-height:1.7;color:#0369A1">
+<p><b>ℹ️ 本版狀態</b>:v5.2.0 為展示框架,尚未實際產生客戶 ZIP。SHA-256 驗證機制已就緒,實際交付時自動附帶 CHECKSUM.sha256。</p>
+</section>
+</main>
+<footer style="border-top:1px solid #00000010;padding:24px;text-align:center;font-size:12.5px;opacity:.6">
+<p>© 2026 光曦星閣 SNT · SHA-256 v5.2.0</p>
+</footer>
+</body>
+</html>
