@@ -38,3 +38,16 @@
 /studio
 /terms
 /try
+/builder
+/builder/demo
+/builder/readme
+/builder/setup
+/builder/version
+/builder/sha256
+/builder/warranty
+/builder/packages
+/builder/packages/t1
+/builder/packages/t2
+/builder/packages/t3
+/verification
+/compliance

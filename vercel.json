@@ -72,6 +72,13 @@
    ]
   }
  ],
+ "redirects": [
+  { "source": "/products", "destination": "/builder/packages", "permanent": false },
+  { "source": "/products/:path*", "destination": "/builder/packages/:path*", "permanent": false },
+  { "source": "/setup", "destination": "/builder/setup", "permanent": false },
+  { "source": "/version", "destination": "/builder/version", "permanent": false },
+  { "source": "/warranty", "destination": "/builder/warranty", "permanent": false }
+ ],
  "crons": [
   {
    "path": "/api/corps?bot=pulse",
