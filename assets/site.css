@@ -205,7 +205,43 @@ tr:hover td{background:var(--section)}
 .nav__dropdown a{font-size:13.5px;color:var(--muted);padding:8px 14px;border-radius:8px;transition:.15s;white-space:nowrap}
 .nav__dropdown a:hover{background:var(--section);color:var(--primary)}
 .nav__cta{white-space:nowrap !important}
+/* v5.3.4 DEF-001: mobile nav closure — when burger menu open, render 更多 dropdown as flat vertical list (all 7 Builder entries visible + clickable, no horizontal scroll) */
 @media (max-width:768px){
-  .nav__more{display:none}
-  .nav__links .nav__link:nth-child(n+5){display:none}
+  .nav__links.open .nav__more{
+    display:block;
+    width:100%;
+    margin-top:8px;
+  }
+  .nav__links.open .nav__more-btn{
+    width:100%;
+    text-align:left;
+    background:transparent;
+    border:none;
+    border-top:1px solid var(--card-line);
+    border-radius:0;
+    padding:12px 10px 4px;
+    cursor:default;
+    pointer-events:none;
+    opacity:.45;
+    font-size:11.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+  }
+  .nav__links.open .nav__dropdown{
+    display:flex;
+    position:static;
+    box-shadow:none;
+    border:none;
+    padding:0;
+    min-width:0;
+    background:transparent;
+    gap:0;
+  }
+  .nav__links.open .nav__dropdown a{
+    padding:8px 22px;
+    font-size:13.5px;
+    border-radius:8px;
+    white-space:nowrap;
+  }
 }
