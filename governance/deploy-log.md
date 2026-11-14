@@ -18,7 +18,7 @@
 | v5.3.1 | 2026-11-11 | 2e774291 | dpl_7Lbdar6N | Preview | ✅ PASS | FAIL(同上) | ⏳ | Preview |
 | v5.3.2 | 2026-11-11 | 35d0ac5 | dpl_7y3TWBqf | Preview | ✅ PASS | FAIL(證據層不足) | ⏳ | Preview |
 | v5.3.3 | 2026-11-12 | cab67f8 | dpl_EX6nGdnZ3USxc3yTJH9EvcefhN4E | Production | ✅ PASS | ⏳ 待複查 | ✅ EXEC-ORDER-BLOCKER-001 | Production(superseded) |
-| v5.3.4 | 2026-11-15 | 52d6722 | dpl_GiikSNpB6P93zrsWMEfjsiNQoVeM | Production | ✅ PASS | ⏳ 待覆核 | ✅ L3-SIGN-001 | Production(現行) |
+| v5.3.4 | 2026-11-15 | f0fade8 | dpl_7yipkLRPEPPUfao8jxKtuMSbqyoA | Production | ✅ PASS | FAIL→修復中→待重新覆核 | ✅ L3-SIGN-001 | Production(現行,defect-fix) |
 
 **備註:**
 - v5.0.0 部署時未走完整 L1/L2/L3 流程(當時流程尚未確立)。已於 2026-11-12 被 v5.3.3 取代,再於 2026-11-15 被 v5.3.4 取代。
@@ -27,7 +27,10 @@
 - v5.3.4 為 P2 Nav Closure(L3-SIGN-001,A.C. LEE 核定),修補導覽列缺口:主站 26 頁 + Builder 區 10 頁 + verification/compliance 2 頁導覽列閉環,桌機手機同步。
 - v5.3.4 git tag 不可變參照:https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.3.4
 - v5.3.4 Production 實證:https://tower.xingdeng.tw(/VERSION = v5.3.4)
-- v5.3.4 部署 URL:https://orbit-tower-site-skk3myiop-xfls.vercel.app
+- v5.3.4 部署 URL(defect-fix):https://orbit-tower-site-juohpg350-xfls.vercel.app
+- v5.3.4 初始部署 dpl_GiikSNpB6P93zrsWMEfjsiNQoVeM(52d6722,nav closure)→ MANUS FAIL(DEF-001~004)→ defect-fix 部署 dpl_7yipkLRPEPPUfao8jxKtuMSbqyoA(f0fade8,含 DEF-001 手機導覽閉環 + DEF-002 manifest + DEF-003 deploy ID + DEF-004 version strategy)
+- **DEF-004 版本策略(避免版本混淆)**:tag v5.3.4 最初指向 52d6722(nav closure code),經 defect-fix 後移至最終 commit(f0fade8 + governance evidence),使 tag v5.3.4 = 最終 commit = Production 部署內容。tag 與 Production 不再分離。
+- v5.3.4 commit 鏈:52d6722(nav closure)→ ef665d0(governance R1)→ 9422baa(DEF-001 R1)→ 026ae78(DEF-001 R2 CSS)→ f0fade8(DEF-001 R3 Demo+README)→ [本 commit](DEF-002/003/004 governance evidence)。tag v5.3.4 指向最終 commit。
 
 ---
 
@@ -37,6 +40,7 @@ v5.3.4 部署至 Production(2026-11-15),取代 v5.3.3。v5.3.3 取代 v5.0.0(202
 
 回滾目標:
 - Production 回滾一階:dpl_EX6nGdnZ3USxc3yTJH9EvcefhN4E(v5.3.3)
+- Production 回滾零階(同版本前 defect-fix):dpl_GiikSNpB6P93zrsWMEfjsiNQoVeM(v5.3.4 nav closure,DEF-001 前)
 - Production 回滾二階:dpl_339z6Kan(v5.0.0,原始)
 - Preview 回滾:任意舊 Preview deployment(可隨時丟棄,不影響 Production)
 - 原始碼回滾:git checkout v5.3.4(或 v5.3.3,或任意 commit)
@@ -68,6 +72,7 @@ v5.3.4 部署至 Production(2026-11-15),取代 v5.3.3。v5.3.3 取代 v5.0.0(202
 |---|---|---|---|
 | v5.3.3 | 2026-11-12 | ✅ PASS | R1~R7 全清零,vercel.json + version + compliance 頁檢查通過 |
 | v5.3.4 | 2026-11-15 | ✅ PASS | v5.3.4 變更僅導覽列入口(Builder/Demo/README/Setup/Version/SHA256/Warranty 連結)+ 版本字串,未觸及承諾文案。R1~R7 核心七條紅線全清零(主動接待/成效承諾/時效/監控/VIP價格/自動化承諾)。R7x 延伸防護標記 NT$7,800/13,900/24,800 為 tower repo 環境偽陽性——此為創辦人核定現行 T1/T2/T3 定價(Founder Approved Override),非舊定價外洩。實跑 redline_check.py 於 index/builder/version/t1/warranty 五頁。 |
+| v5.3.4 defect-fix | 2026-11-15 | ✅ PASS | DEF-001~004 修復僅觸及 nav CSS + burger JS + manifest + deploy-log + CHANGELOG,未觸及定價/品牌/承諾文案。R1~R7 全清零。實跑 redline_check.py + agent-browser 4 viewport(320/360/390/428px)手機導覽驗證。 |
 
 ---
 

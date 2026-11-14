@@ -7,6 +7,53 @@
 
 ---
 
+## v5.3.4 defect-fix · 2026-11-15 · MANus FAIL DEF-001~004 修復 (COPILOT-EXEC-005)
+
+### 變更摘要
+
+MANUS 對 v5.3.4 P2 判定 FAIL,指出 4 項缺陷(DEF-001 手機導覽、DEF-002 manifest、DEF-003 deploy ID、DEF-004 版本策略)。本修復逐一閉環,提交 MANUS 重新覆核。
+
+### 缺陷修復
+
+| # | 缺陷 | 根因 | 修復 |
+|---|---|---|---|
+| DEF-001 | 手機導覽閉環(320/360/390/428px)7 Builder 入口不可見 | CSS @media(768px) `.nav__more{display:none}` 隱藏整個更多下拉;12 頁(builder/* + verification/compliance)無 burger 按鈕;2 頁(checkout)有 burger 但缺 site.js | (1) CSS 改為 nav__links.open 時更多下拉平面垂直列表;(2) 12 頁補 burger 按鈕;(3) 15 頁補 inline toggle script;(4) builder/version 補 Demo+README 連結;(5) CSS 加 overflow-wrap:break-word + table 響應式。agent-browser 實測 4 viewport × 2 頁面 = 8 組合全 PASS |
+| DEF-002 | SHA256 manifest 未含 VERSION | 原 find 用副檔名過濾,VERSION 無副檔名被漏 | manifest 生成腳本顯式納入 VERSION + 所有 .md/.html/.css/.js/.json/.txt/.xml/.jsonld,並完成自驗(SHA 比對) |
+| DEF-003 | deploy-log Deploy ID 與實際不一致 | deploy-log 記 dpl_GiikSNpB...(首次部署),但 defect-fix 後現行 Production 為 dpl_7yipkLRPEP...(f0fade8) | deploy-log v5.3.4 列更新為現行 deploy ID dpl_7yipkLRPEPPUfao8jxKtuMSbqyoA |
+| DEF-004 | tag v5.3.4 vs ef665d Production commit 關係混淆 | tag v5.3.4→52d6722(code),Production=ef665d0(governance),兩者分離致版本混淆 | tag v5.3.4 移至最終 commit(含 defect-fix code + governance evidence),使 tag = Production = 不再分離。commit 鏈完整記錄於 deploy-log |
+
+### 修改檔案
+
+| 路徑 | 變更 |
+|---|---|
+| `assets/site.css` | DEF-001: 手機 nav CSS(更多下拉平面列表 + overflow-wrap + table 響應式) |
+| 12 個 builder/* + verification/compliance HTML | DEF-001: 補 nav__burger 按鈕 |
+| 15 個 HTML(上述 12 + checkout 2 + builder/version) | DEF-001: 補 inline burger toggle script |
+| `builder/version/index.html` | DEF-001 R3: 補 Demo+README nav 連結 |
+| `governance/deploy-log.md` | DEF-003: 現行 deploy ID;DEF-004: 版本策略文件 |
+| `governance/CHANGELOG.md` | 本條目(defect-fix 紀錄) |
+| `governance/backup-manifest.sha256` | DEF-002: 重建(含 VERSION + 自驗) |
+
+### DEF-001 手機導覽驗證(agent-browser 實測)
+
+| Viewport | 頁面 | burger 可見 | nav 開啟 | 7 入口全可見 | 無水平捲動 |
+|---|---|---|---|---|---|
+| 320px | / | ✅ | ✅ | ✅ | ✅ |
+| 320px | /builder/version | ✅ | ✅ | ✅ | ✅ |
+| 360px | / | ✅ | ✅ | ✅ | ✅ |
+| 360px | /builder/version | ✅ | ✅ | ✅ | ✅ |
+| 390px | / | ✅ | ✅ | ✅ | ✅ |
+| 390px | /builder/version | ✅ | ✅ | ✅ | ✅ |
+| 428px | / | ✅ | ✅ | ✅ | ✅ |
+| 428px | /builder/version | ✅ | ✅ | ✅ | ✅ |
+
+### 授權依據
+
+- COPILOT-EXEC-005(2026-11-15):允許修正範圍僅限 P2 Defect Fix,不得進入 P3。不得修改產品內容/定價/品牌/Orbit/VIP。
+- 完成後提交 P2 Defect Report 交 MANUS 重新覆核,不得提交 P2 Completion Report 直到 PASS。
+
+---
+
 ## v5.3.4 · 2026-11-15 · P2 Nav Closure (L3-SIGN-001)
 
 ### 變更摘要
