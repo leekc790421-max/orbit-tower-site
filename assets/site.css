@@ -194,6 +194,14 @@ tr:hover td{background:var(--section)}
 }
 @media (max-width:400px){ .nav__in{gap:8px} .brand small{display:none} }
 
+/* v5.3.4 DEF-001: prevent mobile horizontal scroll from long tokens (URLs/slashes/parentheses) + responsive tables */
+@media (max-width:720px){
+  body{overflow-x:hidden; overflow-wrap:break-word; word-break:break-word}
+  .wrap, main{overflow-wrap:break-word; word-break:break-word}
+  table{display:block; overflow-x:auto; max-width:100%; -webkit-overflow-scrolling:touch}
+  pre, code{white-space:pre-wrap; word-break:break-word}
+}
+
 /* === nav 修復:防擠換行 + 下拉選單(2026-11-09) === */
 .nav__links{gap:2px !important;flex-wrap:nowrap !important}
 .nav__link,.nav__links>a:not(.btn){font-size:13.5px !important;padding:8px 10px !important;white-space:nowrap !important}
