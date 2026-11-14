@@ -7,6 +7,50 @@
 
 ---
 
+## v5.3.4 · 2026-11-15 · P2 Nav Closure (L3-SIGN-001)
+
+### 變更摘要
+
+依 L3-SIGN-001(A.C. LEE 核定,2026-11-15)修補 P2 Tower Builder Foundation 導覽列缺口(F-nav)。v5.3.3 已完成 /builder 七大頁面、T1/T2/T3 產品頁、404 路由、合規證據,但主站導覽列未掛 Builder 入口,訪客無法從首頁導覽列進入 Builder 區。本版閉環導覽列,完成 P2 驗收條件「導覽列連結正常」。
+
+### 修復項目
+
+| # | 缺失 | 修復 |
+|---|---|---|
+| 1 | 主站 26 頁導覽列無 Builder 入口 | 「更多 ▾」下拉選單新增 Builder / Demo / README / Setup / Version / SHA256 / Warranty 七入口 |
+| 2 | Builder 區 10 頁缺 SHA256 連結 | 區段導覽列補入 SHA256(Version 與保固之間) |
+| 3 | verification / compliance 頁 Builder 連結無子連結 | 轉為下拉選單,含 7 個 Builder 子連結 |
+| 4 | 桌機 / 手機導覽同步 | 響應式單一 nav markup,一改兩版同步 |
+
+### 修改檔案
+
+| 路徑 | 變更 |
+|---|---|
+| `VERSION` | v5.3.3 → v5.3.4 |
+| `builder/version/index.html` | v5.3.3 → v5.3.4(標題/meta/og/jsonld/h1/歷史表/變更區/頁尾)+ 新增 v5.3.4 歷史列 + 變更內容改為 Nav Closure |
+| 26 個主站 HTML | nav__dropdown 新增 7 個 Builder 入口(index、pricing、faq、articles/a01-a09、kits、showcase、diagnose、departments、checkout、about、try、orbit-tower、demo、reports、contact、404) |
+| 10 個 builder/* HTML | 區段導覽列補 SHA256 連結(builder/index、demo、readme、setup、version、sha256、warranty、packages/index、packages/t1、t2、t3) |
+| `verification/index.html`、`compliance/index.html` | Builder 連結 → 下拉選單(7 子連結) |
+| `governance/CHANGELOG.md` | 新增 v5.3.4 條目(本檔) |
+
+### 授權依據
+
+- L3-SIGN-001(A.C. LEE,2026-11-15):核准 Path A,STATUS-LOCKED 局部解除(僅 P2 Builder Foundation),授權修補導覽列缺口並發布 v5.3.4。
+- 禁止事項:不得修改產品定價、品牌名稱、Orbit/VIP/P3/P4/P5 內容。
+
+### 公開核驗證據
+
+- 版本編號:v5.3.4(/VERSION、/builder/version、footer 三處一致)
+- git tag:https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.3.4(不可變)
+- SHA-256 manifest:/governance/backup-manifest.sha256(部署後重建)
+- 部署紀錄:/governance/deploy-log.md
+
+### 部署狀態
+
+部署至 Production(tower.xingdeng.tw),提交 Manus L2 覆核。等 PASS 後提交 P2 Completion Report。
+
+---
+
 ## v5.3.3 · 2026-11-12 · P3-R3 Manus FAIL Fix R2
 
 ### 變更摘要
