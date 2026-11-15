@@ -17,6 +17,8 @@
 | R1 | v5.4.0 | tag v5.4.0（交付 commit） | dpl_7iuiwPXyhoLezvhxK26MYPEPMf3o | 2026-11-15 04:46:57 | READY | 沙盒 URL 隔離（API target 實值=production，查證於 v5.4.1 輪） | orbit-site-6ejj5fmdj-xfls.vercel.app；Deployment Protection 已關閉（供覆核取樣）；orbit.xingdeng.tw 未綁定、專案無任何域名→僅唯一 URL 可達，無公開曝光；本列實值經 v5.4.1 自我覆核輪補全（R1 沙盒快照=v5.4.0 交付時點內容） |
 | R2 | v5.4.1 | tag v5.4.1（交付 commit） | 見 Release v5.4.1 部署登記 | — | READY（Release v5.4.1） | preview（target=None，API 複驗） | 自我覆核修正輪（GEMINI-ORDER-SELF-REVIEW）：筆誤修正＋欄位計數修正＋版本字串同步；部署後 live 複驗見 Release v5.4.1 |
 | R3 | v5.4.2 | tag v5.4.2（交付 commit） | 見 Release v5.4.2 部署登記 | — | READY（Release v5.4.2） | preview（target=None，API 複驗） | FAIL 排查修正輪（MANUS-REVIEW-RESULT: FAIL）：quote 摘要遞送 UI 修復＋favicon.ico 補齊＋version 頁尾滯留缺陷修正；§7 事件登記 |
+| R4 | v5.4.3 | tag v5.4.3（交付 commit） | 見 Release v5.4.3 部署登記 | — | READY | preview（target=None，API 複驗） | 正式上線遺留項補齊輪：og:image＋正式聯絡通道＋gen_manifest VERSION 條目黏行修復；§8 |
+| P4-PROD | v5.4.3 | tag v5.4.3 | dpl_CCZpvvogGyWxNdT8A6yqpQWciaTg（2026-11-15，正式部署） | dpl_CCZpvvog… | READY（alias API 複驗） | production（alias=orbit.xingdeng.tw） | 正式環境上線：域名自 orbit-tower-3d 切換綁定；live 對帳 10/10；Tower 零碰觸複證 v5.3.10 |
 
 ## 2. P4 開工紀錄
 
@@ -83,3 +85,38 @@
 - 對抗式排查彙總（證據存檔 scripts/p4_fail_audit_out.txt）：**重大 3 項**——(a) 報價申請摘要生成後無複製/下載遞送 UI，互動鏈於沙盒端斷鏈；(b) /favicon.ico 直接請求路徑 404；(c) version 頁頁尾版本字串滯留 v5.4.0（og:description 之 v5.4.1 致字串掃描誤配，兩輪自檢漏網——本輪修正並將 L1 頁尾檢查改為頁尾列錨定）。**建議 6 項**——og:image 缺失×5（遞延：og 需絕對 URL，沙盒 URL 逐輪變動，留待正式域配置輪產製，避免於資產寫入臨時 URL）、報價摘要無下載（併入重大(a)處置）。誤報排除：quote 頁「【」為 SUBMIT_NOTE 刻意 UI 標籤，非佔位符。
 - v5.4.2 修正對照：①quote 摘要新增「複製申請摘要」（clipboard API＋execCommand 降級）與「下載申請摘要（.txt）」（Blob）按鈕及成功回饋——互動鏈閉合；②新增 orbit-site/favicon.ico（logo-orbit.svg 向量轉製 48/32/16px，零外部依賴）——直接請求路徑 200，與既有 rel=icon 雙軌；③version 頁尾 v5.4.0→v5.4.2＋L1 頁尾檢查錨定強化；④Orbit L1 新增 favicon（rel=icon＋ICO 檔）／遞送 UI／JS-id 閉合檢查；⑤版本字串 v5.4.2 全線同步；⑥Tower 併行保護複驗四線全綠（verify_freeze／Tower L1／Orbit L1／verify_tags 7 PINNED）；新增檔數 13→14（仍限 orbit-site/**，P4 聲明範圍不變，freeze-validation v1.6 紀錄）。
 - 修正排程：本輪即時完成（無外部依賴項）；og:image 併入正式域配置輪（P5 前置）。R3 部署＋四線重放＋live 複驗全綠後，方提報 Manus 新一輪獨立複查；本單位不自行宣告 PASS。
+
+## 8. 正式上線登記（MANUS-REVIEW-RESULT: PASS＋整合執行令，2026-11-15）
+
+Manus 對 P4 沙盒 v5.4.2（R3）獨立複核判定 **PASS**；整合執行令下達 P4 正式上線與遺留項補齊。本節為執行事實登記。
+
+### 8.1 域名切換事實登記（orbit.xingdeng.tw）
+
+- **切換前狀態取證**（2026-11-15）：域名綁定於 Vercel 專案 `orbit-tower-3d`（GET /v9/projects 全量盤點），實際服務內容為實驗頁「Orbit Tower — AI Digital Headquarters」（orbit3d/，無 /VERSION 端點，GET /VERSION 回 NOT_FOUND）；DNS 已指向 Vercel 邊緣（66.33.60.194 / 76.76.21.93）。
+- **切換操作**（Vercel API，逐項留存）：`DELETE /v9/projects/orbit-tower-3d/domains/orbit.xingdeng.tw`（回 {}）→ `POST /v9/projects/orbit-site/domains {"name":"orbit.xingdeng.tw"}`（回 verified: true）。DNS 零異動（既有 CNAME 已指 Vercel，僅專案綁定切換）；orbit-tower-3d 專案本身零變更（實驗頁仍存於其 vercel.app URL）。
+- **切換後複驗**：production 部署 alias 含 orbit.xingdeng.tw（API GET /v13/deployments/dpl_CCZpvvogGyWxNdT8A6yqpQWciaTg → alias 陣列實值）；https://orbit.xingdeng.tw live 對帳 10/10（/VERSION=v5.4.3、五頁頁尾/og:image/聯絡通道、og.png sha256 與 repo 一致、manifest 14/14、favicon.ico、quote 正式措辭）。
+
+### 8.2 本輪部署序列（含迭代登記）
+
+| 部署 | Deploy ID | target | 內容 |
+|---|---|---|---|
+| R4-a | dpl_FbQgKTy8btHSW1YBrfBJveKpqTF9 | preview | v5.4.3 初版（og:image＋聯絡通道＋版號全線） |
+| R4-b | dpl_8xNsdZ9vDSBnBweFBUVT3aH3MMmt | preview | 同內容重部署（對帳腳本計數覆核用） |
+| R4-c | dpl_AWPYtwevB5JNPBrX5R9Lc1Pvdaki | preview | manifest 修復後終版（見 8.3；R4 登記列以本部署為準） |
+| P4-PROD | dpl_CCZpvvogGyWxNdT8A6yqpQWciaTg | production | 正式環境上線（alias=orbit.xingdeng.tw） |
+
+### 8.3 gen_manifest.py VERSION 條目黏行缺陷修復（本輪發現即修）
+
+- **缺陷**：`gen_manifest.py` 寫檔以 `chr(10).join(RULES_FROZEN)` 無結尾換行，RULES_FROZEN 末元素為 `"#"`，首條列（依排序為 VERSION）直接黏附其後，形成 `#e38f…  VERSION` 之形似註解行——所有以「# 開頭=註解」為慣例之讀取器（含 `sha256sum -c`、L1、live 對帳）皆誤濾該條目。該缺陷自 v5.4.0 起存在（非本輪引入）；**manifest 檔案本身恆完整**（VERSION 條目一直在檔），僅「可解析驗證覆蓋率」實為 13/14。
+- **修復**：寫檔補結尾換行；重建後 14 條全數獨立可解析，VERSION 雜湊 e38f5513… 與實檔一致，L1「O-manifest 全項 14 檔重驗」實測通過。
+- **影響評估**：Tower 凍結鏈不受影響（Tower manifest 由獨立工具產製，無此寫法）；歷史版本 manifest 依 immutable 原則不回溯改寫，以本節為準。
+
+### 8.4 正式環境聯絡通道登記
+
+- 聯絡窗口 **service@xingdeng.tw**——來源：主站 xingdeng.tw 既有公開資訊（非新造地址）；已置入五頁頁尾與 quote 正式環境說明（SUBMIT_NOTE：以複製/下載申請摘要遞送人工評估窗口）。自動化信箱/API 遞送通道為後續生態整合項（P5 後排程），本輪不虛構後端。
+
+### 8.5 SSOT 界定與零碰觸複證
+
+- 工單所載「deployment-registry.md / deploy-log.md 實值登記」：經 SSOT 界定，`governance/deployment-registry.md` 為 **Tower 專屬部署對帳 SSOT**，屬 Tower 凍結範圍（P4 核定調整 3 檔以外不可異動）；Orbit/Vip 部署登記分冊於本檔（與 §6 自檢第 4 項「兩站日誌分冊」原則一致），無互斥矛盾。
+- Tower 正式站零碰觸：上線後複證 tower.xingdeng.tw /VERSION=200 v5.3.10；P4 核定調整 3 檔與 orbit-site/** 新增範圍不變（freeze-validation v1.7）。
+- og:image 資產：assets/og.png（1200×630，PIL 本地產製 97,411 bytes，sha256 入 manifest）；og meta 絕對 URL=https://orbit.xingdeng.tw/assets/og.png（正式域，非臨時沙盒 URL，§7 遞延理由解除）。

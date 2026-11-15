@@ -1,21 +1,23 @@
-# SNT Orbit 部署完整性清單 (backup-manifest.sha256) — 站體 v5.4.2
-# 生成:2026-11-15,P4 沙盒交付 v5.4.2 FAIL 排查修正輪(GEMINI-ORDER-P4-START+GEMINI-ORDER-SELF-REVIEW+MANUS-REVIEW-RESULT FAIL;部署鐵律:工作區→沙盒→L1→L2→編版→部署)
+# SNT Orbit 部署完整性清單 (backup-manifest.sha256) — 站體 v5.4.3
+# 生成:2026-11-15,P4 正式上線遺留項補齊輪(og:image 絕對 URL+og.png+正式聯絡通道;MANUS-REVIEW-RESULT PASS+整合執行令;部署鐵律:工作區→沙盒→L1→L2→編版→部署)
 # 涵蓋:Orbit 站部署輸出之全部檔案(HTML/CSS/SVG/MD/TXT 等,含 VERSION 與 governance/scripts),規則凍結,僅重算。
 # 驗證方式:於 Orbit 站輸出根目錄執行 `sha256sum -c governance/backup-manifest.sha256`,或對站點 URL 逐一比對。
 #
 # 排除規則:
 #   1. governance/backup-manifest.sha256 —— 本檔自身,自參照不可行。
 #   2. .git/ —— 版本控制內部檔案,非部署輸出。
-#d9d57cea42224c2367f232909b6d167bd5cd8eca19593856e144d502637505b5  VERSION
+#
+e38f55130622f9acde8c31ec5ada81748375c7613d79aa9b3ef20f03b84ad15c  VERSION
 a5cad888d0aab10f15217273b556d2ed610c398ad620d8a31c6b465f706a9e4d  assets/logo-orbit.svg
+5ae37c9a65094d74c900e4510cdc8f9fa1673498847a2a0bf61e6e1378b770c2  assets/og.png
 f7b7c7cb25df637d4962fdaa9982a1ab3ac3c62874ef610a3bc73d6f36e972bb  assets/site.css
-57f38eca6b02df44087e23b4e9a7d37c235a82067795a4886349c4d80f0f93f7  enterprise/index.html
+07c4a6fa5d1f6db5ace85b6b5c9b9d985f9b0e89b504ee00560dbbd7e5ed526b  enterprise/index.html
 733f0e62e3b10c627ab692405b645cafb1300640f7393cc95755b9d1b1339247  favicon.ico
-5a03031c3e0aecd085d5acea19293a12f8a6ec653d748217786150b46805fb22  governance/deploy-log.md
-25598249b41febb6758eed67cac9125bbe36e4497ad94c02df9986b1424a8243  index.html
-2be9c41dc9f7dac15dc6538915cab72a6dcf9ddf7529961b09ed3a4b1e1184aa  quote/index.html
-ce508ddcd661ef142bbe3fe5e5d69f145cdfc8ba6f68afa677c956bdc512bf2c  rental/index.html
+51cf009a813d84a5ea68f91c8d34ab5ae9c5adba71cbd26048b967dd6a61802f  governance/deploy-log.md
+a196212d6ffe313dd4437f3a95a68cc2f8334b9226e6c91d8fc9844074355ab6  index.html
+5a5810729363bfb34e7a35c845e29b20ccba9202f05677d00b6761af72993b11  quote/index.html
+03279e691b0f23c9dca609c411ddaf1ede7e77f3ba85fcf1511573842da2f9fe  rental/index.html
 2506c688c07d4341db81519258b732a1c731d28bf64927027e7ec397ab2199aa  scripts/deploy.py
-f88279a0bae28926e088bc0a4b3d4e2ea6bbc22653ca9cc0eefb998e1dfa1a6f  scripts/gen_manifest.py
-e5543870d69f127943a9adf205eed59c5f59270a2d79873cb5381c74ed57baf6  scripts/l1_check.py
-98e2b37e4b0e407aa3f2746a46af94f27befec8902f2cb1ad576b54befaf293b  version/index.html
+760c2942663080df47a559eceb789022be64c4e119e6d6d8abf16c5316744c4b  scripts/gen_manifest.py
+bc854cef311a69bc29cae2dd1514d87ca782c0d92c7b4ee910aa1ca7700215db  scripts/l1_check.py
+b635fc7cb2c33e15a9ff67787d37897fcbac810d84f02c029d5d0f1b6332134a  version/index.html

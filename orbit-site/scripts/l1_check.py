@@ -22,18 +22,18 @@ def rd(rel):
 # 1) 檔案完備
 FILES = ["index.html", "enterprise/index.html", "quote/index.html", "rental/index.html", "version/index.html",
          "VERSION", "assets/site.css", "assets/logo-orbit.svg", "governance/deploy-log.md",
-         "scripts/gen_manifest.py", "scripts/deploy.py", "scripts/l1_check.py"]
+         "scripts/gen_manifest.py", "scripts/deploy.py", "scripts/l1_check.py", "assets/og.png"]
 import contextlib
 manifest_ok = os.path.exists(os.path.join(ROOT, "governance/backup-manifest.sha256"))
 if manifest_ok: FILES.append("governance/backup-manifest.sha256")
-check("O-檔案完備（12+1 檔）", all(os.path.exists(os.path.join(ROOT, f)) for f in FILES))
-check("O-VERSION=v5.4.2", rd("VERSION").strip() == "v5.4.2")
+check("O-檔案完備（13+1 檔）", all(os.path.exists(os.path.join(ROOT, f)) for f in FILES))
+check("O-VERSION=v5.4.3", rd("VERSION").strip() == "v5.4.3")
 
 # 2) 版本字串一致（五頁頁尾 + version 頁 title/hero）
 pages = ["index.html", "enterprise/index.html", "quote/index.html", "rental/index.html", "version/index.html"]
-check("O-五頁頁尾版本字串 v5.4.2(頁尾列錨定)", all("站體 v5.4.2 · 依" in rd(p) for p in pages))
+check("O-五頁頁尾版本字串 v5.4.3(頁尾列錨定)", all("站體 v5.4.3 · 依" in rd(p) for p in pages))
 ver = rd("version/index.html")
-check("O-version 頁 title/工項/鐵律", all(k in ver for k in ["版本資訊 v5.4.2", "GEMINI-ORDER-P4-START", "沙盒交付", "orbit.xingdeng.tw"]))
+check("O-version 頁 title/工項/鐵律", all(k in ver for k in ["版本資訊 v5.4.3", "GEMINI-ORDER-P4-START", "正式上線", "orbit.xingdeng.tw"]))
 check("O-version 版本域不混用", "v5.3.10（已結案）" in ver and "治理文件" in ver and "v5.1.1" in ver and "產品包文件" in ver)
 
 # 3) 內部連結閉環（頁內相對連結與資源存在）
@@ -64,7 +64,7 @@ check("O-手機選單可捲動防呆", "max-height:calc(100dvh - 64px)" in rd("a
 q = rd("quote/index.html")
 check("O-quote 七欄位齊備（五必填二選填）", all(f'id="{x}"' in q for x in ["company", "name", "email", "phone", "plan", "need"]))
 check("O-quote 驗證邏輯", all(k in q for k in ['.test(val("email"))', "length < 20", "classList.toggle", "summary", "申請編號"]))
-check("O-quote 沙盒性質明示（不虛構遞送）", "沙盒階段說明" in q and "遞送通道" in q and "正式環境" in q and "mailto:" not in q)
+check("O-quote 正式環境遞送明示（真實聯絡窗口）", "正式環境說明" in q and "service@xingdeng.tw" in q and "複製" in q and "mailto:" not in q)
 
 # 6) 租賃方案：三檔/計價三因素/條款/定價明示
 r = rd("rental/index.html")
@@ -85,7 +85,7 @@ check("O-deploy-log 鐵律+逐筆登記", all(k in dl for k in ["嚴禁直接於
 check("O-deploy.py 預設 preview（工具層防呆）", rd("scripts/deploy.py").count('sys.argv[2] if len(sys.argv) > 2 else "preview"') == 1 and 'not in ("preview", "production")' in rd("scripts/deploy.py"))
 mf = rd("governance/backup-manifest.sha256")
 rows = [l for l in mf.splitlines() if l and not l.startswith("#")]
-check("O-manifest 規則凍結檔頭", mf.startswith("# SNT Orbit 部署完整性清單") and "站體 v5.4.2" in mf and "本檔自身" in mf)
+check("O-manifest 規則凍結檔頭", mf.startswith("# SNT Orbit 部署完整性清單") and "站體 v5.4.3" in mf and "本檔自身" in mf)
 mism = []
 for line in rows:
     h, _, p = line.partition("  ")
@@ -105,6 +105,9 @@ check("O-self-review 紀錄在案", all(k in dl for k in ["GEMINI-ORDER-SELF-REV
 # 12) FAIL 排查修正項複驗（MANUS-REVIEW-RESULT）
 check("O-favicon 五頁 rel=icon", all('rel="icon" type="image/svg+xml" href="/assets/logo-orbit.svg"' in rd(p) for p in pages))
 check("O-favicon.ico 存在(直接請求路徑)", __import__("os").path.exists("orbit-site/favicon.ico"))
+check("O-og:image 五頁絕對 URL", all('property="og:image" content="https://orbit.xingdeng.tw/assets/og.png"' in rd(p) for p in pages))
+check("O-og.png 就位(1200×630)", os.path.getsize("orbit-site/assets/og.png") > 20000)
+check("O-正式聯絡通道 五頁頁尾", all("service@xingdeng.tw" in rd(p) for p in pages))
 check("O-quote 摘要遞送 UI(複製+下載)", all(k in q for k in ["clipboard", "execCommand", "Blob", "copy-sum", "dl-sum"]))
 check("O-quote JS 引用 id 閉合", all(i in q for i in ["qactions", "copy-sum", "dl-sum"]))
 
