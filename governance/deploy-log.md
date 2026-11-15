@@ -35,7 +35,7 @@
 - **日期校正(2026-11-15)**:v5.0.0 原標 2026-11-10、v5.3.3 原標 2026-11-12、v5.3.4 各列原標 2026-11-15,與 Vercel API 實測 createdAt 不符,已依實測校正(v5.0.0=11-11 07:46、v5.3.3=11-13 00:59、v5.3.4 全鏈=11-14 19:21~23:01 UTC)。
 - **漏列補記(2026-11-15)**:v5.3.3 後續部署(dpl_AS2Z3iPk)、v5.3.4 governance(dpl_CrjfgSM,即 MANUS 覆核時之現行)、DEF-001 R1/R2(dpl_2eUABLaGG/dpl_hMLb1AE)、governance R2(dpl_AZSaWtwZ)共 5 筆已依 Vercel API 補列。
 - **Deploy ID 對映精度**:本專案採 Files API 部署(無 git meta),Deploy ID 與 commit 之對映依部署時間序與內容比對;標「推定」者為時間序推定,精確對應以 Vercel Dashboard 為準(Manus 具 Dashboard 存取權)。
-- **v5.3.5 R2 補記**:首次部署(dpl_7zRQpXpX)後發現 repo vercel.json 缺 name/version 鍵(前手工作區改動未 commit 之漂移),致 /VERSION 被 case-insensitive 比對至 /version 別名而 307;已還原部署態語義並補 /sha256,重新部署。此漂移亦證實 deploy-log 鐵律 2(工作區未 commit 改動)之風險為實。
+- **v5.3.5 R2/R3 補記**:首次部署(dpl_7zRQpXpX)後發現 /VERSION 被 redirects 預設之 case-insensitive 比對接往 /version 別名(307),治理版本檔無法直接存取;已為別名 redirects 加 caseSensitive:true(/VERSION 確定性回傳檔案,/version 維持別名),並還原部署態 vercel.json 之 name/version 鍵(修正前手工作區改動未 commit 之漂移,該漂移證實鐵律 2 之風險為實),重新部署。
 - **現行部署 ID 之制度性落差說明**:Deploy ID 於部署完成後始由 Vercel 產生,故本檔 v5.3.5 列以「本 commit = tag v5.3.5」定位現行部署(commit 公開可驗),實際 Deploy ID 以 Vercel Dashboard 為準並記錄於 P2-R1 Completion Package;此為制度性一行落差,非紀錄不實。
 - v5.3.3 為 Manus FAIL Fix R2,補齊 404 路由別名 + 版本同步 + 合規證據公開核驗(governance/ 入 repo + git tag),經 EXEC-ORDER-BLOCKER-001(L3 覆蓋)部署至 Production。
 - v5.3.4 commit 鏈:52d6722(nav closure)→ ef665d0(governance R1)→ 9422baa(DEF-001 R1)→ 026ae78(DEF-001 R2 CSS)→ f0fade8(DEF-001 R3+defect-fix)→ ca81640(governance R2)。
