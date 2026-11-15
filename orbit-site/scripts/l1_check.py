@@ -27,13 +27,13 @@ import contextlib
 manifest_ok = os.path.exists(os.path.join(ROOT, "governance/backup-manifest.sha256"))
 if manifest_ok: FILES.append("governance/backup-manifest.sha256")
 check("O-檔案完備（12+1 檔）", all(os.path.exists(os.path.join(ROOT, f)) for f in FILES))
-check("O-VERSION=v5.4.1", rd("VERSION").strip() == "v5.4.1")
+check("O-VERSION=v5.4.2", rd("VERSION").strip() == "v5.4.2")
 
 # 2) 版本字串一致（五頁頁尾 + version 頁 title/hero）
 pages = ["index.html", "enterprise/index.html", "quote/index.html", "rental/index.html", "version/index.html"]
-check("O-五頁頁尾版本字串 v5.4.1", all("站體 v5.4.1" in rd(p) for p in pages))
+check("O-五頁頁尾版本字串 v5.4.2(頁尾列錨定)", all("站體 v5.4.2 · 依" in rd(p) for p in pages))
 ver = rd("version/index.html")
-check("O-version 頁 title/工項/鐵律", all(k in ver for k in ["版本資訊 v5.4.1", "GEMINI-ORDER-P4-START", "沙盒交付", "orbit.xingdeng.tw"]))
+check("O-version 頁 title/工項/鐵律", all(k in ver for k in ["版本資訊 v5.4.2", "GEMINI-ORDER-P4-START", "沙盒交付", "orbit.xingdeng.tw"]))
 check("O-version 版本域不混用", "v5.3.10（已結案）" in ver and "治理文件" in ver and "v5.1.1" in ver and "產品包文件" in ver)
 
 # 3) 內部連結閉環（頁內相對連結與資源存在）
@@ -85,7 +85,7 @@ check("O-deploy-log 鐵律+逐筆登記", all(k in dl for k in ["嚴禁直接於
 check("O-deploy.py 預設 preview（工具層防呆）", rd("scripts/deploy.py").count('sys.argv[2] if len(sys.argv) > 2 else "preview"') == 1 and 'not in ("preview", "production")' in rd("scripts/deploy.py"))
 mf = rd("governance/backup-manifest.sha256")
 rows = [l for l in mf.splitlines() if l and not l.startswith("#")]
-check("O-manifest 規則凍結檔頭", mf.startswith("# SNT Orbit 部署完整性清單") and "站體 v5.4.1" in mf and "本檔自身" in mf)
+check("O-manifest 規則凍結檔頭", mf.startswith("# SNT Orbit 部署完整性清單") and "站體 v5.4.2" in mf and "本檔自身" in mf)
 mism = []
 for line in rows:
     h, _, p = line.partition("  ")
@@ -102,7 +102,13 @@ check("O-quote 零自動報價字串", "NT$" not in q)
 # 11) 自我覆核紀錄（GEMINI-ORDER-SELF-REVIEW）
 check("O-self-review 紀錄在案", all(k in dl for k in ["GEMINI-ORDER-SELF-REVIEW", "R2", "v5.4.1", "146/149"]))
 
-# 12) 無佔位符
+# 12) FAIL 排查修正項複驗（MANUS-REVIEW-RESULT）
+check("O-favicon 五頁 rel=icon", all('rel="icon" type="image/svg+xml" href="/assets/logo-orbit.svg"' in rd(p) for p in pages))
+check("O-favicon.ico 存在(直接請求路徑)", __import__("os").path.exists("orbit-site/favicon.ico"))
+check("O-quote 摘要遞送 UI(複製+下載)", all(k in q for k in ["clipboard", "execCommand", "Blob", "copy-sum", "dl-sum"]))
+check("O-quote JS 引用 id 閉合", all(i in q for i in ["qactions", "copy-sum", "dl-sum"]))
+
+# 13) 無佔位符
 alltext = "\n".join(rd(p) for p in pages)
 check("O-無佔位符", not re.search(r"【待補|TODO|XXX|undefined|NaN", alltext))
 

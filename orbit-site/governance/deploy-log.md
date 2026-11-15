@@ -15,7 +15,8 @@
 | 輪次 | 版本 | Commit | Deploy ID | Timestamp (UTC) | State | 環境 | 備註 |
 |---|---|---|---|---|---|---|---|
 | R1 | v5.4.0 | tag v5.4.0（交付 commit） | dpl_7iuiwPXyhoLezvhxK26MYPEPMf3o | 2026-11-15 04:46:57 | READY | 沙盒 URL 隔離（API target 實值=production，查證於 v5.4.1 輪） | orbit-site-6ejj5fmdj-xfls.vercel.app；Deployment Protection 已關閉（供覆核取樣）；orbit.xingdeng.tw 未綁定、專案無任何域名→僅唯一 URL 可達，無公開曝光；本列實值經 v5.4.1 自我覆核輪補全（R1 沙盒快照=v5.4.0 交付時點內容） |
-| R2 | v5.4.1 | tag v5.4.1（交付 commit） | 見 Release v5.4.1 部署登記 | — | READY（Release v5.4.1） | preview 沙盒 | 自我覆核修正輪（GEMINI-ORDER-SELF-REVIEW）：筆誤修正＋欄位計數修正＋版本字串同步；部署後 live 複驗見 Release v5.4.1 |
+| R2 | v5.4.1 | tag v5.4.1（交付 commit） | 見 Release v5.4.1 部署登記 | — | READY（Release v5.4.1） | preview（target=None，API 複驗） | 自我覆核修正輪（GEMINI-ORDER-SELF-REVIEW）：筆誤修正＋欄位計數修正＋版本字串同步；部署後 live 複驗見 Release v5.4.1 |
+| R3 | v5.4.2 | tag v5.4.2（交付 commit） | 見 Release v5.4.2 部署登記 | — | READY（Release v5.4.2） | preview（target=None，API 複驗） | FAIL 排查修正輪（MANUS-REVIEW-RESULT: FAIL）：quote 摘要遞送 UI 修復＋favicon.ico 補齊＋version 頁尾滯留缺陷修正；§7 事件登記 |
 
 ## 2. P4 開工紀錄
 
@@ -73,3 +74,12 @@
 - v5.4.0 Release 內文之同源筆誤（六欄位/四入口表述）依歷史文件原則不改寫，以本版為準。
 
 自檢結論：五項查核全數通過、發現項全數修正後，內部自檢 100% 符合規範、無自參照語病與數據矛盾，方提報 Manus 獨立覆核。
+
+## 7. 複核攔截事件登記（MANUS-REVIEW-RESULT: FAIL，2026-11-15）
+
+- 事件：Manus 對 P4 沙盒 v5.4.0（R1 URL orbit-site-6ejj5fmdj-xfls.vercel.app）獨立複核判定 **FAIL**。依 SNT-REVIEW-001：正式域 orbit.xingdeng.tw 維持絕對隔離（本輪零觸碰，Tower 正式站四端點 live 複證 200=v5.3.10）、不得結案、不得進入下一階段。
+- **缺失清單調閱聲明**：工單未附失敗日誌/缺失清單（upload/ 僅原始企劃書三份；全工作區無複核日誌檔）。依 GEMINI-ORDER-SELF-REVIEW 自檢機制，以「對抗式深度排查」替代，涵蓋工單指定四大項：展示架構／互動邏輯／報價與租賃模組／Tower 併行保護。
+- R1（Manus 實際審視對象）live 取證：①R1 部署登記列為空值（Deploy ID/Timestamp/State=「—」）——治理可見缺失，v5.4.1 已修復（R2 內容補全），R1 快照依 immutable 原則不可改；②R1 列「preview 沙盒」表述與 API 查證 target=production 不符——v5.4.1 已如實更正登記；③直接請求 /favicon.ico 得 404（五頁 rel=icon SVG 原已具備，瀏覽器端不觸發；404 見於直接路徑請求）。
+- 對抗式排查彙總（證據存檔 scripts/p4_fail_audit_out.txt）：**重大 3 項**——(a) 報價申請摘要生成後無複製/下載遞送 UI，互動鏈於沙盒端斷鏈；(b) /favicon.ico 直接請求路徑 404；(c) version 頁頁尾版本字串滯留 v5.4.0（og:description 之 v5.4.1 致字串掃描誤配，兩輪自檢漏網——本輪修正並將 L1 頁尾檢查改為頁尾列錨定）。**建議 6 項**——og:image 缺失×5（遞延：og 需絕對 URL，沙盒 URL 逐輪變動，留待正式域配置輪產製，避免於資產寫入臨時 URL）、報價摘要無下載（併入重大(a)處置）。誤報排除：quote 頁「【」為 SUBMIT_NOTE 刻意 UI 標籤，非佔位符。
+- v5.4.2 修正對照：①quote 摘要新增「複製申請摘要」（clipboard API＋execCommand 降級）與「下載申請摘要（.txt）」（Blob）按鈕及成功回饋——互動鏈閉合；②新增 orbit-site/favicon.ico（logo-orbit.svg 向量轉製 48/32/16px，零外部依賴）——直接請求路徑 200，與既有 rel=icon 雙軌；③version 頁尾 v5.4.0→v5.4.2＋L1 頁尾檢查錨定強化；④Orbit L1 新增 favicon（rel=icon＋ICO 檔）／遞送 UI／JS-id 閉合檢查；⑤版本字串 v5.4.2 全線同步；⑥Tower 併行保護複驗四線全綠（verify_freeze／Tower L1／Orbit L1／verify_tags 7 PINNED）；新增檔數 13→14（仍限 orbit-site/**，P4 聲明範圍不變，freeze-validation v1.6 紀錄）。
+- 修正排程：本輪即時完成（無外部依賴項）；og:image 併入正式域配置輪（P5 前置）。R3 部署＋四線重放＋live 複驗全綠後，方提報 Manus 新一輪獨立複查；本單位不自行宣告 PASS。

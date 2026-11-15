@@ -133,8 +133,8 @@ SNT Freeze Validation 重放 v2(git immutable tag 鏈 + 工作區)
 == Tower 交付態逐檔硬驗(P4 併行模式)== 基準=tag v5.3.10 manifest(149 檔)
   零變更 146/149 | P4 起點核定調整 3: governance/freeze-replay-2026-11-15.txt, governance/freeze-validation.md, scripts/verify_freeze.py
 
-== 工作區相對 v5.3.10 == 新增 13(限 orbit-site/**) | 移除 0(限 0)
-  新增: orbit-site/VERSION, orbit-site/assets/logo-orbit.svg, orbit-site/assets/site.css, orbit-site/enterprise/index.html, orbit-site/governance/backup-manifest.sha256, orbit-site/governance/deploy-log.md, orbit-site/index.html, orbit-site/quote/index.html, orbit-site/rental/index.html, orbit-site/scripts/deploy.py, orbit-site/scripts/gen_manifest.py, orbit-site/scripts/l1_check.py, orbit-site/version/index.html
+== 工作區相對 v5.3.10 == 新增 14(限 orbit-site/**) | 移除 0(限 0)
+  新增: orbit-site/VERSION, orbit-site/assets/logo-orbit.svg, orbit-site/assets/site.css, orbit-site/enterprise/index.html, orbit-site/favicon.ico, orbit-site/governance/backup-manifest.sha256, orbit-site/governance/deploy-log.md, orbit-site/index.html, orbit-site/quote/index.html, orbit-site/rental/index.html, orbit-site/scripts/deploy.py, orbit-site/scripts/gen_manifest.py, orbit-site/scripts/l1_check.py, orbit-site/version/index.html
 
 對照 governance/freeze-validation.md 之判定:全部差異應屬該文件所列核准變更;出現未列差異 = 疑似誤變動。
 

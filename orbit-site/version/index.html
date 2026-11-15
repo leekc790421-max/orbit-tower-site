@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>版本資訊 v5.4.1｜光曦星軌 Orbit</title>
-<meta name="description" content="光曦星軌 Orbit 站體版本資訊：v5.4.1 P4 沙盒交付版（自我覆核修正輪）。版本域定義、P4 工項狀態、沙盒部署登記與驗證。">
-<meta property="og:title" content="版本資訊 v5.4.1｜光曦星軌 Orbit">
-<meta property="og:description" content="Orbit 站體 v5.4.1：P4 沙盒交付版（自我覆核修正輪），治理與驗證紀錄公開。">
+<title>版本資訊 v5.4.2｜光曦星軌 Orbit</title>
+<meta name="description" content="光曦星軌 Orbit 站體版本資訊：v5.4.2 P4 沙盒交付版（FAIL 排查修正輪）。版本域定義、P4 工項狀態、沙盒部署登記與驗證。">
+<meta property="og:title" content="版本資訊 v5.4.2｜光曦星軌 Orbit">
+<meta property="og:description" content="Orbit 站體 v5.4.2：P4 沙盒交付版（FAIL 排查修正輪），治理與驗證紀錄公開。">
 <link rel="icon" type="image/svg+xml" href="/assets/logo-orbit.svg">
 <link rel="stylesheet" href="/assets/site.css">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"光曦星軌 Orbit 企業數位總部","version":"v5.4.1","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://orbit.xingdeng.tw/"}
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"光曦星軌 Orbit 企業數位總部","version":"v5.4.2","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://orbit.xingdeng.tw/"}
 </script>
 </head>
 <body>
@@ -28,15 +28,15 @@
 
 <header class="hero" style="padding:60px 0 40px"><div class="wrap">
 <span class="kicker">Version · 治理透明</span>
-<h1>版本資訊 v5.4.1</h1>
-<p style="font-size:14px;opacity:.7;margin-top:8px">v5.4.1 · P4 沙盒交付版（自我覆核修正輪）· 2026-11-15</p>
+<h1>版本資訊 v5.4.2</h1>
+<p style="font-size:14px;opacity:.7;margin-top:8px">v5.4.2 · P4 沙盒交付版（FAIL 排查修正輪）· 2026-11-15</p>
 </div></header>
 
 <section style="padding-top:16px"><div class="wrap">
 <div class="sec-head"><span class="kicker">版本域定義</span><h2>版本域（v5.1.1 核定 · 不得混用）</h2></div>
 <table class="tbl">
 <tr><th style="width:26%">域</th><th>版本</th><th style="width:34%">說明</th></tr>
-<tr><td><b>Orbit 站體</b></td><td><b>v5.4.x</b>（本站 v5.4.1）</td><td>P4 Orbit Productization 起始版本</td></tr>
+<tr><td><b>Orbit 站體</b></td><td><b>v5.4.x</b>（本站 v5.4.2）</td><td>P4 Orbit Productization 起始版本</td></tr>
 <tr><td>Tower 站體</td><td>v5.3.10（已結案）</td><td>光曦星閣，P2/P3 已取得 Manus PASS</td></tr>
 <tr><td>治理文件</td><td>v5.1.1</td><td>SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001</td></tr>
 <tr><td>產品包文件</td><td>v5.2.0</td><td>README / Setup / Warranty</td></tr>
@@ -58,8 +58,9 @@
 <div class="sec-head"><span class="kicker">部署登記</span><h2>沙盒部署登記與驗證</h2></div>
 <table class="tbl">
 <tr><th style="width:26%">項目</th><th>內容</th></tr>
-<tr><td>本版（v5.4.1）</td><td>沙盒部署：見 GitHub Release <a href="https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.4.1">v5.4.1</a> 部署登記（Deploy ID/Timestamp/沙盒 URL）</td></tr>
-<tr><td>歷史 R1（v5.4.0）</td><td>沙盒 dpl_7iuiwPXyhoLezvhxK26MYPEPMf3o（2026-11-15 04:46:57 UTC）；其快照為 v5.4.0 交付時點內容，R1 列登記實值經本輪補全</td></tr>
+<tr><td>本版（v5.4.2）</td><td>沙盒部署：見 GitHub Release <a href="https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.4.2">v5.4.2</a> 部署登記（Deploy ID/Timestamp/沙盒 URL；含 FAIL 排查與修正對照）</td></tr>
+<tr><td>歷史 R2（v5.4.1）</td><td>沙盒 dpl_FLTGYWxiecZpYCHg7HB8VjErTFD4（preview，target=None 經 API 複驗）；自我覆核修正輪</td></tr>
+<tr><td>歷史 R1（v5.4.0）</td><td>沙盒 dpl_7iuiwPXyhoLezvhxK26MYPEPMf3o（2026-11-15 04:46:57 UTC）；快照為 v5.4.0 交付時點內容（R1 列空值登記與 target 表述之治理缺失已於 v5.4.1 更正；R1 快照依 immutable 原則不可改）</td></tr>
 <tr><td>凍結完整性</td><td>Orbit manifest（<a href="/governance/backup-manifest.sha256">/governance/backup-manifest.sha256</a>）涵蓋部署輸出全部檔案，sha256sum -c 全數 OK</td></tr>
 <tr><td>Tower 併行保護</td><td>Tower 站 v5.3.10 交付態 149 檔零變更（scripts/verify_freeze.py P4 併行模式逐檔硬驗）</td></tr>
 <tr><td>治理</td><td>SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001；待 Manus 獨立覆核（P4 沙盒輪）</td></tr>
@@ -72,7 +73,7 @@
 <div><h4>站內導覽</h4><a href="/">首頁</a><a href="/enterprise/">企業方案</a><a href="/quote/">報價入口</a><a href="/rental/">租賃方案</a></div>
 <div><h4>SNT 全站互聯</h4><a href="https://tower.xingdeng.tw/">光曦星閣 Tower</a><a href="https://tower.xingdeng.tw/compliance">Tower 合規證據</a><a href="https://tower.xingdeng.tw/governance/deployment-registry.md">Tower 部署對帳 SSOT</a></div>
 </div>
-<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.0 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
+<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.2 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
 </footer>
 </body>
 </html>

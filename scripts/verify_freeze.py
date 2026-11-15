@@ -11,7 +11,7 @@ immutable tag 鏈逐段比較 v5.3.4→v5.3.5→v5.3.6→v5.3.7→v5.3.8→工�
 import re, subprocess, sys
 
 REPO_REFS = ["v5.3.4", "v5.3.5", "v5.3.6", "v5.3.7", "v5.3.8", "v5.3.9", "v5.3.10"]  # immutable tags(不可移動,見 governance/tag-protection.md)
-WORKTREE_LABEL = "v5.4.1(工作區,P4 自我覆核輪)"  # P4 起工作區段=併行模式:Tower 交付態逐檔硬驗+新增限 orbit-site/**
+WORKTREE_LABEL = "v5.4.2(工作區,P4 FAIL 排查修正輪)"  # P4 起工作區段=併行模式:Tower 交付態逐檔硬驗+新增限 orbit-site/**
 PAT = re.compile(r"^([0-9a-f]{64})\s+\*?(.+?)\s*$")
 
 # ── 硬性斷言(依 governance/freeze-validation.md §1;集合=逐項精確,整數=僅計數) ──

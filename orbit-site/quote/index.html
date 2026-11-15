@@ -60,6 +60,7 @@
 <button class="btn btn-gold" type="button" id="submit">送出申請</button>
 <p class="note" style="margin-top:14px">提交即表示同意申請內容用於方案評估。我們不將申請資料用於評估以外用途；細節見站體治理文件與後續簽署之保密條款。</p>
 <div class="summary" id="summary"></div>
+<div class="frow" id="qactions" style="display:none;margin-top:14px"><button class="btn btn-line" type="button" id="copy-sum">複製申請摘要</button><button class="btn btn-line" type="button" id="dl-sum">下載申請摘要（.txt）</button></div>
 <div class="done" id="done"></div>
 </div>
 </div></section>
@@ -78,7 +79,7 @@
 <div><h4>站內導覽</h4><a href="/">首頁</a><a href="/enterprise/">企業方案</a><a href="/rental/">租賃方案</a><a href="/version/">版本資訊</a></div>
 <div><h4>SNT 全站互聯</h4><a href="https://tower.xingdeng.tw/">光曦星閣 Tower</a><a href="https://tower.xingdeng.tw/compliance">Tower 合規證據</a><a href="/version/">Orbit 治理與版本</a></div>
 </div>
-<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.1 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
+<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.2 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
 </footer>
 <script>
 (function () {
@@ -108,6 +109,20 @@
     var done = document.getElementById("done");
     done.textContent = "✅ 申請已生成（" + no + "）。" + SUBMIT_NOTE;
     done.style.display = "block";
+    document.getElementById("qactions").style.display = "flex";
+    document.getElementById("copy-sum").onclick = function () {
+      var btn = this;
+      function ok() { btn.textContent = "✅ 已複製到剪貼簿"; setTimeout(function () { btn.textContent = "複製申請摘要"; }, 2000); }
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(lines).then(ok, function () {}); }
+      else { var t = document.createElement("textarea"); t.value = lines; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); ok(); } catch (e) {} document.body.removeChild(t); }
+    };
+    document.getElementById("dl-sum").onclick = function () {
+      var blob = new Blob([lines], { type: "text/plain;charset=utf-8" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = no + "-申請摘要.txt";
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); document.body.removeChild(a); }, 500);
+    };
     done.scrollIntoView({ block: "center", behavior: "smooth" });
   });
 })();
