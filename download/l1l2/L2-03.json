@@ -1,0 +1,24 @@
+{
+ "id": "L2-03",
+ "name": "api/quote.js 執行期實測（T1/T2/T3 回應金額+稅+名稱+T3 note 口徑）",
+ "category": "L2",
+ "result": "PASS",
+ "details": "",
+ "evidence": {
+  "T1": {
+   "code": 200,
+   "grand": 8190,
+   "item": "光曦星閣 T1 木工接案包"
+  },
+  "T2": {
+   "code": 200,
+   "grand": 14595,
+   "item": "光曦星閣 T2 統包接案包"
+  },
+  "T3": {
+   "code": 200,
+   "grand": 26040,
+   "item": "光曦星閣 T3 企業獲客包"
+  }
+ }
+}

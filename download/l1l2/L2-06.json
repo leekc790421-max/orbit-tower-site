@@ -1,0 +1,10 @@
+{
+ "id": "L2-06",
+ "name": "JSON-LD 結構化資料核定三值（index/faq/pricing）",
+ "category": "L2",
+ "result": "PASS",
+ "details": "",
+ "evidence": {
+  "異常": []
+ }
+}

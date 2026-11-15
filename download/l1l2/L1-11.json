@@ -1,0 +1,10 @@
+{
+ "id": "L1-11",
+ "name": "scripts/verify_freeze.py v3 重放全綠（六段 tag 鏈+v6.0 併行模式斷言）",
+ "category": "L1",
+ "result": "PASS",
+ "details": "== 硬性斷言結果 == 全部通過 ✅（6 段 immutable tag 比較 + v6.0 併行模式工作區斷言）",
+ "evidence": {
+  "returncode": 0
+ }
+}

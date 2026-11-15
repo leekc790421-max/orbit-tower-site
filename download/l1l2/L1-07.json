@@ -1,0 +1,21 @@
+{
+ "id": "L1-07",
+ "name": "VERSION=v6.0 + x-release meta 全站無舊值（實測 2 處皆 snt-v6.0）+ 首頁 SNT v6.0 版字",
+ "category": "L1",
+ "result": "PASS",
+ "details": "/VERSION=v6.0;x-release 逐處盤點（站體僅部分頁掛此 meta,屬 v6.0 授權現狀,本檢核確保零舊值）",
+ "evidence": {
+  "version": "v6.0",
+  "x_release": [
+   [
+    "index.html",
+    "snt-v6.0"
+   ],
+   [
+    "pricing/index.html",
+    "snt-v6.0"
+   ]
+  ],
+  "舊值": []
+ }
+}

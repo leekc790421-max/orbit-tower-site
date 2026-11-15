@@ -1,0 +1,8 @@
+{
+ "id": "L1-04",
+ "name": "api/quote.js CATALOG=核定三值與 v6.0 名稱",
+ "category": "L1",
+ "result": "PASS",
+ "details": "CATATALOG 三值 7800/13900/24800+方案名;無舊價字串",
+ "evidence": {}
+}

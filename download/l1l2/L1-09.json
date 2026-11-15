@@ -1,0 +1,10 @@
+{
+ "id": "L1-09",
+ "name": "manifest 規則頭凍結（v5.3.10→工作區規則行逐字一致,僅計數行差異）",
+ "category": "L1",
+ "result": "PASS",
+ "details": "規則行 old=33 new=33 差異行=0",
+ "evidence": {
+  "diff": []
+ }
+}

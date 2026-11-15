@@ -5,7 +5,7 @@ const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const CATALOG = {
   T1: { kind: 'kit',  name: '光曦星閣 T1 木工接案包',   price: 7800,  unit: '一次性', note: '個人木工／小工班：接案形象站＋作品案例＋LINE 詢價＋基礎 SEO' },
   T2: { kind: 'kit',  name: '光曦星閣 T2 統包接案包',    price: 13900, unit: '一次性', note: '裝潢公司／系統櫃業者：案例庫＋行情文章＋進階詢價表單' },
-  T3: { kind: 'kit',  name: '光曦星閣 T3 企業獲客包',    price: 24800, unit: '一次性', note: '大型工程行／室內設計：T2 全部＋Orbit 接案 ERP（客戶／報價／工程／收款／評論回收）' },
+  T3: { kind: 'kit',  name: '光曦星閣 T3 企業獲客包',    price: 24800, unit: '一次性', note: '大型工程行／室內設計：T2 全部＋企業級獲客支援（客戶／報價／工程／收款／評論回收管理）' },
 };
 
 function quoteNo() {

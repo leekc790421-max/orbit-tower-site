@@ -1,0 +1,14 @@
+{
+ "id": "L2-04",
+ "name": "api/webhook.js GET probe 執行期實測（200 ok/mode=probe）",
+ "category": "L2",
+ "result": "PASS",
+ "details": "",
+ "evidence": {
+  "ok": true,
+  "mode": "probe",
+  "armed": false,
+  "db": false,
+  "line_ai": false
+ }
+}

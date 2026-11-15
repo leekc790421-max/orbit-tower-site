@@ -1,0 +1,10 @@
+{
+ "id": "L1-01",
+ "name": "舊試用價 NT$1,980/3,980/9,800 站體零殘留（governance 歷史登記除外）",
+ "category": "L1",
+ "result": "PASS",
+ "details": "掃描站體內容檔（排除 governance/ 歷史登記與 download/ 存證）",
+ "evidence": {
+  "hits": []
+ }
+}

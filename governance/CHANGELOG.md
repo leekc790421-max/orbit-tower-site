@@ -7,6 +7,28 @@
 
 ---
 
+## v6.0 sandbox-fix · 2026-11-15 · v6.0 裝潢產業獲客引擎沙盒修復輪 (GEMINI-GOV-ACTION:Manus 5 大缺失點對點修復)
+
+### 變更摘要
+
+v6.0 沙盒重構輪（commit 708bfbf,僅沙盒分支）經 Manus 依 SNT-REVIEW-001 判定 5 項缺失後,由 Z.AI 新帳號依 GEMINI-GOV-ACTION 執行令於隔離分支 sandbox/v6.0-acquisition-engine 點對點修復。本輪零部署、零新 tag、main 零碰觸;授權依據=GEMINI-GOV-ACTION（SNT v6.0/v7.0 創辦人核定整合執行版）。
+
+| # | Manus 缺失 | 修復內容 |
+|---|---|---|
+| 1 | 殘留舊價格未清剿 | api/webhook.js AI 接待提示詞:移除試用價 NT$1,980/NT$3,980/NT$9,800、客製化 NT$30,000 起、舊品名（個人網站/商業店家/公司企業）與「30 分鐘上線」時效承諾,改列核定三值 T1 7,800/T2 13,900/T3 24,800;v6.0 輪漏網之 structured-data.jsonld（NT$3,000-13,900 舊價域+「30 分鐘快速架站」）與 og-cover.svg（「快速架站 NT$3,000 起」）一併清根。全站僅存核定三值+非產品定價白名單（續約 NT$500/年、示範頁菜單價、contracts/ 合約範本門檻） |
+| 2 | 版本標記與治理登記 | /VERSION v5.3.10→v6.0;deploy-log 增 v6.0 沙盒輪登記列與備註段（commit 追溯）;本 CHANGELOG 條目;頁面 meta x-release=snt-v6.0 已於 708bfbf 完成,本輪實測不變 |
+| 3 | T3「不賣系統」口徑 | api/quote.js T3 note 收斂:「T2 全部＋Orbit 接案 ERP（客戶／報價／工程／收款／評論回收）」→「T2 全部＋企業級獲客支援（客戶／報價／工程／收款／評論回收管理）」,對齊 SNT v6.0 最終標語「不賣網站、不賣系統、不賣數位轉型,只幫客戶接案」 |
+| 4 | 交付存證與驗證目錄 | 新增 download/:v6.0 自檢報告 DOCX、18 項 L1/L2 JSON 原始紀錄（download/l1l2/L1-01～L2-06）+彙總 summary.json、freeze 重放檔（download/freeze-replay-v6.0-2026-11-15.txt）;檢核工具 scripts/v60_l1l2_check.py 一併入庫供 Manus 重放 |
+| 5 | 凍結基準重立 | governance/backup-manifest.sha256 依凍結原則同步重算（規則頭逐字凍結,僅計數行 149→171 與新增 download/** 21 檔+scripts/v60_l1l2_check.py 條目;api/ 附錄同步 quote.js/webhook.js 雜湊）;scripts/verify_freeze.py 升級 v6.0 併行模式:v5.3.10 交付態差異逐檔對 v6.0 授權清單（50 檔）硬性斷言,新增限 orbit-site/**+vip-site/**+download/**,零移除;freeze-validation.md v1.12 登記 |
+
+### 新增/修改檔案
+
+- 修改:api/webhook.js、api/quote.js、VERSION、structured-data.jsonld、og-cover.svg、scripts/verify_freeze.py、governance/backup-manifest.sha256（重算）、governance/freeze-validation.md、governance/deploy-log.md、governance/CHANGELOG.md、governance/freeze-replay-2026-11-15.txt（重跑）
+- 新增:download/**（存證目錄）、scripts/v60_l1l2_check.py
+- 站體其餘檔案零變更;main、git tag、Vercel 部署零碰觸
+
+---
+
 ## v5.3.10 defect-fix · 2026-11-15 · P2-R6 Defect Fix (自行覆核工具修正輪)
 
 ### 變更摘要

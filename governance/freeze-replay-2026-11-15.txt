@@ -1,4 +1,4 @@
-SNT Freeze Validation 重放 v2(git immutable tag 鏈 + 工作區)
+SNT Freeze Validation 重放 v3(git immutable tag 鏈 + 工作區 v6.0 併行模式)
 == v5.3.4 → v5.3.5 == 條目 108→139 | 新增 48 | 移除 17 | hash 變更 14 | 檔頭規則差異行 33
   新增: .marker, 3d/audio-file-0.mp3, 3d/logo-kv.jpg, 3d/logo-mark.png, assets/cover.jpg, assets/logo-full.png, assets/logo-full.webp, assets/logo-mark.png, assets/og.png, assets/promo/kit-banner.jpg, assets/promo/kit-enterprise.jpg, assets/promo/kit-langs.jpg, assets/promo/kit-personal.jpg, assets/promo/kit-shop.jpg, assets/promo/kit-story-9x16.jpg, assets/promo/kit-support.jpg, assets/promo/kit-t1.jpg, assets/promo/kit-t2.jpg, assets/promo/kit-t3.jpg, assets/promo/kit-watermark.jpg, assets/promo/og-kits.jpg, assets/shots/enterprise-contact.jpg, assets/shots/enterprise-hero.jpg, assets/shots/enterprise-mobile.jpg, assets/shots/enterprise-services.jpg, assets/shots/enterprise-support.jpg, assets/shots/personal-contact.jpg, assets/shots/personal-hero.jpg, assets/shots/personal-mobile.jpg, assets/shots/personal-services.jpg, assets/shots/personal-support.jpg, assets/shots/shop-contact.jpg, assets/shots/shop-hero.jpg, assets/shots/shop-mobile.jpg, assets/shots/shop-services.jpg, assets/shots/shop-support.jpg, scripts/vercel-deploy.py, verification/screenshots/builder.png, verification/screenshots/demo.png, verification/screenshots/products.png, verification/screenshots/readme.png, verification/screenshots/setup.png, verification/screenshots/sha256.png, verification/screenshots/t1.png, verification/screenshots/t2.png, verification/screenshots/t3.png, verification/screenshots/version.png, verification/screenshots/warranty.png
   移除: A39C0B14F006967E8754E39805A5B040.txt, api/ai-router.js, api/align.js, api/corps.js, api/diagnose.mjs, api/health.js, api/leads.js, api/order.js, api/quote.js, api/roster.js, api/strategist.js, api/support.mjs, api/webhook.js, package-lock.json, package.json, sitemap.xml, vercel.json
@@ -130,12 +130,17 @@ SNT Freeze Validation 重放 v2(git immutable tag 鏈 + 工作區)
 == v5.3.9 → v5.3.10 == 條目 149→149 | 新增 0 | 移除 0 | hash 變更 18 | 檔頭規則差異行 0
   hash 變更(授權修改): VERSION, builder/demo/index.html, builder/index.html, builder/readme/index.html, builder/setup/index.html, builder/sha256/index.html, builder/version/index.html, builder/warranty/index.html, compliance/index.html, governance/CHANGELOG.md, governance/deploy-log.md, governance/deploy-replay-2026-11-15.txt, governance/deployment-registry.md, governance/freeze-replay-2026-11-15.txt, governance/freeze-validation.md, governance/tag-registry.txt, scripts/deploy_chain_audit.py, scripts/verify_freeze.py
 
-== Tower 交付態逐檔硬驗(P4 併行模式)== 基準=tag v5.3.10 manifest(149 檔)
-  零變更 146/149 | P4 起點核定調整 3: governance/freeze-replay-2026-11-15.txt, governance/freeze-validation.md, scripts/verify_freeze.py
+== Tower 交付態逐檔硬驗(v6.0 併行模式)== 基準=工作區 manifest(v6.0 重算,150 檔)
+  零變更 150/150
 
-== 工作區相對 v5.3.10 == 新增 32(限 orbit-site/**+vip-site/**) | 移除 0(限 0)
-  新增: orbit-site/VERSION, orbit-site/assets/geometry.js, orbit-site/assets/logo-orbit.svg, orbit-site/assets/og.png, orbit-site/assets/site.css, orbit-site/enterprise/index.html, orbit-site/favicon.ico, orbit-site/governance/backup-manifest.sha256, orbit-site/governance/deploy-log.md, orbit-site/index.html, orbit-site/quote/index.html, orbit-site/rental/index.html, orbit-site/scripts/deploy.py, orbit-site/scripts/gen_manifest.py, orbit-site/scripts/l1_check.py, orbit-site/version/index.html, vip-site/VERSION, vip-site/appointment/index.html, vip-site/assets/crystal.js, vip-site/assets/logo-vip.svg, vip-site/assets/og.png, vip-site/assets/site.css, vip-site/consultants/index.html, vip-site/favicon.ico, vip-site/governance/backup-manifest.sha256, vip-site/governance/deploy-log.md, vip-site/index.html, vip-site/membership/index.html, vip-site/scripts/deploy.py, vip-site/scripts/gen_manifest.py, vip-site/scripts/l1_check.py, vip-site/version/index.html
+== v5.3.10 基準 → v6.0 工作區基準 == 條目 149→150 | 新增 1 | 移除 0 | hash 變更 49
+  新增: scripts/v60_l1l2_check.py
+  hash 變更(授權修改): 404.html, VERSION, about/index.html, articles/a01/index.html, articles/a02/index.html, articles/a03/index.html, articles/a04/index.html, articles/a05/index.html, articles/a06/index.html, articles/a07/index.html, articles/a08/index.html, articles/a09/index.html, articles/index.html, builder/demo/index.html, builder/index.html, builder/packages/index.html, builder/packages/t1/index.html, builder/packages/t2/index.html, builder/packages/t3/index.html, builder/warranty/index.html, checkout/confirm/index.html, checkout/index.html, contact/index.html, demo/index.html, departments/index.html, diagnose/index.html, faq/index.html, governance/CHANGELOG.md, governance/deploy-log.md, governance/freeze-replay-2026-11-15.txt, governance/freeze-validation.md, index.html, kits/index.html, legal/index.html, llms.txt, og-cover.svg, orbit-tower/index.html, pricing/index.html, privacy/index.html, quick/index.html, reports/index.html, scripts/verify_freeze.py, showcase/demo-corp/index.html, showcase/demo-personal/index.html, showcase/demo-shop/index.html, showcase/index.html, structured-data.jsonld, terms/index.html, try/index.html
 
-對照 governance/freeze-validation.md 之判定:全部差異應屬該文件所列核准變更;出現未列差異 = 疑似誤變動。
+== api/ 附錄硬驗 == 0 條全數一致
 
-== 硬性斷言結果 == 全部通過 ✅（6 段 immutable tag 比較 + 工作區結構斷言）
+== 工作區相對 v5.3.10 == 新增 33(限 orbit-site/**+vip-site/**+download/**+v60_l1l2_check.py) | 移除 0(限 0)
+
+對照 governance/freeze-validation.md 之判定:全部差異應屬該文件所列核准變更(§1+v1.12 v6.0 基準重立);出現未列差異 = 疑似誤變動。
+
+== 硬性斷言結果 == 全部通過 ✅（6 段 immutable tag 比較 + v6.0 併行模式工作區斷言）

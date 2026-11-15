@@ -1,0 +1,42 @@
+{
+ "id": "L1-08",
+ "name": "SNT v6.0 最終標語「不賣網站、不賣系統、不賣數位轉型,只幫客戶接案」全站落地",
+ "category": "L1",
+ "result": "PASS",
+ "details": "含標語頁數=31（v6.0 輪 M5 口號頁尾 19 頁基準）",
+ "evidence": {
+  "pages": [
+   "index.html",
+   "404.html",
+   "checkout/index.html",
+   "checkout/confirm/index.html",
+   "contact/index.html",
+   "articles/index.html",
+   "articles/a07/index.html",
+   "articles/a08/index.html",
+   "articles/a01/index.html",
+   "articles/a04/index.html",
+   "articles/a06/index.html",
+   "articles/a02/index.html",
+   "articles/a09/index.html",
+   "articles/a03/index.html",
+   "articles/a05/index.html",
+   "diagnose/index.html",
+   "demo/index.html",
+   "kits/index.html",
+   "about/index.html",
+   "showcase/index.html",
+   "departments/index.html",
+   "terms/index.html",
+   "faq/index.html",
+   "legal/index.html",
+   "pricing/index.html",
+   "orbit-tower/index.html",
+   "privacy/index.html",
+   "builder/index.html",
+   "builder/packages/index.html",
+   "reports/index.html",
+   "try/index.html"
+  ]
+ }
+}

@@ -1,0 +1,10 @@
+{
+ "id": "L1-10",
+ "name": "manifest 全量重驗 sha256sum -c 全綠",
+ "category": "L1",
+ "result": "PASS",
+ "details": "OK=170 FAILED=0",
+ "evidence": {
+  "returncode": 0
+ }
+}

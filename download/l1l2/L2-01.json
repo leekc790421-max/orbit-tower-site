@@ -1,0 +1,10 @@
+{
+ "id": "L2-01",
+ "name": "本地沙盒等價環境全頁 200（76 端點）",
+ "category": "L2",
+ "result": "PASS",
+ "details": "",
+ "evidence": {
+  "異常": []
+ }
+}

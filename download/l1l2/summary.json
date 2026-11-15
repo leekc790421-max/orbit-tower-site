@@ -1,0 +1,249 @@
+{
+ "round": "v6.0 sandbox-fix (GEMINI-GOV-ACTION)",
+ "repo": "orbit-tower-site",
+ "branch": "sandbox/v6.0-acquisition-engine",
+ "base_commit": "708bfbf",
+ "approved_prices": {
+  "T1": "NT$7,800",
+  "T2": "NT$13,900",
+  "T3": "NT$24,800"
+ },
+ "total": 18,
+ "pass": 18,
+ "fail": 0,
+ "results": [
+  {
+   "id": "L1-01",
+   "name": "舊試用價 NT$1,980/3,980/9,800 站體零殘留（governance 歷史登記除外）",
+   "category": "L1",
+   "result": "PASS",
+   "details": "掃描站體內容檔（排除 governance/ 歷史登記與 download/ 存證）",
+   "evidence": {
+    "hits": []
+   }
+  },
+  {
+   "id": "L1-02",
+   "name": "裸數字 1,980/3,980/9,800 站體零殘留（治理歷史登記除外）",
+   "category": "L1",
+   "result": "PASS",
+   "details": "逐行掃描站體內容檔;governance/ 之歷史版本登記（v5.3.10 凍結產品線紀錄）不屬站體",
+   "evidence": {
+    "hits": []
+   }
+  },
+  {
+   "id": "L1-03",
+   "name": "全站 NT$ 值域=核定三值+非產品定價白名單",
+   "category": "L1",
+   "result": "PASS",
+   "details": "值域盤點: {\"NT$110\": 1, \"NT$120\": 1, \"NT$13,900\": 84, \"NT$130\": 2, \"NT$150\": 1, \"NT$160\": 1, \"NT$2,500\": 1, \"NT$24,800\": 85, \"NT$30,000\": 1, \"NT$449\": 1, \"NT$500\": 13, \"NT$7,800\": 86}",
+   "evidence": {
+    "超白名單": {}
+   }
+  },
+  {
+   "id": "L1-04",
+   "name": "api/quote.js CATALOG=核定三值與 v6.0 名稱",
+   "category": "L1",
+   "result": "PASS",
+   "details": "CATATALOG 三值 7800/13900/24800+方案名;無舊價字串",
+   "evidence": {}
+  },
+  {
+   "id": "L1-05",
+   "name": "api/quote.js T3 note 無「Orbit 接案 ERP」販賣式表述",
+   "category": "L1",
+   "result": "PASS",
+   "details": "T3 note=「大型工程行／室內設計：T2 全部＋企業級獲客支援（客戶／報價／工程／收款／評論回收管理）」;對齊標語「不賣網站、不賣系統、不賣數位轉型,只幫客戶接案」",
+   "evidence": {
+    "note": "大型工程行／室內設計：T2 全部＋企業級獲客支援（客戶／報價／工程／收款／評論回收管理）"
+   }
+  },
+  {
+   "id": "L1-06",
+   "name": "api/webhook.js AI 接待提示詞=三固定價、零試用價、零時效承諾",
+   "category": "L1",
+   "result": "PASS",
+   "details": "移除試用價 1,980/3,980/9,800+客製化 30,000+30 分鐘時效;三值在列;「沒有試用價」否定句為 v6.0 口徑",
+   "evidence": {}
+  },
+  {
+   "id": "L1-07",
+   "name": "VERSION=v6.0 + x-release meta 全站無舊值（實測 2 處皆 snt-v6.0）+ 首頁 SNT v6.0 版字",
+   "category": "L1",
+   "result": "PASS",
+   "details": "/VERSION=v6.0;x-release 逐處盤點（站體僅部分頁掛此 meta,屬 v6.0 授權現狀,本檢核確保零舊值）",
+   "evidence": {
+    "version": "v6.0",
+    "x_release": [
+     [
+      "index.html",
+      "snt-v6.0"
+     ],
+     [
+      "pricing/index.html",
+      "snt-v6.0"
+     ]
+    ],
+    "舊值": []
+   }
+  },
+  {
+   "id": "L1-08",
+   "name": "SNT v6.0 最終標語「不賣網站、不賣系統、不賣數位轉型,只幫客戶接案」全站落地",
+   "category": "L1",
+   "result": "PASS",
+   "details": "含標語頁數=31（v6.0 輪 M5 口號頁尾 19 頁基準）",
+   "evidence": {
+    "pages": [
+     "index.html",
+     "404.html",
+     "checkout/index.html",
+     "checkout/confirm/index.html",
+     "contact/index.html",
+     "articles/index.html",
+     "articles/a07/index.html",
+     "articles/a08/index.html",
+     "articles/a01/index.html",
+     "articles/a04/index.html",
+     "articles/a06/index.html",
+     "articles/a02/index.html",
+     "articles/a09/index.html",
+     "articles/a03/index.html",
+     "articles/a05/index.html",
+     "diagnose/index.html",
+     "demo/index.html",
+     "kits/index.html",
+     "about/index.html",
+     "showcase/index.html",
+     "departments/index.html",
+     "terms/index.html",
+     "faq/index.html",
+     "legal/index.html",
+     "pricing/index.html",
+     "orbit-tower/index.html",
+     "privacy/index.html",
+     "builder/index.html",
+     "builder/packages/index.html",
+     "reports/index.html",
+     "try/index.html"
+    ]
+   }
+  },
+  {
+   "id": "L1-09",
+   "name": "manifest 規則頭凍結（v5.3.10→工作區規則行逐字一致,僅計數行差異）",
+   "category": "L1",
+   "result": "PASS",
+   "details": "規則行 old=33 new=33 差異行=0",
+   "evidence": {
+    "diff": []
+   }
+  },
+  {
+   "id": "L1-10",
+   "name": "manifest 全量重驗 sha256sum -c 全綠",
+   "category": "L1",
+   "result": "PASS",
+   "details": "OK=170 FAILED=0",
+   "evidence": {
+    "returncode": 0
+   }
+  },
+  {
+   "id": "L1-11",
+   "name": "scripts/verify_freeze.py v3 重放全綠（六段 tag 鏈+v6.0 併行模式斷言）",
+   "category": "L1",
+   "result": "PASS",
+   "details": "== 硬性斷言結果 == 全部通過 ✅（6 段 immutable tag 比較 + v6.0 併行模式工作區斷言）",
+   "evidence": {
+    "returncode": 0
+   }
+  },
+  {
+   "id": "L1-12",
+   "name": "治理記錄檔登記（deploy-log v6.0 列+CHANGELOG v6.0 條目+freeze-validation v1.12+commit 708bfbf 追溯）",
+   "category": "L1",
+   "result": "PASS",
+   "details": "",
+   "evidence": {}
+  },
+  {
+   "id": "L2-01",
+   "name": "本地沙盒等價環境全頁 200（76 端點）",
+   "category": "L2",
+   "result": "PASS",
+   "details": "",
+   "evidence": {
+    "異常": []
+   }
+  },
+  {
+   "id": "L2-02",
+   "name": "HTTP 響應體舊價格零殘留（1,980/3,980/9,800/3,000）",
+   "category": "L2",
+   "result": "PASS",
+   "details": "",
+   "evidence": {
+    "命中": []
+   }
+  },
+  {
+   "id": "L2-03",
+   "name": "api/quote.js 執行期實測（T1/T2/T3 回應金額+稅+名稱+T3 note 口徑）",
+   "category": "L2",
+   "result": "PASS",
+   "details": "",
+   "evidence": {
+    "T1": {
+     "code": 200,
+     "grand": 8190,
+     "item": "光曦星閣 T1 木工接案包"
+    },
+    "T2": {
+     "code": 200,
+     "grand": 14595,
+     "item": "光曦星閣 T2 統包接案包"
+    },
+    "T3": {
+     "code": 200,
+     "grand": 26040,
+     "item": "光曦星閣 T3 企業獲客包"
+    }
+   }
+  },
+  {
+   "id": "L2-04",
+   "name": "api/webhook.js GET probe 執行期實測（200 ok/mode=probe）",
+   "category": "L2",
+   "result": "PASS",
+   "details": "",
+   "evidence": {
+    "ok": true,
+    "mode": "probe",
+    "armed": false,
+    "db": false,
+    "line_ai": false
+   }
+  },
+  {
+   "id": "L2-05",
+   "name": "T1/T2/T3 包頁定價與 /pricing 導流交叉一致",
+   "category": "L2",
+   "result": "PASS",
+   "details": "",
+   "evidence": {}
+  },
+  {
+   "id": "L2-06",
+   "name": "JSON-LD 結構化資料核定三值（index/faq/pricing）",
+   "category": "L2",
+   "result": "PASS",
+   "details": "",
+   "evidence": {
+    "異常": []
+   }
+  }
+ ]
+}
