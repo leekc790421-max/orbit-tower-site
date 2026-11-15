@@ -1,0 +1,43 @@
+# SNT 部署鏈稽核重放（scripts/deploy_chain_audit.py,Vercel API 唯讀;可重放）
+# 重放時間:2026-11-15 04:13:34 UTC
+
+## 1. 全量 production 部署:168 筆
+狀態分布:BLOCKED 2, ERROR 10, READY 156
+最新 READY:dpl_A98SQNRUFfZzfh8KqsuorgF6Lw79（2026-11-15 03:30:26 UTC）
+
+## 2. v5.3.7 鏈（Vercel API 原始紀錄重建;窗口 2026-11-15 02:40:00~2026-11-15 02:50:00 UTC）
+
+| Deploy ID | Timestamp (UTC) | State | Commit（meta） | 唯一 URL | alias |
+|---|---|---|---|---|---|
+| dpl_CFKXtbwdhK7kEq1vnWx3g1D8d4To | 2026-11-15 02:43:36 | READY | (n/a:無 git 綁定) | orbit-tower-site-2wvucjxgf-xfls.vercel.app | None |
+| dpl_HDF7wwGJ73vQoi1HPhra6jnRmqxS | 2026-11-15 02:45:51 | READY | (n/a:無 git 綁定) | orbit-tower-site-2wwy7xbrz-xfls.vercel.app | None |
+
+## 2. v5.3.8 鏈（Vercel API 原始紀錄重建;窗口 2026-11-15 03:25:00~2026-11-15 03:35:00 UTC）
+
+| Deploy ID | Timestamp (UTC) | State | Commit（meta） | 唯一 URL | alias |
+|---|---|---|---|---|---|
+| dpl_FcfPbs9PET9yJS2jaa14pR8pbKo9 | 2026-11-15 03:28:20 | READY | (n/a:無 git 綁定) | orbit-tower-site-76lg76ft8-xfls.vercel.app | None |
+| dpl_A98SQNRUFfZzfh8KqsuorgF6Lw79 | 2026-11-15 03:30:26 | READY | (n/a:無 git 綁定) | orbit-tower-site-kulk3mvg2-xfls.vercel.app | None |
+
+## 3. 內容層級核實（內容雜湊法）
+
+- 現行 production（https://tower.xingdeng.tw,公開無需權限）之 governance/backup-manifest.sha256 sha256:
+  - live = `40a51dbd65c180d0…`（16250 bytes）
+- 候選 commit 之 git blob sha256:
+  - v5.3.3（首行 commit cab67）= `6cc149b733768b7b…`
+  - v5.3.4（首行 commit ca816）= `47cdbd42eed961ce…`
+  - v5.3.5（首行 commit 22658）= `f4a8f6026b3b1468…`
+  - v5.3.6（首行 commit a6772）= `208367d2abc898fe…`
+  - v5.3.7（首行 commit cd1e4）= `7b1c83491a51a896…`
+  - v5.3.8（首行 commit 0d439）= `9c711c69a3c58d4d…`
+  - 77924c1（中間 commit,v5.3.8 R1 工作紀錄對應）（首行 commit 77924）= `e729a972788e3a4d…`
+  - HEAD（首行 commit 0d439）= `9c711c69a3c58d4d…`
+
+- **判定:live 與全部候選 commit 不符 → 未能追溯,需排查**
+
+## 4. 核實邊界（誠實揭露,不猜填）
+- 部署唯一 URL（*-xfls.vercel.app）回 HTTP 302「Protected by Vercel Authentication」（Deployment Protection/SSO）→ 歷史筆內容無法自 URL 公開取樣。
+- Vercel Files API（/v2/deployments/{id}/files）對 CLI blob 部署僅回 {id} 2 檔,不列靜態檔 → 歷史筆內容無法經 Files API 取樣。
+- 部署 meta 無 gitCommitSha（CLI 上傳部署）→ 部署來源欄=n/a。
+- 故:僅「現行 production」可內容核實（經公開域名）;歷史筆 commit 歸屬依 deploy-log 工作紀錄與 tag-registry PINNED 對應,屬工作紀錄對應,標記「未能追溯（內容層級）」。
+

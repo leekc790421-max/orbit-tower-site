@@ -7,6 +7,35 @@
 
 ---
 
+## v5.3.9 defect-fix · 2026-11-15 · P2-R5 Defect Fix (Manus P2-R4 複查修繕方案)
+
+### 變更摘要
+
+Manus 對 P2-R4(v5.3.8)獨立複查再次判定 FAIL,並首次提供具體修繕方案四項。本版逐項修復;範圍仍限治理/驗證檔與存證工具,站體程式零變更;依方案③不改動 v5.3.8 tag/釘死值,以新版本(v5.3.9)發佈。
+
+| # | Manus 修繕方案 | 修復(v5.3.9) |
+|---|---|---|
+| ① | DEF-003 部署對帳:重放 168 筆 vs 登記 166;v5.3.8 鏈未登記;Release 誤標較早部署為現行 | deployment-registry.md §1 重算 169(v5.3.9 交付後全量,含本鏈;驗收以當時重放核對,不沿用舊快照);§2 v5.3.8 鏈 R1/R2 逐筆實登記(ID/UTC/State/alias/唯一 URL);Release v5.3.8 以更正紀錄修復(保留原誤紀錄+更正時間);新增 scripts/deploy_chain_audit.py 與存證 governance/deploy-replay-2026-11-15.txt |
+| ② | Release commit 對帳:以部署來源或內容雜湊核實;無法證實標記未能追溯,不猜填;以可追溯更正紀錄補入,保留原紀錄 | R2 經 production 域名(tower.xingdeng.tw)內容雜湊核實=0d439d1✓;R1 部署唯一 URL 受 Vercel Deployment Protection 保護(302 SSO)+Files API 未回列靜態檔→標記「未能追溯(工作紀錄時序對應 77924c1)」;更正紀錄含核實方法與結果表 |
+| ③ | 治理檔修改採新版本發佈,不覆寫 v5.3.8 | 本版 v5.3.9 新 commit/tag/Release;v5.3.8 tag 與釘死值(0d439d11…)不動並納入 tag-registry.txt PINNED(PINNED 增至 6 個) |
+| ④ | DEF-002 補強:verify_freeze.py 明列兩段 immutable tag 比較+硬性斷言+非零結束;重跑保存輸出;驗證正式站 manifest | v2:v5.3.4→v5.3.5→v5.3.6→v5.3.7→v5.3.8 五 tag 鏈逐段硬性斷言(條目/新增/移除/hash 變更/規則差異;含本次補強之 v5.3.7→v5.3.8 段=+0/−0/15 檔 hash——manifest 本檔自我排除不入條目集,git 檔案層級另含其重算)+工作區結構斷言,不符即 exit(1);重跑輸出存證 governance/freeze-replay-2026-11-15.txt;正式站 manifest 交付後全項重驗(149/149) |
+
+### 新增/修改檔案
+
+| 路徑 | 性質 |
+|---|---|
+| scripts/deploy_chain_audit.py、governance/deploy-replay-2026-11-15.txt、governance/freeze-replay-2026-11-15.txt | 新增(①④存證) |
+| scripts/verify_freeze.py | v2 更新(④) |
+| governance/deployment-registry.md、governance/deploy-log.md、governance/freeze-validation.md、governance/tag-registry.txt、governance/CHANGELOG.md | 更新(①②③) |
+| VERSION、builder 六頁、builder/version、compliance | 版本字串同步 v5.3.8→v5.3.9(機械式) |
+| governance/backup-manifest.sha256 | 規則凍結,同步重算(146→149 條) |
+
+### 授權依據
+
+- Manus P2-R4 複查 FAIL 通知與修繕方案;SNT-REVIEW-001:未取得 PASS 前不得結案、不得進入下一階段;P4 Orbit Productization 維持全面暫停。
+
+---
+
 ## v5.3.8 defect-fix · 2026-11-15 · P2-R4 Defect Fix (MANUS-REVIEW-009 修復)
 
 ### 前版補記（v5.3.7 R2 修正輪）

@@ -1,0 +1,132 @@
+SNT Freeze Validation 重放 v2(git immutable tag 鏈 + 工作區)
+== v5.3.4 → v5.3.5 == 條目 108→139 | 新增 48 | 移除 17 | hash 變更 14 | 檔頭規則差異行 33
+  新增: .marker, 3d/audio-file-0.mp3, 3d/logo-kv.jpg, 3d/logo-mark.png, assets/cover.jpg, assets/logo-full.png, assets/logo-full.webp, assets/logo-mark.png, assets/og.png, assets/promo/kit-banner.jpg, assets/promo/kit-enterprise.jpg, assets/promo/kit-langs.jpg, assets/promo/kit-personal.jpg, assets/promo/kit-shop.jpg, assets/promo/kit-story-9x16.jpg, assets/promo/kit-support.jpg, assets/promo/kit-t1.jpg, assets/promo/kit-t2.jpg, assets/promo/kit-t3.jpg, assets/promo/kit-watermark.jpg, assets/promo/og-kits.jpg, assets/shots/enterprise-contact.jpg, assets/shots/enterprise-hero.jpg, assets/shots/enterprise-mobile.jpg, assets/shots/enterprise-services.jpg, assets/shots/enterprise-support.jpg, assets/shots/personal-contact.jpg, assets/shots/personal-hero.jpg, assets/shots/personal-mobile.jpg, assets/shots/personal-services.jpg, assets/shots/personal-support.jpg, assets/shots/shop-contact.jpg, assets/shots/shop-hero.jpg, assets/shots/shop-mobile.jpg, assets/shots/shop-services.jpg, assets/shots/shop-support.jpg, scripts/vercel-deploy.py, verification/screenshots/builder.png, verification/screenshots/demo.png, verification/screenshots/products.png, verification/screenshots/readme.png, verification/screenshots/setup.png, verification/screenshots/sha256.png, verification/screenshots/t1.png, verification/screenshots/t2.png, verification/screenshots/t3.png, verification/screenshots/version.png, verification/screenshots/warranty.png
+  移除: A39C0B14F006967E8754E39805A5B040.txt, api/ai-router.js, api/align.js, api/corps.js, api/diagnose.mjs, api/health.js, api/leads.js, api/order.js, api/quote.js, api/roster.js, api/strategist.js, api/support.mjs, api/webhook.js, package-lock.json, package.json, sitemap.xml, vercel.json
+  hash 變更(授權修改): VERSION, builder/demo/index.html, builder/index.html, builder/readme/index.html, builder/setup/index.html, builder/sha256/index.html, builder/version/index.html, builder/warranty/index.html, compliance/index.html, governance/CHANGELOG.md, governance/deploy-log.md, showcase/demo-corp/index.html, showcase/demo-personal/index.html, showcase/demo-shop/index.html
+  規則 L1:
+    v5.3.4: <無>
+    v5.3.5: # SNT Tower Site 部署完整性清單 (backup-manifest.sha256) — 站體 v5.3.5
+  規則 L2:
+    v5.3.4: <無>
+    v5.3.5: # 生成:2026-11-15,P2-R1 Defect Fix 施工管線重建(COPILOT-EXEC-006 核定;依《SNT_P2-R1_缺陷調查報告》DEF-002 修復項)
+  規則 L3:
+    v5.3.4: <無>
+    v5.3.5: # 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 139 檔。
+  規則 L4:
+    v5.3.4: <無>
+    v5.3.5: # 驗證方式:於部署輸出根目錄執行 `sha256sum -c governance/backup-manifest.sha256`,或對 https://tower.xingdeng.tw/<路徑> 逐一比對。
+  規則 L5:
+    v5.3.4: <無>
+    v5.3.5: # # 開頭為註解行,sha256sum -c 自動略過。
+  規則 L6:
+    v5.3.4: <無>
+    v5.3.5: #
+  規則 L7:
+    v5.3.4: <無>
+    v5.3.5: # 排除規則(依 DEF-002 修復項明文化):
+  規則 L8:
+    v5.3.4: <無>
+    v5.3.5: #   1. governance/backup-manifest.sha256 —— 本檔自身,自參照不可行。
+  規則 L9:
+    v5.3.4: <無>
+    v5.3.5: #   2. api/* —— Serverless Functions:公開 URL 回傳函式執行輸出而非原始碼,靜態雜湊無法自線上核驗。
+  規則 L10:
+    v5.3.4: <無>
+    v5.3.5: #      API 檢核規則:以本 repo 工作區之 api/ 原始碼雜湊(見下方附錄)+ Vercel Dashboard 建置紀錄查核;
+  規則 L11:
+    v5.3.4: <無>
+    v5.3.5: #      部署管線若變更 api/*,須於 deploy-log 記錄並同步更新本附錄。
+  規則 L12:
+    v5.3.4: <無>
+    v5.3.5: #   3. package.json / package-lock.json —— repo 依賴管理檔,Vercel 不對外服務(公開 URL 404,已實測)。
+  規則 L13:
+    v5.3.4: <無>
+    v5.3.5: #   4. sitemap.xml —— build 時由 scripts/bump-sitemap.js 自動重生(lastmod=建置日,並自 paths.txt 補登漏頁),
+  規則 L14:
+    v5.3.4: <無>
+    v5.3.5: #      不具位元組不變性;核驗方式:以 /sitemap.xml 即時核對 URL 清單與 paths.txt 一致性。
+  規則 L15:
+    v5.3.4: <無>
+    v5.3.5: #   5. .gitignore、.github/ 等 repo 運維檔與 dot 目錄 —— Vercel 不對外服務(公開 URL 404,v5.3.5 部署實測)。
+  規則 L16:
+    v5.3.4: <無>
+    v5.3.5: #   5b. vercel.json —— 建置時由 Vercel 正規化重序(語義與 repo 版一致,已核對;位元組不具不變性),
+  規則 L17:
+    v5.3.4: <無>
+    v5.3.5: #       核驗方式:以 /vercel.json 即時核對 redirects/headers/crons 設定與 repo 一致。
+  規則 L18:
+    v5.3.4: <無>
+    v5.3.5: #   6. A39C0B14F006967E8754E39805A5B040.txt —— 已於先前版本下線,舊 manifest 之殘留條目本版移除。
+  規則 L19:
+    v5.3.4: <無>
+    v5.3.5: #
+  規則 L20:
+    v5.3.4: <無>
+    v5.3.5: # 附錄:api/ 原始碼雜湊(Serverless,非公開 URL 可驗;供工作區與 Dashboard 查核):
+  規則 L21:
+    v5.3.4: <無>
+    v5.3.5: #   1a8c7153110767f220eb6f3f33d91aa7cacebc325c0e42bc087084b5352b7d98  api/ai-router.js
+  規則 L22:
+    v5.3.4: <無>
+    v5.3.5: #   ed402704b8f75cbdb70b7a89e75ddb4b398d67bc66f564c70bd8f702369320f5  api/align.js
+  規則 L23:
+    v5.3.4: <無>
+    v5.3.5: #   cd16f9b6df3546c8e8e65ae30d54caaad29eefba8a30357e4439d1c039004e70  api/corps.js
+  規則 L24:
+    v5.3.4: <無>
+    v5.3.5: #   f4761152d946d494b9bf0a8b095f38ea7563b169fd12c1baa0dd44830b7ded0d  api/diagnose.mjs
+  規則 L25:
+    v5.3.4: <無>
+    v5.3.5: #   c1bbaaccecf8b04b06455ab1d05ad2be31eeff41ad79a8c44a95d18ff4004758  api/health.js
+  規則 L26:
+    v5.3.4: <無>
+    v5.3.5: #   1df7a261fc12a21c025cecc02fdd6aab56e660f176d7341372e72a19eae0b087  api/leads.js
+  規則 L27:
+    v5.3.4: <無>
+    v5.3.5: #   4b6c55024b09d4e00326ea9af474a2bfaec50a7144d16a5bde4cf206edbf3987  api/order.js
+  規則 L28:
+    v5.3.4: <無>
+    v5.3.5: #   c2bbe8ab8547a3786344cf23cbdc7752c8fc773ea3886be76073257c3af17536  api/quote.js
+  規則 L29:
+    v5.3.4: <無>
+    v5.3.5: #   99d773e7f040cc1d6f0fd00ef86c0670ca666d9cf4f51587fa5ca78458b72e9a  api/roster.js
+  規則 L30:
+    v5.3.4: <無>
+    v5.3.5: #   54956f40c248128fdbdf4df4239c30ef9aa5fb7d3c73a5b5222284dbf22f8084  api/strategist.js
+  規則 L31:
+    v5.3.4: <無>
+    v5.3.5: #   f4622d8651491fff5ba77b80a8da569ecbf8047e6d5027f78ab197386fa83f22  api/support.mjs
+  規則 L32:
+    v5.3.4: <無>
+    v5.3.5: #   dac3de3445ba87c6ec342e9ce0e2ddc47a38af9f10e1d371b6561f75ec8624e1  api/webhook.js
+  規則 L33:
+    v5.3.4: <無>
+    v5.3.5: #
+
+== v5.3.5 → v5.3.6 == 條目 139→141 | 新增 2 | 移除 0 | hash 變更 55 | 檔頭規則差異行 1
+  新增: governance/tag-protection.md, scripts/verify_tags.sh
+  hash 變更(授權修改): 404.html, VERSION, about/index.html, articles/a01/index.html, articles/a02/index.html, articles/a03/index.html, articles/a04/index.html, articles/a05/index.html, articles/a06/index.html, articles/a07/index.html, articles/a08/index.html, articles/a09/index.html, articles/index.html, assets/site.css, builder/demo/index.html, builder/index.html, builder/packages/index.html, builder/packages/t1/index.html, builder/packages/t2/index.html, builder/packages/t3/index.html, builder/readme/index.html, builder/setup/index.html, builder/sha256/index.html, builder/version/index.html, builder/warranty/index.html, checkout/confirm/index.html, checkout/index.html, compliance/index.html, contact/index.html, contracts/ai/index.html, contracts/data/index.html, contracts/index.html, contracts/key/index.html, contracts/kit/index.html, contracts/service/index.html, demo/index.html, departments/index.html, diagnose/index.html, faq/index.html, governance/CHANGELOG.md, governance/deploy-log.md, index.html, kits/index.html, legal/index.html, orbit-tower/index.html, payment-policy/index.html, pricing/index.html, privacy/index.html, quick/index.html, reports/index.html, showcase/index.html, studio/index.html, terms/index.html, try/index.html, verification/index.html
+  規則 L3:
+    v5.3.5: # 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 139 檔。
+    v5.3.6: # 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 141 檔。
+
+== v5.3.6 → v5.3.7 == 條目 141→146 | 新增 5 | 移除 0 | hash 變更 13 | 檔頭規則差異行 1
+  新增: governance/deployment-registry.md, governance/freeze-validation.md, governance/tag-registry.txt, scripts/vercel_reconcile.py, scripts/verify_freeze.py
+  hash 變更(授權修改): VERSION, builder/demo/index.html, builder/index.html, builder/readme/index.html, builder/setup/index.html, builder/sha256/index.html, builder/version/index.html, builder/warranty/index.html, compliance/index.html, governance/CHANGELOG.md, governance/deploy-log.md, governance/tag-protection.md, scripts/verify_tags.sh
+  規則 L3:
+    v5.3.6: # 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 141 檔。
+    v5.3.7: # 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 146 檔。
+
+== v5.3.7 → v5.3.8 == 條目 146→146 | 新增 0 | 移除 0 | hash 變更 15 | 檔頭規則差異行 0
+  hash 變更(授權修改): VERSION, builder/demo/index.html, builder/index.html, builder/readme/index.html, builder/setup/index.html, builder/sha256/index.html, builder/version/index.html, builder/warranty/index.html, compliance/index.html, governance/CHANGELOG.md, governance/deploy-log.md, governance/deployment-registry.md, governance/freeze-validation.md, governance/tag-registry.txt, scripts/verify_tags.sh
+
+== v5.3.8 → v5.3.9(工作區) == 條目 146→149 | 新增 3 | 移除 0 | hash 變更 15 | 檔頭規則差異行 1
+  新增: governance/deploy-replay-2026-11-15.txt, governance/freeze-replay-2026-11-15.txt, scripts/deploy_chain_audit.py
+  hash 變更(授權修改): VERSION, builder/demo/index.html, builder/index.html, builder/readme/index.html, builder/setup/index.html, builder/sha256/index.html, builder/version/index.html, builder/warranty/index.html, compliance/index.html, governance/CHANGELOG.md, governance/deploy-log.md, governance/deployment-registry.md, governance/freeze-validation.md, governance/tag-registry.txt, scripts/verify_freeze.py
+  規則 L3:
+    v5.3.8: # 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 146 檔。
+    v5.3.9(工作區): # 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 149 檔。
+
+對照 governance/freeze-validation.md 之判定:全部差異應屬該文件所列核准變更;出現未列差異 = 疑似誤變動。
+
+== 硬性斷言結果 == 全部通過 ✅（4 段 immutable tag 比較 + 工作區結構斷言）
