@@ -7,6 +7,40 @@
 
 ---
 
+## v5.3.7 defect-fix · 2026-11-15 · P2-R3 Defect Fix (COPILOT-EXEC-008)
+
+### 變更摘要
+
+MANUS-REVIEW-008 對 P2-R2 判定 FAIL,三項皆為治理驗證強化。創辦人核定 COPILOT-EXEC-008:P2-R3 Defect Fix(v5.3.6→v5.3.7);P2 未 PASS 前禁止進入 P3/P4/P5;允許修改範圍=治理文件/Release Registry/Deploy Log/Tag Validation/Freeze Rules/相關驗證檔案。本版站體程式(site.css/JS/頁面內容)零變更,僅治理檔新增/更新與版本字串同步;完成後提交 P2-R3 Completion Package 送 MANUS-REVIEW-009,不得自行宣告 PASS。
+
+### 修復內容
+
+| # | MANUS 判定 | 修復 |
+|---|---|---|
+| DEF-002 | Freeze Coverage 存在變動 | 新增 governance/freeze-validation.md:P2-R1(v5.3.4→v5.3.5,+48/−17/規則重寫)、P2-R2(v5.3.5→v5.3.6,+2 治理檔/規則零變更/55 檔重算)、P2-R3(v5.3.6→v5.3.7,+5 驗證檔/規則零變更)三版 Coverage/Exclusion/Rules Diff 逐版列表+誤變動判定(全部為核定變更,非誤變動,無需回復)+重現指令;新增 scripts/verify_freeze.py 自動重放 |
+| DEF-003 | Release Registry 與 Vercel Deploy History 不一致 | 根因:舊登記僅 9 筆(v5.3.5/v5.3.6 鏈),Vercel 全史 164 筆。新增 governance/deployment-registry.md(部署登記 SSOT):治理期 17 筆逐筆(Tag/Commit/Deploy ID/Release/Timestamp/Production State)+前治理期 147 筆彙總(ERROR 9/BLOCKED 2 逐筆揭露 ID)+權威序聲明+一行落差規則;新增 scripts/vercel_reconcile.py(唯讀對帳重放);補建 Release v5.3.3/v5.3.4(自此每治理期 tag 一 Release 鏡像) |
+| DEF-004 | verify_tags.sh 僅驗存在,未驗 v5.3.6 對應固定 Commit | 新增 governance/tag-registry.txt(Expected Tag Registry:v5.3.3~v5.3.6 全 40-hex PINNED,現行版 CURRENT);scripts/verify_tags.sh v2:驗證 tag 存在/不可變(現值==PINNED 期望值)/對應 commit 正確(peel 後完整比對),PINNED 偏離即 FAIL;tag-protection.md §5 同步更新全長 SHA |
+
+### 新增/修改檔案
+
+| 路徑 | 性質 |
+|---|---|
+| governance/freeze-validation.md | 新增(DEF-002) |
+| governance/deployment-registry.md | 新增(DEF-003) |
+| governance/tag-registry.txt | 新增(DEF-004) |
+| scripts/verify_tags.sh | v2 重寫(DEF-004) |
+| scripts/verify_freeze.py | 新增(DEF-002) |
+| scripts/vercel_reconcile.py | 新增(DEF-003) |
+| governance/tag-protection.md、governance/deploy-log.md、governance/CHANGELOG.md | 更新 |
+| VERSION、builder 六頁、builder/version、compliance | 版本字串同步 v5.3.6→v5.3.7(機械式) |
+| governance/backup-manifest.sha256 | 規則凍結,同步重算 |
+
+### 授權依據
+
+- COPILOT-EXEC-008(2026-11-15,創辦人核定):P2-R3 Defect Fix;禁止施工 P3/新增產品頁/SEO 頁/Orbit/VIP/改價/改品牌;完成後直接提交 MANUS-REVIEW-009,不得自行宣告 PASS。
+
+---
+
 ## v5.3.6 defect-fix · 2026-11-15 · P2-R2 Defect Fix (COPILOT-EXEC-007)
 
 ### 變更摘要

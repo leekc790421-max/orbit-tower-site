@@ -1,0 +1,81 @@
+# SNT Freeze Validation Report（DEF-002, COPILOT-EXEC-008）
+
+> 建立日期：2026-11-15（P2-R3 Defect Fix, v5.3.7）
+> 授權：COPILOT-EXEC-008（創辦人核定；MANUS-REVIEW-008 判定「Freeze Coverage 存在變動」,要求列出 P2-R1/P2-R2/P2-R3 三版 Coverage Diff／Exclusion Diff／Rules Diff,說明何處變動、是否為誤變動、是否需回復）
+> 凍結原則（自 v5.3.5 定稿,MANUS REVIEW P2-R1 DEF-002 PASS）：manifest 之涵蓋規則/排除規則/檔頭說明**凍結不得重建**；版本內容檔案經核定變更時,依既有規則**同步重算雜湊**（v5.3.5 manifest 檔頭即載明「最終部署後重新生成」管線）;新增治理檔依涵蓋規則（「部署輸出之全部檔案」）自動納入。
+> 重放：`python3 scripts/verify_freeze.py`（git refs v5.3.4/v5.3.5/v5.3.6 + 工作區,純 git 依賴）。
+
+---
+
+## 1. 結論摘要（逐版判定）
+
+| 版本邊界 | Coverage 變動 | Exclusion 變動 | Rules 變動 | 核定依據 | 誤變動？ | 需回復？ |
+|---|---|---|---|---|---|---|
+| P2-R1（v5.3.4→v5.3.5） | 108→139 條（+48/−17） | **有**：新增排除 api/*（12 檔,不對外服務,404 實測驗證）、package.json/package-lock.json、sitemap.xml（建置正規化）、vercel.json（建置正規化,語義一致驗證）、A39C0B14…txt（dotfile 類）；.github/* 與 dotfile 於檔頭規則明示 | **有**：檔頭規則整體重寫定稿（涵蓋規則改為「部署輸出之全部檔案」+排除清單+api/* 檢核附錄 12 條+VERSION 納入聲明） | COPILOT-EXEC-006（P2-R1 核准 manifest 重建）；**MANUS REVIEW P2-R1 已判 DEF-002 PASS** | 否 | 否（已覆核通過之基線） |
+| P2-R2（v5.3.5→v5.3.6） | 139→141 條（+2,見 §2.2） | **零** | **零**（唯一差異=計數行「共 139 檔」→「共 141 檔」）；55 檔 hash 重算（核定修改：site.css 修復+43 檔 cache-bust 單行+版本字串/治理檔更新） | COPILOT-EXEC-007（DEF-002 凍結+重算許可） | 否 | 否 |
+| P2-R3（v5.3.6→v5.3.7,本版） | 141→146 條（+5 驗證檔,見 §2.3）；14 檔 hash 重算 | **零** | **零**（唯一差異=計數行→「共 146 檔」） | COPILOT-EXEC-008（允許修改：治理文件/Release Registry/Deploy Log/Tag Validation/Freeze Rules/相關驗證檔案） | 否 | 否 |
+
+**本報告即「核准差異清單」之申請件**：上表所列全部差異均為上述三張核定令授權範圍內之變更,無任何未授權條目變動（誤變動=0）。請 MANUS 核准本清單;核准後,v5.3.7 manifest 即為新凍結基線,後續版本對其遵循 ZERO-RULES-DIFF。
+
+## 2. Coverage Diff 詳列
+
+### 2.1　P2-R1：v5.3.4（108 條）→ v5.3.5（139 條）
+
+- **+48**：此為涵蓋規則由「部分清單」改為「部署輸出全部檔案」後補齊之既有部署檔案（並非新增部署檔案）：`.marker`、`3d/`（3 檔）、`assets/`（logo/cover/og 等 5 檔）、`assets/promo/`（14 檔）、`assets/shots/`（15 檔）、`scripts/vercel-deploy.py`、`verification/screenshots/`（10 檔）。
+- **−17**：改列排除（見 §3.1）。
+- **hash 變更 14**：P2-R1 核定修改之檔案（VERSION、builder 六頁、builder/version、compliance、deploy-log、CHANGELOG、showcase 三頁版本字串）。
+
+### 2.2　P2-R2：v5.3.5（139 條）→ v5.3.6（141 條）
+
+- **+2**：`governance/tag-protection.md`、`scripts/verify_tags.sh`——COPILOT-EXEC-007 DEF-004 之核定交付物,依涵蓋規則自動納入。
+- **hash 變更 55**：`assets/site.css`（DEF-001 修復）+ 43 個 HTML 之 `?v=5.3.6` cache-bust 單行差異（交付必要措施,git diff 逐檔核驗）+ 版本字串同步與治理檔更新。
+
+### 2.3　P2-R3：v5.3.6（141 條）→ v5.3.7（146 條,本版）
+
+- **+5**：`governance/freeze-validation.md`（本檔）、`governance/deployment-registry.md`（DEF-003 SSOT）、`governance/tag-registry.txt`（DEF-004 期望值登記）、`scripts/verify_tags.sh` 為 v2 重寫（hash 變更列）——新增檔為 `scripts/vercel_reconcile.py`（DEF-003）、`scripts/verify_freeze.py`（DEF-002）。全部屬 COPILOT-EXEC-008 允許修改清單。
+- **hash 變更 13**：VERSION+builder 六頁+builder/version+compliance（版本字串 v5.3.6→v5.3.7 機械同步）、deploy-log、CHANGELOG、tag-protection.md、verify_tags.sh（v2）。
+
+## 3. Exclusion Diff 詳列
+
+### 3.1　P2-R1 定稿之排除規則（自 v5.3.5 起,至 v5.3.7 零變更）
+
+| 排除對象 | 理由 | 驗證 |
+|---|---|---|
+| `api/*`（12 檔） | 不對外服務（部署環境 404 實測）;納入檔頭「api 檢核附錄」逐檔登記 SHA 供內容存查 | 附錄 12 條,MANUS 可重放 |
+| `vercel.json` | 部署態被 Vercel 建置正規化（name/version 鍵）,語義一致已驗證;收錄將造成假性不一致 | R3 ERROR 事件與 R4 驗證紀錄 |
+| `sitemap.xml` | 建置正規化生成 | 同上性質 |
+| `package.json`、`package-lock.json` | 建置工件,不屬部署輸出內容 | — |
+| dotfile（3 檔） | 非對外服務 | — |
+| `.github/*` | repo 工作流檔案,不對外服務（部署環境 404 實測） | v5.3.5 R5 驗證紀錄 |
+
+### 3.2　P2-R2／P2-R3
+
+- **零變更**。排除清單與附錄規則逐字一致（`python3 scripts/verify_freeze.py` 可重放：兩版僅計數行差異）。
+
+## 4. Rules Diff 詳列（檔頭規則）
+
+- **P2-R1**：檔頭整體重寫定稿（涵蓋規則措辭、排除清單、api 附錄 12 條、VERSION 納入聲明）——P2-R1 核定範圍,已由 MANUS REVIEW 判 DEF-002 PASS。
+- **P2-R2／P2-R3**：規則文字零變更;唯一逐行差異為計數行「共 N 檔」（139→141→146）。
+- 沿用說明：檔頭「含 VERSION 與 governance 三檔」為 v5.3.5 定稿時之措辭（當時 governance 恰為三檔）。因規則凍結,此措辭未隨 governance 檔案數增長而改寫;實際涵蓋規則為同句之「部署輸出之全部檔案」,新治理檔依此自動納入——措辭保留、規則效力不變,特此說明。
+
+## 5. 重現指令（MANUS 可獨立執行）
+
+```bash
+# 一鍵三版+工作區差異重放（純 git,公開 repo 可自行 clone）
+python3 scripts/verify_freeze.py
+
+# 或逐步:
+git show v5.3.5:governance/backup-manifest.sha256 > /tmp/m535.txt
+git show v5.3.6:governance/backup-manifest.sha256 > /tmp/m536.txt
+git show v5.3.7:governance/backup-manifest.sha256 > /tmp/m537.txt
+diff /tmp/m535.txt /tmp/m536.txt   # 應僅:+2 新檔/55 重算/計數行
+diff /tmp/m536.txt /tmp/m537.txt   # 應僅:+5 新檔/14 重算/計數行
+# live 一致性:
+curl -s https://tower.xingdeng.tw/governance/backup-manifest.sha256 | sha256sum -c --quiet  # 或逐檔比對
+```
+
+## 6. 變更紀錄
+
+| 版本 | 日期 | 變更 |
+|---|---|---|
+| v1.0 | 2026-11-15 | 依 COPILOT-EXEC-008 建立（P2-R3 DEF-002）：三版 Diff、誤變動判定（0 筆）、核准差異清單申請 |

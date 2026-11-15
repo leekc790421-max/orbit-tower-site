@@ -1,46 +1,66 @@
 #!/usr/bin/env bash
-# SNT tag 不可變登記驗證（DEF-004）——主要路徑 git ls-remote（公開 repo,無需認證、無 API 限流）;
-# 備援路徑 GitHub REST API(可能受未認證 60/hr 限流,可設 GH_TOKEN 提高額度)。
+# SNT Tag 三驗（DEF-004 v2, COPILOT-EXEC-008）:對 governance/tag-registry.txt 之每個 tag 驗證——
+#   (1) 存在  (2) 不可變(現值==PINNED 期望值,任何偏離 FAIL)  (3) 對應 commit 正確(含 annotated tag peel)
+# 主路徑:git ls-remote(公開 repo,無需權限、無 API 限流);備援:GitHub REST API(可設 GH_TOKEN 提高額度)。
+# CURRENT 列=現行施工版:自參照不可預先釘死,交付時登記於同名 GitHub Release(部署登記表),
+#   若設 EXPECT_v5_3_7=<sha> 環境變數則一併硬驗;否則輸出現值供與 Release 比對。
 # 用法: bash scripts/verify_tags.sh [OWNER/REPO]
 REPO="${1:-leekc790421-max/orbit-tower-site}"
 URL="https://github.com/$REPO.git"
-fail=0
+fail=0; npin=0; ncur=0
 
-peeled() { # tag -> commit sha(annotated 取 ^{} peel;lightweight 直接取 ref sha)
+peeled() { # annotated tag 取 ^{} peel 後 commit;lightweight 直接取 ref sha
   local out commit
   out=$(git ls-remote "$URL" "refs/tags/$tag" "refs/tags/$tag^{}" 2>/dev/null)
   commit=$(echo "$out" | awk '$2 ~ /\^\{\}$/ {print $1}' | head -1)
   [ -z "$commit" ] && commit=$(echo "$out" | awk -v t="refs/tags/$tag" '$2 == t {print $1}' | head -1)
   echo "$commit"
 }
-
-check() { # tag expected_commit_prefix
-  tag="$1"; want="$2"
-  got=$(peeled)
-  if [ -z "$got" ]; then
-    # 備援:REST API(annotated tag 需再解一層)
-    obj=$(curl -s ${GH_TOKEN:+-H "Authorization: Bearer $GH_TOKEN"} "https://api.github.com/repos/$REPO/git/ref/tags/$tag")
-    sha=$(echo "$obj" | grep -o '"sha": *"[0-9a-f]*"' | head -1 | grep -o '[0-9a-f]\{40\}')
-    typ=$(echo "$obj" | grep -o '"type": *"[a-z]*"' | head -1 | cut -d'"' -f4)
-    if [ "$typ" = "tag" ]; then
-      got=$(curl -s ${GH_TOKEN:+-H "Authorization: Bearer $GH_TOKEN"} "https://api.github.com/repos/$REPO/git/tags/$sha" \
-        | grep -o '"sha": *"[0-9a-f]*"' | sed -n '2p' | grep -o '[0-9a-f]\{40\}')
-    else
-      got="$sha"
-    fi
+api_commit() { # 備援路徑
+  local obj sha typ
+  obj=$(curl -s ${GH_TOKEN:+-H "Authorization: Bearer $GH_TOKEN"} "https://api.github.com/repos/$REPO/git/ref/tags/$tag")
+  sha=$(echo "$obj" | grep -o '"sha": *"[0-9a-f]*"' | head -1 | grep -o '[0-9a-f]\{40\}')
+  typ=$(echo "$obj" | grep -o '"type": *"[a-z]*"' | head -1 | cut -d'"' -f4)
+  if [ "$typ" = "tag" ]; then
+    curl -s ${GH_TOKEN:+-H "Authorization: Bearer $GH_TOKEN"} "https://api.github.com/repos/$REPO/git/tags/$sha" \
+      | grep -o '"sha": *"[0-9a-f]*"' | sed -n '2p' | grep -o '[0-9a-f]\{40\}'
+  else
+    echo "$sha"
   fi
-  if [ -z "$want" ]; then echo "?  $tag -> ${got:-未取得}"; return; fi
-  case "$got" in
-    "$want"*) echo "OK  $tag -> $got";;
-    *) echo "FAIL $tag -> ${got:-未取得}（登記值 $want）"; fail=1;;
-  esac
 }
 
-echo "== $REPO tag 登記驗證（對照 governance/tag-protection.md §5;ls-remote peel 後 commit）=="
-check v5.3.3 cab67f8
-check v5.3.4 ca81640
-check v5.3.5 2265813
-check v5.3.6 ""   # 現行版:輸出現值,與 Release v5.3.6 登記比對
+REG="${REG_FILE:-governance/tag-registry.txt}"
+[ -f "$REG" ] || REG="$(dirname "$0")/../governance/tag-registry.txt"
+echo "== SNT tag 三驗(存在/不可變/commit 正確) — repo=$REPO,期望值=$REG =="
+while read -r tag want state; do
+  case "$tag" in ""|\#*) continue;; esac
+  got=$(peeled); [ -z "$got" ] && got=$(api_commit)
+  if [ -z "$got" ]; then
+    echo "FAIL $tag 不存在於遠端(或網路失敗)"; fail=1; continue
+  fi
+  envname="EXPECT_$(echo "$tag" | tr 'v.' '__')"
+  if [ "$state" = "PINNED" ]; then
+    npin=$((npin+1))
+    if [ "$got" = "$want" ]; then
+      echo "OK  $tag 存在且不可變,$got(=登記值)"
+    else
+      echo "FAIL $tag 現值 $got ≠ PINNED 登記值 $want —— tag 已變動!"; fail=1
+    fi
+  elif [ "$state" = "CURRENT" ]; then
+    ncur=$((ncur+1))
+    exp=$(printenv "$envname" 2>/dev/null || true)
+    if [ -n "$exp" ]; then
+      if [ "$got" = "$exp" ]; then
+        echo "OK  $tag 存在且不可變,$got(=$envname)"
+      else
+        echo "FAIL $tag 現值 $got ≠ $envname $exp"; fail=1
+      fi
+    else
+      echo "?   $tag 為現行施工版,commit=$got(自參照;交付時釘於 GitHub Release $tag 部署登記,次版納入 PINNED)"
+    fi
+  fi
+done < "$REG"
+echo "== 統計:PINNED 硬驗 $npin 個,CURRENT 軟驗 $ncur 個 =="
 echo "== /VERSION 實測 =="
 curl -s https://tower.xingdeng.tw/VERSION && echo
 exit $fail

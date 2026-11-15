@@ -25,15 +25,15 @@ git tag 為版本不可變參照（deploy-log 鐵律 6：版本編號禁止 late
 ## 4. 驗證方式（公開、可獨立重放）
 
 ```bash
-# (1) tag→commit 對照（無需任何權限）
-curl -s https://api.github.com/repos/leekc790421-max/orbit-tower-site/git/ref/tags/v5.3.5
-#    應回 object.sha = 2265813…（見 §5 登記表）；v5.3.4 → ca81640…；v5.3.6 → 見登記表
-
-# (2) 一鍵全量驗證（本 repo 內建腳本,僅用公開 API）
+# (1) 三驗腳本(DEF-004 v2):tag 存在/不可變/對應 commit 正確——讀取 governance/tag-registry.txt 期望值
 bash scripts/verify_tags.sh
+#    PINNED 列逐一硬驗(現值==登記值,偏離即 FAIL);現行版 CURRENT 以 EXPECT_v5_3_7=<sha> 硬驗或輸出現值
+
+# (2) tag→commit 逐筆對照(無需任何權限,ls-remote)
+git ls-remote https://github.com/leekc790421-max/orbit-tower-site.git "refs/tags/v5.3.*"
 
 # (3) Release/部署登記表（無需任何權限）
-curl -s https://api.github.com/repos/leekc790421-max/orbit-tower-site/releases/tags/v5.3.6 | jq -r .body
+curl -s https://api.github.com/repos/leekc790421-max/orbit-tower-site/releases/tags/v5.3.7 | jq -r .body
 
 # (4) 不可變性實測（規則集建立後）：git push --force origin <任意sha>:refs/tags/v5.3.5 應被 GitHub 拒絕
 ```
@@ -42,12 +42,13 @@ curl -s https://api.github.com/repos/leekc790421-max/orbit-tower-site/releases/t
 
 | tag | commit | 建立時間 (UTC) | 狀態 |
 |---|---|---|---|
-| v5.3.3 | cab67f8 | 2026-11-12 | 存查（歷史版本） |
-| v5.3.4 | ca81640 | 2026-11-14 23:00 | **保留存查，不得移動**（曾由 52d6722→f0fade8→ca81640 兩次移動，已列缺失檢討；輕量 tag，直接指向 commit） |
-| v5.3.5 | 2265813 | 2026-11-15（P2-R1 完工） | 存查（已由 MANUS 覆核：DEF-002 PASS） |
-| v5.3.6 | （本 commit = tag v5.3.6） | 2026-11-15（P2-R2 完工） | 現行施工版本 |
+| v5.3.3 | cab67f862f83ac31dc5c19dbebe91ff9b8bcf611 | 2026-11-12/13 | 存查（歷史版本） |
+| v5.3.4 | ca816404691053b982a0563e80b8560ec0842053 | 2026-11-14 23:01 | **保留存查，不得移動**（曾由 52d6722→f0fade8→ca81640 兩次移動，已列缺失檢討；輕量 tag，直接指向 commit） |
+| v5.3.5 | 2265813ebaf26ebfbc82be5a9fafbc93cac912f9 | 2026-11-15 00:20（P2-R1 完工） | 存查（已由 MANUS 覆核：DEF-002 PASS） |
+| v5.3.6 | a6772abfded8fafd01a0cc515b4e3d4638999996 | 2026-11-15 01:44（P2-R2 完工） | 存查（MANUS-REVIEW-008 要求釘死,現已 PINNED） |
+| v5.3.7 | （本 commit = tag v5.3.7） | 2026-11-15（P2-R3 完工） | 現行施工版本（CURRENT,交付時於 Release v5.3.7 釘死,次版納入 PINNED） |
 
-> 登記表以 GitHub API 即時值為準（§4 驗證方式 (1)(2)）；兩者不符即代表發生未經核准之 tag 變更，應立即依 §7 通報。
+> 機器可讀期望值登記：**governance/tag-registry.txt**（v5.3.3~v5.3.6 全 40-hex PINNED;現行版 CURRENT）。上表與 registry 一致;兩者不符即代表發生未經核准之 tag 變更，應立即依 §7 通報。
 
 ## 6. 永久技術保護（建議，由創辦人/具權限者執行）
 
