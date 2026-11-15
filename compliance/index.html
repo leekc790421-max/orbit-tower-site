@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>部署合規證據｜SNT-DEPLOY-001 Compliance v5.3.5 | 光曦星閣 SNT</title>
+<title>部署合規證據｜SNT-DEPLOY-001 Compliance v5.3.6 | 光曦星閣 SNT</title>
 <meta name="description" content="光曦星閣 SNT-DEPLOY-001 部署合規證據:版本編號、備份 SHA-256、部署紀錄、回滾 ID、git tag 公開核驗。供 Manus 獨立覆核。">
 <link rel="canonical" href="https://tower.xingdeng.tw/compliance">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="光曦星閣">
-<meta property="og:title" content="部署合規證據｜SNT-DEPLOY-001 Compliance v5.3.5">
+<meta property="og:title" content="部署合規證據｜SNT-DEPLOY-001 Compliance v5.3.6">
 <meta property="og:description" content="版本編號、備份 SHA-256、部署紀錄、git tag 公開核驗。">
 <meta property="og:url" content="https://tower.xingdeng.tw/compliance">
 <script type="application/ld+json">
@@ -30,18 +30,18 @@
 <header style="margin-bottom:32px">
 <span style="display:inline-block;background:#FEE2E2;color:#991B1B;border-radius:99px;padding:6px 16px;font-size:12.5px;font-weight:700">SNT-DEPLOY-001 · COMPLIANCE</span>
 <h1 style="font-size:clamp(26px,4.5vw,36px);font-weight:900;margin:18px 0 10px">部署合規證據</h1>
-<p style="font-size:15px;opacity:.7">v5.3.5 · 供 Manus 獨立覆核 · 2026-11-15</p>
+<p style="font-size:15px;opacity:.7">v5.3.6 · 供 Manus 獨立覆核 · 2026-11-15</p>
 </header>
 
 <section style="background:#fff;border:1px solid #00000010;border-radius:14px;padding:24px 26px;margin-bottom:22px">
 <h2 style="font-size:17px;font-weight:800;margin-bottom:14px">1. 版本編號</h2>
 <table style="width:100%;border-collapse:collapse;font-size:14px">
 <tr style="background:#F8FAFC"><th style="text-align:left;padding:10px 12px;border-bottom:1px solid #00000010">項目</th><th style="text-align:left;padding:10px 12px;border-bottom:1px solid #00000010">值</th></tr>
-<tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">現行版本</td><td style="padding:10px 12px;border-bottom:1px solid #00000008;font-weight:700;color:#0369A1">v5.3.5</td></tr>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">現行版本</td><td style="padding:10px 12px;border-bottom:1px solid #00000008;font-weight:700;color:#0369A1">v5.3.6</td></tr>
 <tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">版本檔(本站)</td><td style="padding:10px 12px;border-bottom:1px solid #00000008"><a href="/VERSION"><code>/VERSION</code></a></td></tr>
 <tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">版本頁(本站)</td><td style="padding:10px 12px;border-bottom:1px solid #00000008"><a href="/builder/version"><code>/builder/version</code></a></td></tr>
 <tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">CHANGELOG(本站)</td><td style="padding:10px 12px;border-bottom:1px solid #00000008"><a href="/governance/CHANGELOG.md"><code>/governance/CHANGELOG.md</code></a></td></tr>
-<tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">git tag(不可變)</td><td style="padding:10px 12px;border-bottom:1px solid #00000008"><a href="https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.3.5" target="_blank" rel="noopener">releases/tag/v5.3.5</a></td></tr>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">git tag(不可變)</td><td style="padding:10px 12px;border-bottom:1px solid #00000008"><a href="https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.3.6" target="_blank" rel="noopener">releases/tag/v5.3.6</a></td></tr>
 <tr><td style="padding:10px 12px">版本規則</td><td style="padding:10px 12px">v5.主版號.修正號,禁止 latest 覆蓋</td></tr>
 </table>
 </section>
@@ -51,7 +51,7 @@
 <table style="width:100%;border-collapse:collapse;font-size:13px">
 <tr style="background:#F8FAFC"><th style="text-align:left;padding:10px 12px;border-bottom:1px solid #00000010">層級</th><th style="text-align:left;padding:10px 12px;border-bottom:1px solid #00000010">內容</th><th style="text-align:left;padding:10px 12px;border-bottom:1px solid #00000010">核驗方式</th></tr>
 <tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">公開(本站)</td><td style="padding:10px 12px;border-bottom:1px solid #00000008"><a href="/governance/backup-manifest.sha256"><code>/governance/backup-manifest.sha256</code></a></td><td style="padding:10px 12px;border-bottom:1px solid #00000008">本 repo 內,含所有 HTML/JSON/CSS/JS 之 SHA-256,可線上下載比對 ✅</td></tr>
-<tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">不可變</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">git tag <code>v5.3.5</code>（v5.3.4 保留存查）</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">GitHub tag 指向固定 commit,<code>git checkout v5.3.5</code> 可還原完整原始碼 ✅</td></tr>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">不可變</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">git tag <code>v5.3.6</code>（v5.3.4/v5.3.5 保留存查）</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">GitHub tag 指向固定 commit,<code>git checkout v5.3.6</code> 可還原完整原始碼 ✅</td></tr>
 <tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">物理快照</td><td style="padding:10px 12px;border-bottom:1px solid #00000008"><code>backups/production-2026-11-10/</code></td><td style="padding:10px 12px;border-bottom:1px solid #00000008">工作區四站完整檔案快照(含 .sha256),運維回滾用</td></tr>
 <tr><td style="padding:10px 12px">歷史快照</td><td style="padding:10px 12px"><code>backups/preview-2026-11-12-v5.3.3/</code></td><td style="padding:10px 12px">v5.3.3 部署前快照(工作區),含 orbit-tower-site 完整檔案 + SHA-256</td></tr>
 </table>
@@ -68,7 +68,7 @@
 <tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">v5.3.0</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">2026-11-11</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">f415c51d</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">dpl_BHpW1Y4U</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;text-align:center">Preview</td></tr>
 <tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">v5.3.1</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">2026-11-11</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">2e774291</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">dpl_7Lbdar6N</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;text-align:center">Preview</td></tr>
 <tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">v5.3.2</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">2026-11-11</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">35d0ac5</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">dpl_7y3TWBqf</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;text-align:center">Preview</td></tr>
-<tr><td style="padding:8px 10px">v5.3.3</td><td style="padding:8px 10px">2026-11-13</td><td style="padding:8px 10px;font-family:monospace">tag v5.3.3</td><td style="padding:8px 10px"><a href="https://orbit-tower-site-2keqmizmz-xfls.vercel.app" target="_blank" rel="noopener" style="font-family:monospace;font-size:11.5px">orbit-tower-site-2keqmizmz-xfls.vercel.app</a></td><td style="padding:8px 10px;text-align:center">Preview</td></tr><tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">v5.3.4 nav closure</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">2026-11-14</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">52d6722</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">dpl_GiikSNpB6P93zrsWMEfjsiNQoVeM</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;text-align:center">Production</td></tr><tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">v5.3.4 defect-fix</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">2026-11-14</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">f0fade8</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">dpl_7yipkLRPEPPUfao8jxKtuMSbqyoA</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;text-align:center">Production</td></tr><tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">v5.3.4 governance R2</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">2026-11-14</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">ca81640</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">dpl_AZSaWtwZe6hjcbfodXBHwEWZCxE2</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;text-align:center">Production</td></tr><tr><td style="padding:8px 10px;font-weight:700;color:#0369A1">v5.3.5（現行）</td><td style="padding:8px 10px">2026-11-15</td><td style="padding:8px 10px;font-family:monospace">tag v5.3.5</td><td style="padding:8px 10px"><a href="/governance/deploy-log.md" style="font-family:monospace;font-size:11.5px">見 deploy-log（受 SSO 保護,Deploy ID 詳見 Vercel Dashboard）</a></td><td style="padding:8px 10px;text-align:center">Production</td></tr>
+<tr><td style="padding:8px 10px">v5.3.3</td><td style="padding:8px 10px">2026-11-13</td><td style="padding:8px 10px;font-family:monospace">tag v5.3.3</td><td style="padding:8px 10px"><a href="https://orbit-tower-site-2keqmizmz-xfls.vercel.app" target="_blank" rel="noopener" style="font-family:monospace;font-size:11.5px">orbit-tower-site-2keqmizmz-xfls.vercel.app</a></td><td style="padding:8px 10px;text-align:center">Preview</td></tr><tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">v5.3.4 nav closure</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">2026-11-14</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">52d6722</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">dpl_GiikSNpB6P93zrsWMEfjsiNQoVeM</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;text-align:center">Production</td></tr><tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">v5.3.4 defect-fix</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">2026-11-14</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">f0fade8</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">dpl_7yipkLRPEPPUfao8jxKtuMSbqyoA</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;text-align:center">Production</td></tr><tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">v5.3.4 governance R2</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">2026-11-14</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">ca81640</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">dpl_AZSaWtwZe6hjcbfodXBHwEWZCxE2</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;text-align:center">Production</td></tr><tr><td style="padding:8px 10px">v5.3.5</td><td style="padding:8px 10px">2026-11-15</td><td style="padding:8px 10px;font-family:monospace">2265813</td><td style="padding:8px 10px;font-family:monospace">dpl_EsNZSj64yKsH9CdUksaRSZ1THnVK</td><td style="padding:8px 10px;text-align:center">Production</td></tr><tr><td style="padding:8px 10px;font-weight:700;color:#0369A1">v5.3.6（現行）</td><td style="padding:8px 10px">2026-11-15</td><td style="padding:8px 10px;font-family:monospace">tag v5.3.6</td><td style="padding:8px 10px"><a href="https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.3.6" style="font-family:monospace;font-size:11.5px">部署登記:GitHub Release v5.3.6</a></td><td style="padding:8px 10px;text-align:center">Production</td></tr>
 </table>
 <p style="font-size:12px;opacity:.6;margin-top:12px">部署 URL 均受 SSO 保護(需 Vercel 權限),公開核驗以 Production 網域 + /VERSION 為準;本表為摘要,以 deploy-log 為準。每版 Deploy ID 詳見 <a href="/governance/deploy-log.md"><code>/governance/deploy-log.md</code></a>。</p>
 </section>
@@ -78,7 +78,7 @@
 <table style="width:100%;border-collapse:collapse;font-size:13px">
 <tr style="background:#F8FAFC"><th style="text-align:left;padding:8px 10px;border-bottom:1px solid #00000010">站</th><th style="text-align:left;padding:8px 10px;border-bottom:1px solid #00000010">現行 Production</th><th style="text-align:left;padding:8px 10px;border-bottom:1px solid #00000010">回滾目標</th></tr>
 <tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">xingdeng</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">dpl_BKEeZnW8 (v5.0.0)</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">backup 2026-11-10</td></tr>
-<tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">tower</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">tag v5.3.5（現行）</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">backup 2026-11-10;一階回滾 tag v5.3.5^（v5.3.4=ca81640）,詳見 deploy-log</td></tr>
+<tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">tower</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">tag v5.3.6（現行）</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">一階回滾 tag v5.3.6^（v5.3.5=2265813）,詳見 deploy-log</td></tr>
 <tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">orbit</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-family:monospace">dpl_H6mFFx1A (v5.0.0)</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">backup 2026-11-10</td></tr>
 <tr><td style="padding:8px 10px">vip</td><td style="padding:8px 10px;font-family:monospace">dpl_GVoFCKaK (v5.0.0)</td><td style="padding:8px 10px">backup 2026-11-10</td></tr>
 </table>
@@ -88,12 +88,12 @@
 <section style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:14px;padding:20px 24px;margin-bottom:22px">
 <h2 style="font-size:16px;font-weight:800;color:#166534;margin-bottom:8px">合規檢查清單</h2>
 <ul style="font-size:14px;line-height:2;color:#166534;padding-left:24px">
-<li>✅ 版本編號 v5.3.5(非 latest,禁止覆蓋;tag 一經公開引用不可移動)</li>
-<li>✅ /VERSION、/builder/version、/compliance 三處版本一致(v5.3.5)</li>
+<li>✅ 版本編號 v5.3.6(非 latest,禁止覆蓋;tag 政策見 /governance/tag-protection.md)</li>
+<li>✅ /VERSION、/builder/version、/compliance 三處版本一致(v5.3.6)</li>
 <li>✅ CHANGELOG.md 入 repo 公開可訪(<a href="/governance/CHANGELOG.md" style="color:#166534">/governance/CHANGELOG.md</a>)</li>
 <li>✅ deploy-log.md 入 repo 公開可訪(<a href="/governance/deploy-log.md" style="color:#166534">/governance/deploy-log.md</a>)</li>
 <li>✅ backup-manifest.sha256 入 repo 公開可訪(<a href="/governance/backup-manifest.sha256" style="color:#166534">/governance/backup-manifest.sha256</a>)</li>
-<li>✅ git tag v5.3.5 推送 GitHub(不可變備份參照);tag v5.3.4 保留存查</li>
+<li>✅ git tag v5.3.6 推送 GitHub;tag 保護政策與登記表見 /governance/tag-protection.md</li>
 <li>✅ 回滾 ID 已記錄(四站現行 Production deployment UID)</li>
 <li>✅ 部署流程:Workspace → L1 → Preview → L2 → L3 → Production</li>
 <li>✅ Production 現行 v5.3.5(COPILOT-EXEC-006 核定),回滾目標已記錄</li>
@@ -111,7 +111,7 @@
 <tr><td style="padding:8px 10px;border-bottom:1px solid #BFDBFE">CHANGELOG</td><td style="padding:8px 10px;border-bottom:1px solid #BFDBFE"><a href="/governance/CHANGELOG.md" style="color:#1E40AF">/governance/CHANGELOG.md</a></td></tr>
 <tr><td style="padding:8px 10px;border-bottom:1px solid #BFDBFE">部署紀錄</td><td style="padding:8px 10px;border-bottom:1px solid #BFDBFE"><a href="/governance/deploy-log.md" style="color:#1E40AF">/governance/deploy-log.md</a></td></tr>
 <tr><td style="padding:8px 10px;border-bottom:1px solid #BFDBFE">SHA-256 manifest</td><td style="padding:8px 10px;border-bottom:1px solid #BFDBFE"><a href="/governance/backup-manifest.sha256" style="color:#1E40AF">/governance/backup-manifest.sha256</a></td></tr>
-<tr><td style="padding:8px 10px;border-bottom:1px solid #BFDBFE">git tag</td><td style="padding:8px 10px;border-bottom:1px solid #BFDBFE"><a href="https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.3.5" target="_blank" rel="noopener" style="color:#1E40AF">github.com/.../releases/tag/v5.3.5</a></td></tr>
+<tr><td style="padding:8px 10px;border-bottom:1px solid #BFDBFE">git tag</td><td style="padding:8px 10px;border-bottom:1px solid #BFDBFE"><a href="https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.3.6" target="_blank" rel="noopener" style="color:#1E40AF">github.com/.../releases/tag/v5.3.6</a></td></tr>
 <tr><td style="padding:8px 10px">部署實證</td><td style="padding:8px 10px">Production 網域 <a href="https://tower.xingdeng.tw" style="color:#1E40AF">https://tower.xingdeng.tw</a>(以 /VERSION 為準);部署 URL 受 SSO 保護(需 Vercel 權限)</td></tr>
 </table>
 </section>
@@ -139,7 +139,7 @@
 
 </main>
 <footer style="border-top:1px solid #00000010;padding:24px;text-align:center;font-size:12.5px;opacity:.6">
-<p>© 2026 光曦星閣 SNT · Compliance v5.3.5 · SNT-DEPLOY-001</p>
+<p>© 2026 光曦星閣 SNT · Compliance v5.3.6 · SNT-DEPLOY-001</p>
 </footer>
 <script>(function(){var b=document.querySelector('.nav__burger'),l=document.querySelector('.nav__links');if(b&&l){b.addEventListener('click',function(){var o=l.classList.toggle('open');b.setAttribute('aria-expanded',String(o))});l.addEventListener('click',function(e){if(e.target.closest('a'))l.classList.remove('open')})}})();</script>
 </body>

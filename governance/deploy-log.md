@@ -27,7 +27,12 @@
 | v5.3.4 DEF-001 R2 | 2026-11-14 | 026ae78(推定) | dpl_hMLb1AE3pNMZSeuBuV2ZyaZT3NHz | Production | ✅ PASS | — | ✅ L3-SIGN-001 | superseded(2026-11-15 補記,原漏列) |
 | v5.3.4 defect-fix | 2026-11-14 | f0fade8 | dpl_7yipkLRPEPPUfao8jxKtuMSbqyoA | Production | ✅ PASS | FAIL→修復中→待重新覆核 | ✅ L3-SIGN-001 | superseded |
 | v5.3.4 governance R2 | 2026-11-14 | ca81640 | dpl_AZSaWtwZe6hjcbfodXBHwEWZCxE2 | Production | ✅ PASS | — | ✅ L3-SIGN-001 | superseded(2026-11-15 補記,原漏列;tag v5.3.4 現指向本 commit) |
-| v5.3.5 | 2026-11-15 | (本 commit = tag v5.3.5) | 內容部署 dpl_7zRQpXpXnUaTNYtzB7qP8VMMkYqi(00:07 UTC);現行 Production 為載送本 commit 之部署,Deploy ID 見 Vercel Dashboard/Completion Package | Production | ✅ PASS | ⏳ 待 MANUS 複驗 | ✅ COPILOT-EXEC-006 | Production(現行) |
+| v5.3.5 R1 內容部署 | 2026-11-15 00:07 | d7fcd8c | dpl_7zRQpXpXnUaTNYtzB7qP8VMMkYqi | Production | ✅ PASS | — | ✅ COPILOT-EXEC-006 | READY,superseded(13 檔修復) |
+| v5.3.5 R2 重試 | 2026-11-15 00:10 | 5645d74 | dpl_F3cXrzszaBXq2FLG5X52A8psZcyc | Production | ✅ PASS | — | ✅ COPILOT-EXEC-006 | READY,superseded(vercel.json 還原) |
+| v5.3.5 R3 重試(失敗) | 2026-11-15 00:14 | ffc9441 | dpl_2cV8zEiC1xB6UjSQCEETAVLs1Mju | Production | ✅ PASS | — | ✅ COPILOT-EXEC-006 | **ERROR**(vercel.json schema 拒絕 caseSensitive,未上線、不影響 Production) |
+| v5.3.5 R4 重試 | 2026-11-15 00:17 | df5b44f | dpl_Dh52eCgduTy61cH3m3UfvnnBqfPJ | Production | ✅ PASS | — | ✅ COPILOT-EXEC-006 | READY,superseded(移除 /version 別名) |
+| v5.3.5 R5 最終 | 2026-11-15 00:20 | 2265813 = tag v5.3.5 | dpl_EsNZSj64yKsH9CdUksaRSZ1THnVK | Production | ✅ PASS | MANUS REVIEW:DEF-002 PASS;DEF-001/003/004 FAIL | ✅ COPILOT-EXEC-006 | READY;P2-R1 最終 Production,至 v5.3.6 部署前之現行 |
+| v5.3.6 | 2026-11-15 | (本 commit = tag v5.3.6) | 部署登記:GitHub Release v5.3.6(部署完成後即時補記,含失敗/重試/現行與時間/狀態/Commit/Tag) | Production | ✅ PASS | ⏳ 待 MANUS 複驗 | ✅ COPILOT-EXEC-007 | Production(現行) |
 
 **備註:**
 
@@ -35,8 +40,9 @@
 - **日期校正(2026-11-15)**:v5.0.0 原標 2026-11-10、v5.3.3 原標 2026-11-12、v5.3.4 各列原標 2026-11-15,與 Vercel API 實測 createdAt 不符,已依實測校正(v5.0.0=11-11 07:46、v5.3.3=11-13 00:59、v5.3.4 全鏈=11-14 19:21~23:01 UTC)。
 - **漏列補記(2026-11-15)**:v5.3.3 後續部署(dpl_AS2Z3iPk)、v5.3.4 governance(dpl_CrjfgSM,即 MANUS 覆核時之現行)、DEF-001 R1/R2(dpl_2eUABLaGG/dpl_hMLb1AE)、governance R2(dpl_AZSaWtwZ)共 5 筆已依 Vercel API 補列。
 - **Deploy ID 對映精度**:本專案採 Files API 部署(無 git meta),Deploy ID 與 commit 之對映依部署時間序與內容比對;標「推定」者為時間序推定,精確對應以 Vercel Dashboard 為準(Manus 具 Dashboard 存取權)。
-- **v5.3.5 R2~R4 補記**:首次部署(dpl_7zRQpXpX)後發現 /VERSION 被 /version 頂層別名以 case-insensitive 方式 307 攔截(redirects 先於檔案系統且不分大小寫,caseSensitive 屬性不為 Vercel 支援,R3 部署因此 ERROR),治理版本檔無法直接存取。R4 移除 /version 別名: /VERSION 確定性回傳版本檔,/version 以 /builder/version 與 /VERSION 為準;並還原部署態 vercel.json 之 name/version 鍵(修正前手工作區改動未 commit 之漂移,證實鐵律 2 之風險為實)。
-- **現行部署 ID 之制度性落差說明**:Deploy ID 於部署完成後始由 Vercel 產生,故本檔 v5.3.5 列以「本 commit = tag v5.3.5」定位現行部署(commit 公開可驗),實際 Deploy ID 以 Vercel Dashboard 為準並記錄於 P2-R1 Completion Package;此為制度性一行落差,非紀錄不實。
+- **v5.3.5 R1~R5 部署歷程**(完整鏈見上表;GitHub Release `v5.3.5` 同步登記):R1 部署後發現 /VERSION 被 /version 頂層別名以 case-insensitive 方式 307 攔截(redirects 先於檔案系統且不分大小寫);R2 還原部署態 vercel.json 之 name/version 鍵(修正前手工作區改動未 commit 之漂移,證實鐵律 2 之風險為實)仍未解;R3 試加 caseSensitive 屬性,Vercel 建置驗證拒絕(schema 不支援)→ ERROR 未上線;R4 移除 /version 別名,/VERSION 確定性回傳版本檔;R5 manifest 排除規則定稿(.github/ 不對外服務、vercel.json 被建置正規化)。
+- **MANUS REVIEW 結果(P2-R1,2026-11-15)**:DEF-002 PASS(manifest 凍結,後續版本不得重建、僅得依既有規則同步重算);DEF-001 FAIL(手機選單無水平溢位,但底部入口 Version/SHA256/Warranty 無法實際操作完成導覽——P2-R2 根因定位:sticky 表頭內絕對定位選單高於視窗且不可捲動,座標驗證無法反映可達性);DEF-003 FAIL(最終 Production Deploy ID 與重試部署鏈未完整入檔——本版已補列 R1~R5 全鏈並建立 Release 登記制度);DEF-004 FAIL(tag 政策缺可驗證保護機制——見 governance/tag-protection.md)。創辦人核准 P2-R2(COPILOT-EXEC-007),施工範圍僅 DEF-001/003/004。
+- **部署 ID 公開登記制度(DEF-003 修復)**:Deploy ID 於部署完成後始由 Vercel 產生,「載送本檔之部署」無法在部署前自載其 ID。為此自 v5.3.6 起每版建立同名 **GitHub Release 作為部署登記表**(失敗/重試/現行部署之 Deploy ID+時間+狀態+Commit+Tag),於部署完成後即時補記——Release 非部署內容,補記不需重新部署。登記表公開可驗:`GET https://api.github.com/repos/leekc790421-max/orbit-tower-site/releases/tags/<tag>`;本檔與登記表如有出入,以 Release 為準並於本檔補記差異。
 - v5.3.3 為 Manus FAIL Fix R2,補齊 404 路由別名 + 版本同步 + 合規證據公開核驗(governance/ 入 repo + git tag),經 EXEC-ORDER-BLOCKER-001(L3 覆蓋)部署至 Production。
 - v5.3.4 commit 鏈:52d6722(nav closure)→ ef665d0(governance R1)→ 9422baa(DEF-001 R1)→ 026ae78(DEF-001 R2 CSS)→ f0fade8(DEF-001 R3+defect-fix)→ ca81640(governance R2)。
 - **tag 位移歷史存查(DEF-004)**:tag v5.3.4 曾由 52d6722 移動至 f0fade8 再移動至 ca81640(2026-11-14 23:00 UTC),該移動違反 MANUS「保留 tag 不可變」建議,已列為缺失檢討。v5.3.4 tag 現值(ca81640)保留存查,不再移動、不覆蓋、不重寫;v5.3.5 起以新建 tag 為不可變參照,禁止移動。
@@ -47,14 +53,15 @@
 
 ## 回滾紀錄
 
-v5.3.5 部署至 Production(2026-11-15),取代 v5.3.4 governance R2(ca81640)。v5.3.4 全鏈(2026-11-14)取代 v5.3.3(2026-11-13)。v5.3.3 取代 v5.0.0(2026-11-13,EXEC-ORDER-BLOCKER-001)。
+v5.3.6 部署至 Production(2026-11-15),取代 v5.3.5 最終態(2265813/dpl_EsNZSj64yKs…)。v5.3.5 全鏈(2026-11-15 00:07~00:20,含 R3 失敗)取代 v5.3.4 governance R2(ca81640)。v5.3.4(2026-11-14)取代 v5.3.3(2026-11-13)。v5.3.3 取代 v5.0.0(2026-11-13,EXEC-ORDER-BLOCKER-001)。
 
 回滾目標:
-- Production 回滾一階:v5.3.4 最終態 dpl_AZSaWtwZe6hjcbfodXBHwEWZCxE2(ca81640)
+- Production 回滾一階:v5.3.5 最終態 dpl_EsNZSj64yKsH9CdUksaRSZ1THnVK(2265813 = tag v5.3.5)
+- Production 回滾一階(前):v5.3.4 最終態 dpl_AZSaWtwZe6hjcbfodXBHwEWZCxE2(ca81640)
 - Production 回滾二階:v5.3.4 defect-fix dpl_7yipkLRPEPPUfao8jxKtuMSbqyoA(f0fade8)
 - Production 回滾三階:v5.3.3 dpl_EX6nGdnZ3USxc3yTJH9EvcefhN4E(cab67f8)
 - Production 回滾原始:dpl_339z6KanPgCPxRdk91T1qzLH67j7(v5.0.0)
-- 原始碼回滾:git checkout v5.3.5^ (即 v5.3.4=ca81640)、v5.3.3、或任意 commit
+- 原始碼回滾:git checkout v5.3.6^ (即 v5.3.5=2265813)、v5.3.4=ca81640、v5.3.3、或任意 commit
 
 ---
 
@@ -72,7 +79,8 @@ v5.3.5 部署至 Production(2026-11-15),取代 v5.3.4 governance R2(ca81640)。v
 | preview-2026-11-12-v5.3.3 | 2026-11-12 | tower repo v5.3.3 快照 | /home/z/my-project/backups/preview-2026-11-12-v5.3.3/ | orbit-tower-site.sha256 ✅ |
 | git-tag-v5.3.3 | 2026-11-12 | v5.3.3 commit 不可變參照 | GitHub tag v5.3.3 | git checkout v5.3.3 還原 ✅ |
 | git-tag-v5.3.4 | 2026-11-14 | v5.3.4 commit(ca81640)不可變參照,保留存查 | GitHub tag v5.3.4 | git checkout v5.3.4 還原 ✅ |
-| git-tag-v5.3.5 | 2026-11-15 | v5.3.5 commit 不可變參照(現行) | GitHub tag v5.3.5 | git checkout v5.3.5 還原 ✅ |
+| git-tag-v5.3.5 | 2026-11-15 | v5.3.5 commit(2265813)不可變參照 | GitHub tag v5.3.5 | git checkout v5.3.5 還原 ✅ |
+| git-tag-v5.3.6 | 2026-11-15 | v5.3.6 commit 不可變參照(現行);保護政策見 governance/tag-protection.md | GitHub tag v5.3.6 | git checkout v5.3.6 還原 ✅ |
 
 ---
 
@@ -86,6 +94,7 @@ v5.3.5 部署至 Production(2026-11-15),取代 v5.3.4 governance R2(ca81640)。v
 | v5.3.4 | 2026-11-14 | ✅ PASS | v5.3.4 變更僅導覽列入口(Builder/Demo/README/Setup/Version/SHA256/Warranty 連結)+ 版本字串,未觸及承諾文案。R1~R7 核心七條紅線全清零(主動接待/成效承諾/時效/監控/VIP價格/自動化承諾)。R7x 延伸防護標記 NT$7,800/13,900/24,800 為 tower repo 環境偽陽性——此為創辦人核定現行 T1/T2/T3 定價(Founder Approved Override),非舊定價外洩。實跑 redline_check.py 於 index/builder/version/t1/warranty 五頁。(日期依部署時間序校正,原標 2026-11-15) |
 | v5.3.4 defect-fix | 2026-11-14 | ✅ PASS | DEF-001~004 修復僅觸及 nav CSS + burger JS + manifest + deploy-log + CHANGELOG,未觸及定價/品牌/承諾文案。R1~R7 全清零。實跑 redline_check.py + agent-browser 4 viewport(320/360/390/428px)手機導覽驗證——本紀錄之 4 viewport 測試對象為修復後內容,與 MANUS 覆核(修復前 ef665d0,量得 538px 溢位)為不同版本狀態,兩者不矛盾。(日期校正同上;測試時點註記為 DEF-003 修復項) |
 | v5.3.5 | 2026-11-15 | ✅ PASS | P2-R1 變更僅觸及治理檔/版本字串/vercel.json 別名,未觸及定價(T1 NT$7,800/T2 NT$13,900/T3 NT$24,800)/品牌(光曦星樞/閣/軌/匯)/承諾文案。R1~R7 全清零。manifest 預驗證全數一致;git diff 白名單核對僅 13 檔。 |
+| v5.3.6 | 2026-11-15 | ✅ PASS | P2-R2 變更:assets/site.css(行動選單可捲動,1 檔)+治理檔(deploy-log/CHANGELOG/tag-protection.md/verify_tags.sh)+版本字串同步 9 檔;未觸及定價/品牌/承諾文案;DEF-002 manifest 規則凍結,僅同步重算。**實際點擊驗收:4 寬度(320/360/390/428)×2 頁(/,/builder/version)×7 入口=64/64 PASS(可見/可點/可導頁/可收合,真實 CDP 點擊)**,沙盒與部署後線上各執行一輪。R1~R7 全清零。 |
 
 ---
 

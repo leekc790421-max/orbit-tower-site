@@ -7,6 +7,38 @@
 
 ---
 
+## v5.3.6 defect-fix · 2026-11-15 · P2-R2 Defect Fix (COPILOT-EXEC-007)
+
+### 變更摘要
+
+MANUS REVIEW P2-R1 結果:DEF-002 PASS、DEF-001/003/004 FAIL。創辦人核定 P2-R2(COPILOT-EXEC-007),施工範圍僅 DEF-001/003/004;DEF-002 凍結(manifest 不得重建、不得擴大範圍;因本版檔案變更,依既有規則同步重算雜湊以維持正確性,規則與涵蓋零變更)。品牌、定價、Orbit、VIP、P3~P5 全程未異動。
+
+### 修復內容
+
+| # | 缺陷 | 修復 |
+|---|---|---|
+| DEF-001 | 行動選單底部入口無法實際操作完成導覽(座標可驗但不可達) | 根因:sticky 表頭(position:sticky)內之絕對定位選單高於視窗且不可捲動,頁面捲動不帶動選單,底部入口(Version/SHA256/Warranty)永遠在視窗外(320×568 實測選單高 1061px vs 視窗 568px)。修復:assets/site.css 行動選單加 max-height:calc(100dvh - 64px)+overflow-y:auto+overscroll-behavior:contain+safe-area 墊底——選單自身可捲動,全入口可達。**驗收改以實際點擊**(真實 CDP 輸入,非座標/非 DOM):4 寬度(320/360/390/428)×2 頁(/,/builder/version)×7 入口(Builder/Demo/README/Setup/Version/SHA256/Warranty),每入口驗:可見(捲動後在視窗內)→可點(真實點擊)→可導頁(pathname==目標)→可收合(漢堡開→關),沙盒 64/64 PASS+部署後線上 64/64 PASS |
+| DEF-003 | Deploy Log 未完整記錄最終 Production Deploy ID 及重試部署鏈 | deploy-log 補列 v5.3.5 R1~R5 完整鏈(5 列:內容部署/重試×2/失敗 ERROR/最終,含 Deploy ID+時間+狀態+Commit);建立 **GitHub Release 部署登記制度**:每版同名 Release 於部署完成後即時補記完整登記(失敗/重試/現行,Deploy ID+時間+狀態+Commit+Tag),公開可驗、不需重新部署;v5.3.5 登記回填 |
+| DEF-004 | Tag Policy 缺可驗證保護機制 | 新增 governance/tag-protection.md:平台限制說明(ruleset API 403 實錄)、限制方式(憑證治理+政策入檔+Release 登記)、驗證方式(公開 API 4 條指令+內建 scripts/verify_tags.sh)、責任人表、tag 登記表(v5.3.3~v5.3.6)、永久技術保護建議(UI 2 分鐘步驟) |
+
+### 修改檔案
+
+| 路徑 | 變更 |
+|---|---|
+| assets/site.css | DEF-001:行動選單可捲動(max-height/overflow-y/safe-area) |
+| VERSION、builder 六頁、builder/version、compliance | 版本字串同步 v5.3.5→v5.3.6(DEF-004 版本域一致性維護) |
+| governance/deploy-log.md | DEF-003:R1~R5 完整鏈+Release 登記制度+回滾/L1/備份更新 |
+| governance/CHANGELOG.md | 本條目 |
+| governance/tag-protection.md | DEF-004 新增:tag 保護政策與驗證 |
+| scripts/verify_tags.sh | DEF-004 新增:公開 API tag 登記驗證腳本 |
+| governance/backup-manifest.sha256 | DEF-002 凍結:規則零變更,僅因上述檔案變更同步重算雜湊 |
+
+### 授權依據
+
+- COPILOT-EXEC-007(2026-11-15,創辦人核定):P2-R2 Defect Fix,範圍 DEF-001/003/004;DEF-002 不得修改/重建/擴大;完成後提交 P2-R2 Completion Package 重新送 MANUS;未取得 MANUS PASS 不得提交 P2 Completion Report。
+
+---
+
 ## v5.3.5 defect-fix · 2026-11-15 · P2-R1 Defect Fix (COPILOT-EXEC-006)
 
 ### 變更摘要
