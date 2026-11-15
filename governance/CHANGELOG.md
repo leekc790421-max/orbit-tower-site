@@ -27,7 +27,7 @@
 | 路徑 | 變更 |
 |---|---|
 | VERSION | v5.3.4 → v5.3.5 |
-| vercel.json | redirects 新增 /sha256 別名;別名 redirects 加 caseSensitive:true 修正 /VERSION 被預設 case-insensitive 比對至 /version 別名之 307(使 /VERSION 確定性回傳版本檔);並還原部署態之 name/version 鍵(修正 repo 與工作區漂移) |
+| vercel.json | redirects 新增 /sha256 別名;移除 /version 頂層別名(redirects 恆為 case-insensitive 且先於檔案系統,/version 別名存在時 /VERSION 必被 307 攔截,治理版本檔無法直接存取;移除後 /VERSION 確定性回傳版本檔,/version 以 /builder/version 與 /VERSION 為準);並還原部署態之 name/version 鍵(修正 repo 與工作區漂移) |
 | builder/index.html | badge/Version 卡/頁尾 → 站體 v5.3.5 |
 | builder/demo/index.html | 頁尾 → v5.3.5 |
 | builder/readme/index.html | 版本說明與頁尾改為「產品包文件 v5.2.0 + 站體 v5.3.5」雙域標示 |
