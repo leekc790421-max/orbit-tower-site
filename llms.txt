@@ -1,44 +1,56 @@
-# 光曦星閣 · 光曦星軌（Singularity Nexus Technology）
+# 光曦星閣（SNT・Singularity Nexus Technology）
 
-> 官網：https://xingdeng.tw ｜ 3D 數位總部：https://orbit.xingdeng.tw
-> 品牌正名：官方名稱「光曦星閣 / 光曦星軌」，公司主體 SNT（Singularity Nexus Technology）。
+> 流量工廠：https://xingdeng.tw ｜ 接單中心（本站）：https://tower.xingdeng.tw
+> 接案 ERP：https://orbit.xingdeng.tw ｜ 高端顧問中心：https://vip.xingdeng.tw
 
-## 定位
-經營販賣「未來趨勢」的 AI 商業服務站：以動態晶體六邊形大樓 3D 展館為旗艦體驗，
-提供 AI 行銷戰略長（對話式顧問）、趨勢診斷、趨勢報告、-kit 交付方案與雲端報價單自動化。
+## 定位（SNT v6.0 創辦人最終重構版）
+裝潢產業獲客引擎。核心口號：**不賣網站、不賣系統、不賣數位轉型，只幫客戶接案。**
+服務對象：個人木工師傅、小工班、裝潢公司、系統櫃業者、統包團隊、大型工程行、室內設計公司。
+獲客與詢價閉環：Google 流量 → SEO 內容 → 案例 → 詢價 → LINE → 成交。
+
+## 方案與定價（鐵律：全站僅此三值，無試用價、無訂閱費）
+- T1 木工接案包 NT$7,800（個人木工／小工班）：接案形象站＋作品案例＋LINE 詢價按鈕＋AI 估價表單＋基礎 SEO
+- T2 統包接案包 NT$13,900（裝潢公司／系統櫃業者）：T1 全部＋多頁案例庫＋行情文章（首波代寫）＋進階詢價表單
+- T3 企業獲客包 NT$24,800（大型工程行／室內設計）：T2 全部＋光曦星軌接案 ERP（客戶／報價／工程／收款／評論回收）
+全部一次性買斷、含一年主機（續約約 NT$500／年）、30 日保固。付款：ATM 匯款。不綁約。
+
+## 四站職能
+- 光曦星樞（xingdeng.tw）＝流量工廠：Google 流量、裝潢行情、木工價格、案例分析、SEO 文章與 FAQ
+- 光曦星閣（tower.xingdeng.tw）＝接單中心：流量變客戶、案例展示、AI 估價、LINE 詢價、方案成交
+- 光曦星軌（orbit.xingdeng.tw）＝接案 ERP：客戶管理、報價管理、工程管理、收款管理、評論回收
+- 光曦星匯（vip.xingdeng.tw）＝高端顧問中心：品牌顧問、文化顧問、高端會員服務
 
 ## 核心頁面
-- 一鍵快速架網（免費生成品牌站預覽）： https://xingdeng.tw/quick
-- 星樞廣告機器人（瀏覽器本地生成影片/圖/文案）： https://xingdeng.tw/studio
-- 首頁： https://xingdeng.tw/
-- 3D 展館（母公司數位總部）： https://xingdeng.tw/3d ｜獨立網域 https://orbit.xingdeng.tw
-- 方案定價（R1/R2/R3）： https://xingdeng.tw/pricing
-- Kit 產品線： https://xingdeng.tw/kits （互動預覽 /kits/preview/*）
-- 趨勢診斷（公開 API 演示）： https://xingdeng.tw/diagnose
-- 趨勢報告： https://xingdeng.tw/reports
-- 文章（Content Engine a01–a09）： https://xingdeng.tw/articles/a01 …/a09
-- 自動報價單＋沙箱金流： https://xingdeng.tw/checkout
-- 關於／集團架構（含子業「拾光引」）： https://xingdeng.tw/about
-- 聯絡收單： https://xingdeng.tw/contact
-- 部門矩陣： https://xingdeng.tw/departments
-- FAQ： https://xingdeng.tw/faq
-- 法務： https://xingdeng.tw/privacy ｜ https://xingdeng.tw/terms ｜ https://xingdeng.tw/legal
+- 首頁（獲客閉環總覽）： https://xingdeng.tw/
+- 方案定價（三個固定價）： https://xingdeng.tw/pricing
+- 接案包總覽： https://xingdeng.tw/builder/packages （t1／t2／t3 各一頁）
+- 案例與樣板： https://xingdeng.tw/showcase （真實案例規劃中；樣板為示範站）
+- 裝潢行情文章（業主版）： https://xingdeng.tw/articles （新系列產線上；舊系列已完結保留）
+- 常見問題： https://xingdeng.tw/faq
+- 詢價中心： https://xingdeng.tw/contact （LINE 為主：https://line.me/R/ti/p/@559julyu ）
+- 樣板試玩（免留資料）： https://xingdeng.tw/try
+- 快速開站（免費工具）： https://xingdeng.tw/quick
+- 星樞廣告機器人（免費工具）： https://xingdeng.tw/studio
+- 口袋客源池： https://xingdeng.tw/pool
+- 獲客引擎四站說明： https://xingdeng.tw/orbit-tower
+- 關於（含三大考題准入鐵律）： https://xingdeng.tw/about
+- 報價單產生器（沙箱金流）： https://xingdeng.tw/checkout
+- 法務： https://xingdeng.tw/privacy ｜ https://xingdeng.tw/terms ｜ https://xingdeng.tw/legal ｜ https://xingdeng.tw/contracts
 
-## 關係企業（子業）
-- 拾光引・雲端辦公室： https://vip.xingdeng.tw
-- 拾光引 VIP： https://vip.xingdeng.tw
+## 誠實聲明
+- 「案例」頁目前的樣板為示範站（虛構品牌），非客戶實案；真實裝潢案例於首波客戶上線後陸續上架。
+- 行情文章新系列（裝潢一坪多少錢、木工工資、系統櫃 vs 木作櫃、統包報價單）產線中，未標「已上線」者請勿引用為既有內容。
+- 不保證 Google 排名與詢價數量；保證交付完整（原始碼＋README＋SHA-256＋30 日保固）。
 
 ## API 端點（後端，金鑰不外顯）
-- POST /api/strategist — AI 行銷戰略長對話
+- POST /api/quote — 報價單產生器（僅 T1/T2/T3 三項，鐵律價）
 - POST /api/leads — 統一收單（名單落庫）
-- POST /api/quote — 報價單_generate_
+- POST /api/ai-router — AI 接待規則引擎
 - POST /api/order — 訂單／沙箱金流
-- POST /api/diagnose — 網站趨勢掃描
 - GET /api/health — 運維健康檢查（僅回 presence）
 
 ## 語言
-- 繁中（預設/x-default）、English（?hl=en）、日本語（?hl=ja）；全站四語系 hreflang 矩陣。
+繁體中文（預設）。全站以自然語呈現，不用行話、不用英文口號。
 
-## 法律與合約（Legal・三語文本）
-- 制式合約中樞： https://xingdeng.tw/contracts （懶人包 T1-T3／客製與進駐／金鑰會員／AI 附加條款／個資揭露）
-- 免責聲明： https://xingdeng.tw/legal ・ 服務條款： https://xingdeng.tw/terms ・ 隱私： https://xingdeng.tw/privacy
+## 法律與合約
+制式合約中樞： https://xingdeng.tw/contracts （接案包銷售授權／客製開發／AI 附加條款／個資揭露）

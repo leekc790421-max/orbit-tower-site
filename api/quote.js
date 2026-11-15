@@ -1,14 +1,11 @@
-/* 初步商業報價單產生器：POST /api/quote {email, name?, company?, country?, item:'T1|T2|T3|R1|R2|R3', qty, note?}
+/* 初步商業報價單產生器：POST /api/quote {email, name?, company?, country?, item:'T1|T2|T3', qty, note?}（SNT v6.0 鐵律：僅三個固定價）
    → 回傳報價單物件（編號／明細／稅金／有效期／ROI 摘要），同步寫入 /api/leads（order_status: quoted） */
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 const CATALOG = {
-  T1: { kind: 'kit',  name: 'SNT 一鍵架網懶人包・T1 個人版 Starter',    price: 3000,  unit: '一次性', note: '作品集＋服務項目＋三語 AI 接待骨架' },
-  T2: { kind: 'kit',  name: 'SNT 一鍵架網懶人包・T2 店家版 Business',   price: 6600,  unit: '一次性', note: '商品動線＋收款框＋來客分析＋七語系' },
-  T3: { kind: 'kit',  name: 'SNT 一鍵架網懶人包・T3 企業版 Flagship',   price: 13900, unit: '一次性', note: '關於／服務／案例骨架＋AI 部門入駐位' },
-  R1: { kind: 'plan', name: '光曦星軌 訂閱・R1 數位接待員 Starter',  price: 3500,  unit: '月',     note: '24/7 AI 前台接待・單語系' },
-  R2: { kind: 'plan', name: '光曦星軌 訂閱・R2 AI 行銷團隊 Pro',     price: 9800,  unit: '月',     note: '內容引擎＋名單養化＋多語接待' },
-  R3: { kind: 'plan', name: '光曦星軌 訂閱・R3 雲端 AI 辦公室 Enterprise', price: 300000, unit: '專案', note: '3D 總部進駐＋AI 部門全編制（此為基準價，成交依需求訪談）' },
+  T1: { kind: 'kit',  name: '光曦星閣 T1 木工接案包',   price: 7800,  unit: '一次性', note: '個人木工／小工班：接案形象站＋作品案例＋LINE 詢價＋基礎 SEO' },
+  T2: { kind: 'kit',  name: '光曦星閣 T2 統包接案包',    price: 13900, unit: '一次性', note: '裝潢公司／系統櫃業者：案例庫＋行情文章＋進階詢價表單' },
+  T3: { kind: 'kit',  name: '光曦星閣 T3 企業獲客包',    price: 24800, unit: '一次性', note: '大型工程行／室內設計：T2 全部＋Orbit 接案 ERP（客戶／報價／工程／收款／評論回收）' },
 };
 
 function quoteNo() {
@@ -20,8 +17,7 @@ function quoteNo() {
 
 /* ROI 摘要（a06 三公式之精簡版，公開假設、保守標示） */
 function roiSummary(item, subtotal) {
-  const model = { T1: { leads: 4, gm: 3000, close: 0.10 }, T2: { leads: 8, gm: 6000, close: 0.10 }, T3: { leads: 12, gm: 9000, close: 0.08 },
-    R1: { leads: 6, gm: 6000, close: 0.10 }, R2: { leads: 12, gm: 9000, close: 0.10 }, R3: { leads: 25, gm: 30000, close: 0.06 } }[item.id] || { leads: 5, gm: 5000, close: 0.1 };
+  const model = { T1: { leads: 4, gm: 3000, close: 0.10 }, T2: { leads: 8, gm: 6000, close: 0.10 }, T3: { leads: 12, gm: 9000, close: 0.08 } }[item.id] || { leads: 5, gm: 5000, close: 0.1 };
   const monthCost = item.unit === '月' ? subtotal : +(subtotal / 12).toFixed(0);
   const hot = +(model.leads).toFixed(0);
   const gain = +(hot * model.close * model.gm).toFixed(0);
