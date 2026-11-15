@@ -49,8 +49,9 @@ for raw, sha, size in bigs:
         if e.code in (409, 400): continue
         sys.exit(f'blob 上傳失敗 {sha[:8]} {e.code}')
 if bigs: print('blobs ok')
-dep = api('POST', '/v13/deployments?abortOnFail=true&skipAutoDetectionConfirmation=1',
-          {'name': PROJ, 'project': PROJ, 'target': TARGET, 'files': files})
+body = {'name': PROJ, 'project': PROJ, 'files': files}
+if TARGET == 'production': body['target'] = 'production'  # preview=省略 target(API 無生產別名,唯一 URL)
+dep = api('POST', '/v13/deployments?abortOnFailure=true&skipAutoDetectionConfirmation=1'.replace('Failure','Fail'), body)
 if not dep: sys.exit('deploy failed')
 did = dep.get('uid') or dep.get('id')
 for _ in range(60):

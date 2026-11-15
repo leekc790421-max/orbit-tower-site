@@ -84,6 +84,7 @@ curl -s https://tower.xingdeng.tw/governance/backup-manifest.sha256 | sha256sum 
 | 版本 | 日期 | 變更 |
 |---|---|---|
 | v1.0 | 2026-11-15 | 依 COPILOT-EXEC-008 建立（P2-R3 DEF-002）：三版 Diff、誤變動判定（0 筆）、核准差異清單申請 |
+| v1.5 | 2026-11-15 | 自我覆核輪（GEMINI-ORDER-SELF-REVIEW）:WORKTREE_LABEL 更新 v5.4.1;P4 併行聲明數值複核——實測 146/149 零變更+3 核定調整+新增 13（限 orbit-site/**）+零移除,與聲明一致;存證重跑 |
 | v1.4 | 2026-11-15 | P4 併行聲明+工具 P4 併行模式:鏈延至 v5.3.10（六段 immutable tag 硬性斷言）;工作區段改 Tower 交付態逐檔硬驗（146 檔零變更+3 檔核定調整）+工作區新增限 orbit-site/**+零移除 |
 | v1.3 | 2026-11-15 | P2-R6（自行覆核①工具修正輪）:新增 P2-R6 列;verify_freeze.py 鏈延長——六 immutable tag v5.3.4→v5.3.9（新增 v5.3.8→v5.3.9 段硬性斷言=+3/−0/15 檔）+工作區 v5.3.10（無新增/無移除/規則零差異）;freeze-replay 存證重跑 |
 | v1.2 | 2026-11-15 | P2-R5（Manus P2-R4 複查修繕方案④）:P2-R4 列補實測值（16 檔）;新增 P2-R5 列;scripts/verify_freeze.py 升級 v2——五點鏈 v5.3.4→v5.3.8+工作區、四段 immutable tag 硬性斷言（條目/新增/移除/hash 變更/規則差異,不符即 exit 1）、工作區結構斷言;重跑輸出存證 governance/freeze-replay-2026-11-15.txt |

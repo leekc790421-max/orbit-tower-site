@@ -27,13 +27,13 @@ import contextlib
 manifest_ok = os.path.exists(os.path.join(ROOT, "governance/backup-manifest.sha256"))
 if manifest_ok: FILES.append("governance/backup-manifest.sha256")
 check("O-檔案完備（12+1 檔）", all(os.path.exists(os.path.join(ROOT, f)) for f in FILES))
-check("O-VERSION=v5.4.0", rd("VERSION").strip() == "v5.4.0")
+check("O-VERSION=v5.4.1", rd("VERSION").strip() == "v5.4.1")
 
 # 2) 版本字串一致（五頁頁尾 + version 頁 title/hero）
 pages = ["index.html", "enterprise/index.html", "quote/index.html", "rental/index.html", "version/index.html"]
-check("O-五頁頁尾版本字串 v5.4.0", all("站體 v5.4.0" in rd(p) for p in pages))
+check("O-五頁頁尾版本字串 v5.4.1", all("站體 v5.4.1" in rd(p) for p in pages))
 ver = rd("version/index.html")
-check("O-version 頁 title/工項/鐵律", all(k in ver for k in ["版本資訊 v5.4.0", "GEMINI-ORDER-P4-START", "沙盒交付", "orbit.xingdeng.tw"]))
+check("O-version 頁 title/工項/鐵律", all(k in ver for k in ["版本資訊 v5.4.1", "GEMINI-ORDER-P4-START", "沙盒交付", "orbit.xingdeng.tw"]))
 check("O-version 版本域不混用", "v5.3.10（已結案）" in ver and "治理文件" in ver and "v5.1.1" in ver and "產品包文件" in ver)
 
 # 3) 內部連結閉環（頁內相對連結與資源存在）
@@ -62,7 +62,7 @@ check("O-手機選單可捲動防呆", "max-height:calc(100dvh - 64px)" in rd("a
 
 # 5) 報價入口：欄位/驗證/摘要/沙盒明示
 q = rd("quote/index.html")
-check("O-quote 六欄位齊備", all(f'id="{x}"' in q for x in ["company", "name", "email", "phone", "plan", "need"]))
+check("O-quote 七欄位齊備（五必填二選填）", all(f'id="{x}"' in q for x in ["company", "name", "email", "phone", "plan", "need"]))
 check("O-quote 驗證邏輯", all(k in q for k in ['.test(val("email"))', "length < 20", "classList.toggle", "summary", "申請編號"]))
 check("O-quote 沙盒性質明示（不虛構遞送）", "沙盒階段說明" in q and "遞送通道" in q and "正式環境" in q and "mailto:" not in q)
 
@@ -85,7 +85,7 @@ check("O-deploy-log 鐵律+逐筆登記", all(k in dl for k in ["嚴禁直接於
 check("O-deploy.py 預設 preview（工具層防呆）", rd("scripts/deploy.py").count('sys.argv[2] if len(sys.argv) > 2 else "preview"') == 1 and 'not in ("preview", "production")' in rd("scripts/deploy.py"))
 mf = rd("governance/backup-manifest.sha256")
 rows = [l for l in mf.splitlines() if l and not l.startswith("#")]
-check("O-manifest 規則凍結檔頭", mf.startswith("# SNT Orbit 部署完整性清單") and "站體 v5.4.0" in mf and "本檔自身" in mf)
+check("O-manifest 規則凍結檔頭", mf.startswith("# SNT Orbit 部署完整性清單") and "站體 v5.4.1" in mf and "本檔自身" in mf)
 mism = []
 for line in rows:
     h, _, p = line.partition("  ")
@@ -94,7 +94,15 @@ for line in rows:
         mism.append(p.strip())
 check(f"O-manifest 全項 {len(rows)} 檔重驗", not mism, str(mism[:4]))
 
-# 10) 無佔位符
+# 10) 定價一致性（展示頁零定價數字;報價僅預算區間選項）
+import re as _re2
+_priced = [p for p in ["index.html", "enterprise/index.html", "rental/index.html", "version/index.html"] if _re2.search(r"NT\$|\d+\s*萬", rd(p))]
+check("O-定價一致性(展示四頁零定價數字)", not _priced, str(_priced))
+check("O-quote 零自動報價字串", "NT$" not in q)
+# 11) 自我覆核紀錄（GEMINI-ORDER-SELF-REVIEW）
+check("O-self-review 紀錄在案", all(k in dl for k in ["GEMINI-ORDER-SELF-REVIEW", "R2", "v5.4.1", "146/149"]))
+
+# 12) 無佔位符
 alltext = "\n".join(rd(p) for p in pages)
 check("O-無佔位符", not re.search(r"【待補|TODO|XXX|undefined|NaN", alltext))
 

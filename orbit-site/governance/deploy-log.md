@@ -6,7 +6,7 @@
 ## 0. 部署鐵律（SNT-DEPLOY-001）
 
 - 嚴禁直接於 Production 正式站施工。標準執行順序：工作區開發 ➔ 沙盒測試驗證 ➔ L1 自檢 ➔ L2 審查 ➔ 正式備份與版本編號編定（v5.4.0+）➔ 始可部署。
-- 部署工具 `scripts/deploy.py` **預設 target=preview（沙盒）**；Production 部署必須顯式傳入 `production` 參數（工具層防呆）。
+- 部署工具 `scripts/deploy.py` **預設 target=preview（沙盒）**；Production 部署必須顯式傳入 `production` 參數（工具層防呆）。**v5.4.1 起語意修正：preview=省略 target 欄位**（Vercel API 已不接受字串 'preview'；R1 時代傳入雖被接受，經查證實際標記為 production——見 §6 發現⑤）。
 - 每筆部署登記欄位：輪次／版本／Commit／Deploy ID／Timestamp(UTC)／State／環境／驗證結果。
 - 沙盒部署以 preview 唯一 URL 交付覆核，不綁定 orbit.xingdeng.tw；Production 域名於取得 Manus PASS 後始行配置。
 
@@ -14,7 +14,8 @@
 
 | 輪次 | 版本 | Commit | Deploy ID | Timestamp (UTC) | State | 環境 | 備註 |
 |---|---|---|---|---|---|---|---|
-| R1 | v5.4.0 | tag v5.4.0（交付 commit） | dpl_7iuiwPXyhoLezvhxK26MYPEPMf3o | 2026-11-15 04:46:57 | READY | preview 沙盒 | orbit-site-6ejj5fmdj-xfls.vercel.app；Deployment Protection 已關閉（供覆核取樣）；orbit.xingdeng.tw 未綁定 |
+| R1 | v5.4.0 | tag v5.4.0（交付 commit） | dpl_7iuiwPXyhoLezvhxK26MYPEPMf3o | 2026-11-15 04:46:57 | READY | 沙盒 URL 隔離（API target 實值=production，查證於 v5.4.1 輪） | orbit-site-6ejj5fmdj-xfls.vercel.app；Deployment Protection 已關閉（供覆核取樣）；orbit.xingdeng.tw 未綁定、專案無任何域名→僅唯一 URL 可達，無公開曝光；本列實值經 v5.4.1 自我覆核輪補全（R1 沙盒快照=v5.4.0 交付時點內容） |
+| R2 | v5.4.1 | tag v5.4.1（交付 commit） | 見 Release v5.4.1 部署登記 | — | READY（Release v5.4.1） | preview 沙盒 | 自我覆核修正輪（GEMINI-ORDER-SELF-REVIEW）：筆誤修正＋欄位計數修正＋版本字串同步；部署後 live 複驗見 Release v5.4.1 |
 
 ## 2. P4 開工紀錄
 
@@ -27,8 +28,8 @@
 
 | 工項 | 落實 |
 |---|---|
-| ① 企業數位總部展示架構 | index.html 主視覺＋定位＋四大入口與對接流程；enterprise/index.html 三級方案（標準/進階/旗艦）＋模組說明＋FAQ；品牌命名光曦星軌、SNT 全站互聯（Tower 互鏈） |
-| ② 人工評估與報價入口 | quote/index.html 標準化報價入口：結構化欄位（公司/聯絡人/Email/方案興趣/預算區間/需求概述）＋前端驗證＋申請摘要生成；人工評估三步說明。**遞送通道（窗口信箱/API）＝正式環境配置項，沙盒以摘要確認呈現入口邏輯（頁內明示，不虛構信箱）** |
+| ① 企業數位總部展示架構 | index.html 主視覺＋定位＋三大入口（企業方案/報價/租賃）與對接流程；enterprise/index.html 三級方案（標準/進階/旗艦）＋模組說明＋FAQ；品牌命名光曦星軌、SNT 全站互聯（Tower 互鏈） |
+| ② 人工評估與報價入口 | quote/index.html 標準化報價入口：七欄位（公司/聯絡人/Email/電話(選填)/方案興趣/預算區間(選填)/需求概述;五必填二選填）＋前端驗證＋申請摘要生成；人工評估三步說明。**遞送通道（窗口信箱/API）＝正式環境配置項，沙盒以摘要確認呈現入口邏輯（頁內明示，不虛構信箱）** |
 | ③ 租賃方案模組 | rental/index.html 三檔方案（入門/標準/旗艦）＋計價邏輯（平台檔位×上稿量×維護等級）＋商務條款要點（租期/付款/終止移交/資安個資）；定價數字一律經人工評估報價提出（頁內明示） |
 | 版本與治理 | VERSION=v5.4.0；version/index.html（版本域/工項狀態/部署登記）；governance/（本檔＋manifest）；scripts/（deploy.py 預設 preview、gen_manifest.py、l1_check.py） |
 
@@ -50,3 +51,25 @@
 
 - 沙盒輪：回滾＝以上一 commit 重新部署 preview；沙盒 URL 為唯一網址不影響任何正式域名。
 - Production（未來）：一階回滾＝前一 Release tag 重部署（production target）；原始碼 `git checkout <tag>`。
+
+## 6. 自我覆核紀錄（GEMINI-ORDER-SELF-REVIEW，2026-11-15）
+
+依強制自我覆核規範，v5.4.0 沙盒交付後執行全面內部自檢，逐項核實：
+
+| # | 查核項 | 方法 | 實測結果 |
+|---|---|---|---|
+| 1 | 路由可用性 | live curl：沙盒 9 端點＋Tower 正式站 5 端點 | R1 沙盒 9/9 全 200；Tower /、/VERSION、/compliance、/sha256、registry 全 200 且=v5.3.10（零觸碰證明）；tower /version 404 為既有設計（/version 別名已移除，版本揭示走 /VERSION，Tower L1 有對應斷言） |
+| 2 | 定價一致性 | regex 掃描（NT$/萬）＋Tower 價格 vs v5.3.10 tag | Orbit 展示四頁定價字串=零；quote 僅預算區間選項（萬×6=選項文案）、NT$=0；Tower 三價格字串 vs v5.3.10 tag 零變更 |
+| 3 | verify_tags.sh 硬驗 | bash scripts/verify_tags.sh | PINNED 硬驗 7 個全 OK（v5.3.3…v5.3.9）＋v5.3.10 CURRENT 軟驗 OK；Orbit 線 tag v5.4.x 以 immutable GitHub Release 釘死，Tower tag-registry 凍結範圍不混入 orbit tag（兩線分冊） |
+| 4 | deployment-registry.md SSOT | Tower L1 全項＋registry 與 compliance 對讀 | Tower L1 全部通過；v5.3.9/v5.3.10 鏈登記一致；Orbit 部署登記於本檔（R1/R2），兩站日誌分冊、不互斥不矛盾 |
+| 5 | freeze-validation.md 實測數值 | verify_freeze.py 重放 vs 聲明文字 | 實測 146/149 零變更＋3 檔核定調整＋新增 13（限 orbit-site/**）＋零移除＝聲明數值完全一致；六段 immutable tag 硬性斷言全過 |
+
+自檢發現並修正（本版 v5.4.1）：
+- ①筆誤：本檔 §3「四大入口」與首頁實際「三大入口」不符→已修正。
+- ②欄位計數：報價入口實為七欄位（五必填二選填），原記「六欄位/六結構化欄位」→已修正（本檔 §3 與交付包同步更正）。
+- ③登記時點差異：R1 列實值原於部署後補記，致 R1 沙盒快照內無該實值→本版補全並於 R1 列明示快照時點；R2 列採「見 Release v5.4.1」現行筆機制，消除自參照矛盾。
+- ④版本字串同步 v5.4.0→v5.4.1（五頁＋VERSION＋gen_manifest 檔頭＋L1 斷言＋Tower L1 R-P4）。
+- ⑤部署工具語意：Vercel API 已不接受 `target:'preview'`（400 bad_request）；**查證 R1 部署 target 實值=production**——因 orbit-site 專案未綁定任何域名（orbit.xingdeng.tw 未配置），僅唯一 URL 可達，無公開曝光，沙盒隔離實效不變，但登記用語已如實更正（R1 列）；deploy.py 修正為 preview=省略 target 欄位（真 preview 語意，無生產標記），R2 起適用並於部署後以 API 複驗 target 實值。
+- v5.4.0 Release 內文之同源筆誤（六欄位/四入口表述）依歷史文件原則不改寫，以本版為準。
+
+自檢結論：五項查核全數通過、發現項全數修正後，內部自檢 100% 符合規範、無自參照語病與數據矛盾，方提報 Manus 獨立覆核。
