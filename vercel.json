@@ -77,7 +77,7 @@
   { "source": "/products/:path*", "destination": "/builder/packages/:path*", "permanent": false },
   { "source": "/setup", "destination": "/builder/setup", "permanent": false },
   { "source": "/version", "destination": "/builder/version", "permanent": false },
-  { "source": "/warranty", "destination": "/builder/warranty", "permanent": false }
+  { "source": "/warranty", "destination": "/builder/warranty", "permanent": false },{"source":"/sha256","destination":"/builder/sha256","permanent":false}
  ],
  "crons": [
   {

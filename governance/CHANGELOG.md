@@ -7,6 +7,53 @@
 
 ---
 
+## v5.3.5 defect-fix · 2026-11-15 · P2-R1 Defect Fix (COPILOT-EXEC-006)
+
+### 變更摘要
+
+創辦人核定方案 A(不採用方案 B),依《SNT_P2-R1_缺陷調查報告》修復 DEF-002/003/004 與 C-RISK-001;DEF-001 手機導覽經調查確認行為已修復,本版不再變更,僅保留 4 viewport(320/360/390/428px)回歸證據提交 MANUS 複驗。本版不得推進 P3。
+
+### 修復內容
+
+| # | 缺陷 | 修復 |
+|---|---|---|
+| DEF-002 | SHA-256 Manifest 一致性 | governance/backup-manifest.sha256 全量重建:移除未部署項目(A39C0B14F006967E8754E39805A5B040.txt 已下線、package.json/package-lock.json 為 repo 檔);檔頭註明涵蓋規則、排除規則與 api/* 檢核規則(含工作區雜湊附錄);VERSION 納入驗證;部署後全量重驗(sha256sum -c) |
+| DEF-003 | Deploy Log 不一致 | governance/deploy-log.md 補列 v5.3.3 後續部署與 v5.3.4 全鏈共 5 筆漏列(含 MANUS 覆核對象 ef665d0/dpl_CrjfgSM);日期依 Vercel API 實測校正(v5.0.0=11-11、v5.3.3=11-13、v5.3.4 全鏈=11-14);部署 URL 分級標示(vercel.app 受 SSO 保護,公開證據改以 Production 網域+/VERSION);L1 與 MANUS 結論差異來源註記(測試對象版本不同) |
+| DEF-004 | Version Strategy 不一致 | 版本域定義:治理文件 v5.1.1 / 站體 v5.3.x / 產品包 v5.2.0,不得混用;compliance 頁、builder 六頁頁尾、README 版本說明、Setup 版本說明同步至對應版本域;tag v5.3.4(ca81640)保留存查不移動,新施工版本以新建 tag v5.3.5 為不可變參照,使 tag=main HEAD=Production=manifest 四者一致 |
+| C-RISK-001 | /sha256 頂層別名 404 | vercel.json redirects 新增 /sha256 → /builder/sha256 |
+
+### 修改檔案
+
+| 路徑 | 變更 |
+|---|---|
+| VERSION | v5.3.4 → v5.3.5 |
+| vercel.json | redirects 新增 /sha256 別名 |
+| builder/index.html | badge/Version 卡/頁尾 → 站體 v5.3.5 |
+| builder/demo/index.html | 頁尾 → v5.3.5 |
+| builder/readme/index.html | 版本說明與頁尾改為「產品包文件 v5.2.0 + 站體 v5.3.5」雙域標示 |
+| builder/setup/index.html | 頁尾 → v5.3.5;zip 檔名處加註產品包版本域 |
+| builder/sha256/index.html | 頁尾 → v5.3.5;產品包版本語境標註 |
+| builder/warranty/index.html | 頁尾 → v5.3.5;保固說明版本域標註 |
+| builder/version/index.html | 全頁 v5.3.5;新增「版本域定義」區塊;歷史表補 v5.3.5 列;公開核驗證據改分級標示 |
+| compliance/index.html | 現行版本/tag/備份層/回滾說明同步 v5.3.5;部署紀錄表補 v5.3.4 全鏈與 v5.3.5 |
+| governance/deploy-log.md | DEF-003 全項(見上) |
+| governance/CHANGELOG.md | 本條目 |
+| governance/backup-manifest.sha256 | DEF-002 全項(見上) |
+
+### 版本域定義(DEF-004)
+
+- 治理文件版本:v5.1.1(《SNT_v5.1.1_創辦人核定版.pdf》,最高依據)
+- 站體工程版本:v5.3.5(/VERSION、/builder/version、頁尾、git tag、manifest)
+- 產品包版本:v5.2.0(README 文件、builder-t{1,2,3}-v5.2.0.zip、保固卡)
+- 三域各自編號、標示時必須帶域名,不得混用。
+
+### 授權依據
+
+- COPILOT-EXEC-006(2026-11-15,創辦人核定):採用方案 A、不採用方案 B;版本 v5.3.5;核准施工範圍 DEF-002/003/004 + C-RISK-001;DEF-001 視為已修復僅存證;tag 政策停止移動 v5.3.4。
+- 完成後提交 P2-R1 Defect Report 與 Completion Package 交 MANUS 複驗;未取得 MANUS PASS 不得提交 P2 Completion Report,不得推進 P3。
+
+---
+
 ## v5.3.4 defect-fix · 2026-11-15 · MANus FAIL DEF-001~004 修復 (COPILOT-EXEC-005)
 
 ### 變更摘要
