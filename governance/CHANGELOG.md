@@ -7,6 +7,40 @@
 
 ---
 
+## v5.3.8 defect-fix · 2026-11-15 · P2-R4 Defect Fix (MANUS-REVIEW-009 修復)
+
+### 前版補記（v5.3.7 R2 修正輪）
+
+v5.3.7 交付含兩輪部署:R1(f154cff,內容)與 R2(cd1e4f0,驗證腳本 CURRENT 列解析修補——兩欄 registry 列曾被靜默跳過之缺陷,並 tag-registry.txt 補 '-' 佔位)。此補記為 MANUS-REVIEW-009 修復項④。
+
+### 變更摘要
+
+MANUS-REVIEW-009 對 P2-R3(v5.3.7)判定 FAIL。施工單位無 Manus 平台日誌存取權,依獨立重放自查認定四項治理驗證檔一致性缺失,全部修復如下;範圍仍限治理/驗證檔,站體程式零變更,完成後提交 MANUS 複查。
+
+| # | 缺失 | 修復 |
+|---|---|---|
+| ① | freeze-validation.md §1 重算檔數筆誤(14),與 verify_freeze.py 實測(13)不一致 | 更正為 13;§2.3 新增/重算清單改附實測清單;新增 P2-R4 列與 v1.1 變更紀錄 |
+| ② | deployment-registry.md/deploy-log 之 v5.3.7 列「(本 commit)＝tag v5.3.7」自參照語病(檔凍結於 R1,tag 實指 R2),且 SSOT 未實登記 v5.3.7 鏈 Deploy ID;總計 164 未隨部署更新 | v5.3.7 鏈改 R1(dpl_CFKXtbwd…/f154cff/02:43:36)+R2(dpl_HDF7wwGJ…/cd1e4f0/02:45:51)逐筆實登記;總計 164→166;「現行筆登記機制」正式化(歷史輪逐筆實登記,僅現行施工版最後一筆見同名 Release) |
+| ③ | verify_tags.sh 對現行版僅軟驗(無 EXPECT 變數時輸出「?」),獨立執行得不到硬驗判定 | v3:驗證順序=環境變數→同名 GitHub Release body 釘死值(自動,無需權限)→皆無才輸出現值;tag-registry.txt v5.3.7 列改 PINNED(cd1e4f05…),PINNED 增至 5 個 |
+| ④ | CHANGELOG 未記錄 v5.3.7 R2 修正輪 | 本條目前述「前版補記」 |
+
+### 新增/修改檔案
+
+| 路徑 | 性質 |
+|---|---|
+| governance/freeze-validation.md、governance/deployment-registry.md、governance/deploy-log.md | 更新(①②) |
+| scripts/verify_tags.sh | v3 更新(③) |
+| governance/tag-registry.txt | v5.3.7 改 PINNED+v5.3.8 CURRENT(③) |
+| governance/CHANGELOG.md | 更新(④) |
+| VERSION、builder 六頁、builder/version、compliance | 版本字串同步 v5.3.7→v5.3.8(機械式) |
+| governance/backup-manifest.sha256 | 規則凍結,同步重算 |
+
+### 授權依據
+
+- 停工指示(MANUS-REVIEW-RESULT):「針對未達標之項目進行深度排查與程式碼修正,完成後提升版本號、補齊合規證據,並再次提交 Manus 進行獨立複查」;P4 維持全面暫停。
+
+---
+
 ## v5.3.7 defect-fix · 2026-11-15 · P2-R3 Defect Fix (COPILOT-EXEC-008)
 
 ### 變更摘要

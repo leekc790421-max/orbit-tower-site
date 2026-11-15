@@ -1,10 +1,11 @@
 # SNT Expected Tag Registry（DEF-004, COPILOT-EXEC-008）
 # 格式:<tag> <完整 40-hex commit sha> <狀態>
-# 狀態: PINNED=已凍結釘死,任何偏離即 FAIL;CURRENT=現行施工版(交付時於同名 GitHub Release 補記釘死值,次版起納入 PINNED)
+# 狀態: PINNED=已凍結釘死,任何偏離即 FAIL;CURRENT=現行施工版(交付時於同名 GitHub Release 釘死,v3 腳本自動讀取硬驗,次版起納入 PINNED)
 # 本檔為 tag 驗證之唯一期望值來源;scripts/verify_tags.sh 讀取本檔執行「存在/不可變/commit 正確」三驗。
 # 變更本檔之 PINNED 列 = 變更不可變期望值,須 L3 書面核准並於 deploy-log 記錄。
 v5.3.3 cab67f862f83ac31dc5c19dbebe91ff9b8bcf611 PINNED
 v5.3.4 ca816404691053b982a0563e80b8560ec0842053 PINNED
 v5.3.5 2265813ebaf26ebfbc82be5a9fafbc93cac912f9 PINNED
 v5.3.6 a6772abfded8fafd01a0cc515b4e3d4638999996 PINNED
-v5.3.7 - CURRENT
+v5.3.7 cd1e4f05d0a0e1a8d07d7819b0372a69c3f88034 PINNED
+v5.3.8 - CURRENT

@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>版本資訊 v5.3.7 | 光曦星閣 Builder</title>
-<meta name="description" content="光曦星閣 Builder 版本資訊:v5.3.7 P2-R3 Defect Fix。版本域定義、版本歷史、變更紀錄、公開核驗證據(git tag / SHA-256 manifest / tag 保護 / 部署對帳)。">
+<title>版本資訊 v5.3.8 | 光曦星閣 Builder</title>
+<meta name="description" content="光曦星閣 Builder 版本資訊:v5.3.8 P2-R4 Defect Fix。版本域定義、版本歷史、變更紀錄、公開核驗證據(git tag / SHA-256 manifest / tag 保護 / 部署對帳)。">
 <link rel="canonical" href="https://tower.xingdeng.tw/builder/version">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="光曦星閣">
-<meta property="og:title" content="版本資訊 v5.3.7 | 光曦星閣 Builder">
+<meta property="og:title" content="版本資訊 v5.3.8 | 光曦星閣 Builder">
 <meta property="og:description" content="Builder 版本歷史、變更紀錄與公開核驗證據。">
 <meta property="og:url" content="https://tower.xingdeng.tw/builder/version">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"光曦星閣 Builder","version":"v5.3.7","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://tower.xingdeng.tw/builder"}
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"光曦星閣 Builder","version":"v5.3.8","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://tower.xingdeng.tw/builder"}
 </script>
 <link rel="stylesheet" href="/assets/site.css?v=5.3.6">
 </head>
@@ -34,27 +34,27 @@
 <header style="margin-bottom:36px">
 <span style="display:inline-block;background:#E0F2FE;color:#0369A1;border-radius:99px;padding:6px 16px;font-size:12.5px;font-weight:700">BUILDER · VERSION</span>
 <h1 style="font-size:clamp(26px,4.5vw,36px);font-weight:900;margin:18px 0 10px">版本資訊</h1>
-<p style="font-size:14px;opacity:.7">v5.3.7 · P2-R3 Defect Fix · 2026-11-15</p>
+<p style="font-size:14px;opacity:.7">v5.3.8 · P2-R4 Defect Fix · 2026-11-15</p>
 </header>
 <section style="background:linear-gradient(135deg,#E0F2FE,#F0F9FF);border:1px solid #BAE6FD;border-radius:14px;padding:24px 26px;margin-bottom:22px">
 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
 <div>
 <p style="font-size:12px;opacity:.6;letter-spacing:.1em;font-weight:700">CURRENT VERSION</p>
-<p style="font-size:32px;font-weight:900;color:#0369A1;letter-spacing:-.02em;margin-top:4px">v5.3.7</p>
+<p style="font-size:32px;font-weight:900;color:#0369A1;letter-spacing:-.02em;margin-top:4px">v5.3.8</p>
 </div>
 <div style="text-align:right">
 <p style="font-size:13px;opacity:.7">發布日期</p>
 <p style="font-size:15px;font-weight:700">2026-11-15</p>
 </div>
 </div>
-<p style="font-size:14px;opacity:.8;margin-top:14px;line-height:1.6"><b>P2-R3 Defect Fix</b> — 依 COPILOT-EXEC-008(創辦人核定;MANUS-REVIEW-008 結果 FAIL,三項皆為治理驗證強化)修復:DEF-002 建立 governance/freeze-validation.md——P2-R1/R2/R3 三版 Coverage/Exclusion/Rules Diff 逐版列表、誤變動判定與重現指令/scripts/verify_freeze.py;DEF-003 建立 governance/deployment-registry.md 部署登記單一權威來源(SSOT)——治理期 17 筆逐筆登記(Tag/Commit/Deploy ID/Release/Timestamp/Production State)+前治理期 147 筆彙總與異常逐筆揭露+scripts/vercel_reconcile.py 可重放對帳,並補建 Release v5.3.3/v5.3.4;DEF-004 建立 governance/tag-registry.txt Expected Tag Registry(v5.3.3~v5.3.6 全 40-hex 釘死)與 scripts/verify_tags.sh v2——驗證 tag 存在/不可變/對應 commit 正確三驗。</p>
+<p style="font-size:14px;opacity:.8;margin-top:14px;line-height:1.6"><b>P2-R4 Defect Fix</b> — 依 MANUS-REVIEW-009 FAIL 修復指示:治理驗證檔一致性四缺失修復——①freeze-validation.md §1 重算檔數筆誤更正(14→13,與 verify_freeze.py 實測一致);②deployment-registry.md/deploy-log 之 v5.3.7 鏈改 R1/R2 逐筆實登記(Deploy ID/Timestamp/Commit 全值),消除「本 commit」自參照語病,總計 164→166,「現行筆登記機制」正式化;③verify_tags.sh v3——現行版驗證自動向同名 GitHub Release 取釘死值硬驗(無需環境變數,獨立執行即得 OK/FAIL),tag-registry.txt 之 v5.3.7 列改 PINNED(cd1e4f05…,PINNED 增至 5 個);④CHANGELOG 補記 R2 修正輪。站體程式零變更。(創辦人核定;MANUS-REVIEW-008 結果 FAIL,三項皆為治理驗證強化)修復:DEF-002 建立 governance/freeze-validation.md——P2-R1/R2/R3 三版 Coverage/Exclusion/Rules Diff 逐版列表、誤變動判定與重現指令/scripts/verify_freeze.py;DEF-003 建立 governance/deployment-registry.md 部署登記單一權威來源(SSOT)——治理期 17 筆逐筆登記(Tag/Commit/Deploy ID/Release/Timestamp/Production State)+前治理期 147 筆彙總與異常逐筆揭露+scripts/vercel_reconcile.py 可重放對帳,並補建 Release v5.3.3/v5.3.4;DEF-004 建立 governance/tag-registry.txt Expected Tag Registry(v5.3.3~v5.3.6 全 40-hex 釘死)與 scripts/verify_tags.sh v2——驗證 tag 存在/不可變/對應 commit 正確三驗。</p>
 </section>
 
 <section style="background:#fff;border:1px solid #00000010;border-radius:14px;padding:24px 26px;margin-bottom:22px">
 <h2 style="font-size:17px;font-weight:800;margin-bottom:14px">版本歷史</h2>
 <table style="width:100%;border-collapse:collapse;font-size:14px">
 <tr style="background:#F8FAFC"><th style="text-align:left;padding:10px 12px;border-bottom:1px solid #00000010">版本</th><th style="text-align:left;padding:10px 12px;border-bottom:1px solid #00000010">日期</th><th style="text-align:left;padding:10px 12px;border-bottom:1px solid #00000010">說明</th></tr>
-<tr><td style="padding:10px 12px;border-bottom:1px solid #00000008;font-weight:700;color:#0369A1">v5.3.7</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-15</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">P2-R3 Defect Fix:Freeze 三版差異稽核、部署對帳 SSOT、Expected Tag Registry(COPILOT-EXEC-008)</td></tr><tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.6</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-15</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">P2-R2 Defect Fix:行動選單實點擊可達性、部署鏈完整登記、tag 保護政策(COPILOT-EXEC-007)</td></tr><tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.5</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-15</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">P2-R1 Defect Fix:manifest 重建+排除規則、deploy-log 補列校正、版本域定義、/sha256 別名(COPILOT-EXEC-006)</td></tr><tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.4</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-14</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">P2 Nav Closure:導覽列七入口閉環</td></tr><tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.3</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-12</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">Manus FAIL Fix R2:404 路由別名 + 版本同步 + 合規證據公開核驗</td></tr>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #00000008;font-weight:700;color:#0369A1">v5.3.8</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-15</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">P2-R4 Defect Fix:治理驗證檔一致性四缺失修復(MANUS-REVIEW-009)</td></tr><tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.7</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-15</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">P2-R3 Defect Fix:Freeze 三版差異稽核、部署對帳 SSOT、Expected Tag Registry(COPILOT-EXEC-008)</td></tr><tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.6</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-15</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">P2-R2 Defect Fix:行動選單實點擊可達性、部署鏈完整登記、tag 保護政策(COPILOT-EXEC-007)</td></tr><tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.5</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-15</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">P2-R1 Defect Fix:manifest 重建+排除規則、deploy-log 補列校正、版本域定義、/sha256 別名(COPILOT-EXEC-006)</td></tr><tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.4</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-14</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">P2 Nav Closure:導覽列七入口閉環</td></tr><tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.3</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-12</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">Manus FAIL Fix R2:404 路由別名 + 版本同步 + 合規證據公開核驗</td></tr>
 <tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.2</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-11</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">Manus FAIL Fix R1:/kits T2 價格 + /VERSION + /compliance</td></tr>
 <tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.1</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-11</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">Verification Recovery:/verification 驗收包 + 11 截圖</td></tr>
 <tr><td style="padding:10px 12px;border-bottom:1px solid #00000008">v5.3.0</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">2026-11-11</td><td style="padding:10px 12px;border-bottom:1px solid #00000008">Tower Productization:Products T1/T2/T3 產品頁</td></tr>
@@ -66,7 +66,12 @@
 </section>
 
 <section style="background:#fff;border:1px solid #00000010;border-radius:14px;padding:24px 26px;margin-bottom:22px">
-<h2 style="font-size:17px;font-weight:800;margin-bottom:14px">v5.3.7 變更內容（本版）</h2>
+<h2 style="font-size:17px;font-weight:800;margin-bottom:14px">v5.3.8 變更內容（本版）</h2>
+<ul style="font-size:14px;line-height:2;opacity:.85;padding-left:24px"><li><b>①</b>freeze-validation.md §1 筆誤更正+P2-R4 列;</li><li><b>②</b>deployment-registry.md v5.3.7 鏈 R1/R2 實登記+總計 166+現行筆登記機制;</li><li><b>③</b>verify_tags.sh v3(Release 自取釘死值硬驗)+tag-registry.txt v5.3.7 改 PINNED;</li><li><b>④</b>CHANGELOG 補記 R2 修正輪。</li></ul>
+</section>
+
+<section style="background:#fff;border:1px solid #00000010;border-radius:14px;padding:24px 26px;margin-bottom:22px">
+<h2 style="font-size:17px;font-weight:800;margin-bottom:14px">v5.3.7 變更內容</h2>
 <ul style="font-size:14px;line-height:2;opacity:.85;padding-left:24px"><li><b>DEF-002</b>:governance/freeze-validation.md(三版 Freeze Coverage/Exclusion/Rules Diff+誤變動判定+重現指令)+scripts/verify_freeze.py(自動重放)。</li><li><b>DEF-003</b>:governance/deployment-registry.md(部署登記 SSOT:治理期 17 筆逐筆+前治理期 147 筆彙總/異常逐筆)+scripts/vercel_reconcile.py(唯讀對帳重放)+補建 Release v5.3.3/v5.3.4。</li><li><b>DEF-004</b>:governance/tag-registry.txt(v5.3.3~v5.3.6 全 40-hex PINNED)+scripts/verify_tags.sh v2(存在/不可變/commit 三驗)。</li></ul>
 </section>
 
@@ -85,7 +90,7 @@
 <table style="width:100%;border-collapse:collapse;font-size:13.5px">
 <tr style="background:#F8FAFC"><th style="text-align:left;padding:8px 10px;border-bottom:1px solid #00000010">版本域</th><th style="text-align:left;padding:8px 10px;border-bottom:1px solid #00000010">現值</th><th style="text-align:left;padding:8px 10px;border-bottom:1px solid #00000010">適用範圍</th></tr>
 <tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">治理文件版本</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-weight:700">v5.1.1</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">SNT_v5.1.1_創辦人核定版.pdf(治理鏈/定價/部署規範之最高依據)</td></tr>
-<tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">站體工程版本</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-weight:700">v5.3.7</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">/VERSION、/builder/version、頁尾、git tag、manifest</td></tr>
+<tr><td style="padding:8px 10px;border-bottom:1px solid #00000008">站體工程版本</td><td style="padding:8px 10px;border-bottom:1px solid #00000008;font-weight:700">v5.3.8</td><td style="padding:8px 10px;border-bottom:1px solid #00000008">/VERSION、/builder/version、頁尾、git tag、manifest</td></tr>
 <tr><td style="padding:8px 10px">產品包版本</td><td style="padding:8px 10px;font-weight:700">v5.2.0</td><td style="padding:8px 10px">README 文件、Setup 內 zip 檔名(builder-t{1,2,3}-v5.2.0.zip)、保固卡</td></tr>
 </table>
 </section>
@@ -105,7 +110,7 @@
 <tr><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7">Tag 保護</td><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7"><a href="/governance/tag-protection.md" style="color:#166534">/governance/tag-protection.md</a>(政策)+<a href="/governance/tag-registry.txt" style="color:#166534">/governance/tag-registry.txt</a>(期望值,v5.3.3~v5.3.6 PINNED)+scripts/verify_tags.sh(三驗)</td></tr><tr><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7">部署對帳</td><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7"><a href="/governance/deployment-registry.md" style="color:#166534">/governance/deployment-registry.md</a>(SSOT:治理期 17 筆逐筆+前治理期 147 筆彙總)</td></tr><tr><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7">SHA-256 完整性</td><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7"><a href="/governance/backup-manifest.sha256" style="color:#166534">/governance/backup-manifest.sha256</a></td></tr>
 <tr><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7">合規總覽</td><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7"><a href="/compliance" style="color:#166534">/compliance</a></td></tr>
 <tr><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7">驗收包</td><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7"><a href="/verification" style="color:#166534">/verification</a>(11 頁路由 + 截圖)</td></tr>
-<tr><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7">git tag(不可變)</td><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7"><a href="https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.3.7" target="_blank" rel="noopener" style="color:#166534">github.com/.../releases/tag/v5.3.7</a>（不可變;v5.3.3~v5.3.6 全數 PINNED 於 <a href="/governance/tag-registry.txt" style="color:#166534">tag-registry.txt</a>;<a href="/governance/tag-protection.md" style="color:#166534">tag 保護政策</a>）</td></tr>
+<tr><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7">git tag(不可變)</td><td style="padding:8px 10px;border-bottom:1px solid #DCFCE7"><a href="https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.3.8" target="_blank" rel="noopener" style="color:#166534">github.com/.../releases/tag/v5.3.8</a>（不可變;v5.3.3~v5.3.7 全數 PINNED 於 <a href="/governance/tag-registry.txt" style="color:#166534">tag-registry.txt</a>;<a href="/governance/tag-protection.md" style="color:#166534">tag 保護政策</a>）</td></tr>
 <tr><td style="padding:8px 10px">部署實證</td><td style="padding:8px 10px">Production 網域 <a href="https://tower.xingdeng.tw" style="color:#166534">https://tower.xingdeng.tw</a>(以 /VERSION 為準)。部署 URL 受 SSO 保護(需 Vercel 權限),Deploy ID 詳見 deploy-log。</td></tr>
 </table>
 <p style="font-size:12px;opacity:.7;margin-top:12px;color:#166534">證據均為公開 URL(部署 URL 除外:受 SSO 保護,需 Vercel 權限)。Manus 具 Vercel Dashboard 存取權,可查核 Deploy ID 與建置紀錄。</p>
@@ -113,7 +118,7 @@
 
 </main>
 <footer style="border-top:1px solid #00000010;padding:24px;text-align:center;font-size:12.5px;opacity:.6">
-<p>© 2026 光曦星閣 SNT · Builder v5.3.7 · SNT-DEPLOY-001</p>
+<p>© 2026 光曦星閣 SNT · Builder v5.3.8 · SNT-DEPLOY-001</p>
 </footer>
 <script>(function(){var b=document.querySelector('.nav__burger'),l=document.querySelector('.nav__links');if(b&&l){b.addEventListener('click',function(){var o=l.classList.toggle('open');b.setAttribute('aria-expanded',String(o))});l.addEventListener('click',function(e){if(e.target.closest('a'))l.classList.remove('open')})}})();</script>
 </body>

@@ -13,7 +13,8 @@
 |---|---|---|---|---|---|---|
 | P2-R1（v5.3.4→v5.3.5） | 108→139 條（+48/−17） | **有**：新增排除 api/*（12 檔,不對外服務,404 實測驗證）、package.json/package-lock.json、sitemap.xml（建置正規化）、vercel.json（建置正規化,語義一致驗證）、A39C0B14…txt（dotfile 類）；.github/* 與 dotfile 於檔頭規則明示 | **有**：檔頭規則整體重寫定稿（涵蓋規則改為「部署輸出之全部檔案」+排除清單+api/* 檢核附錄 12 條+VERSION 納入聲明） | COPILOT-EXEC-006（P2-R1 核准 manifest 重建）；**MANUS REVIEW P2-R1 已判 DEF-002 PASS** | 否 | 否（已覆核通過之基線） |
 | P2-R2（v5.3.5→v5.3.6） | 139→141 條（+2,見 §2.2） | **零** | **零**（唯一差異=計數行「共 139 檔」→「共 141 檔」）；55 檔 hash 重算（核定修改：site.css 修復+43 檔 cache-bust 單行+版本字串/治理檔更新） | COPILOT-EXEC-007（DEF-002 凍結+重算許可） | 否 | 否 |
-| P2-R3（v5.3.6→v5.3.7,本版） | 141→146 條（+5 驗證檔,見 §2.3）；14 檔 hash 重算 | **零** | **零**（唯一差異=計數行→「共 146 檔」） | COPILOT-EXEC-008（允許修改：治理文件/Release Registry/Deploy Log/Tag Validation/Freeze Rules/相關驗證檔案） | 否 | 否 |
+| P2-R3（v5.3.6→v5.3.7） | 141→146 條（+5 驗證檔,見 §2.3）；13 檔 hash 重算（與 scripts/verify_freeze.py 實測一致） | **零** | **零**（唯一差異=計數行→「共 146 檔」） | COPILOT-EXEC-008（允許修改：治理文件/Release Registry/Deploy Log/Tag Validation/Freeze Rules/相關驗證檔案） | 否 | 否 |
+| P2-R4（v5.3.7→v5.3.8,本版） | 146→146 條（+0/−0,無新檔）；重算＝本版核定修改之治理/驗證檔+版本字串 | **零** | **零**（唯一差異=計數行不變→「共 146 檔」不變） | MANUS-REVIEW-009 FAIL 之缺失修復（治理驗證檔範圍） | 否 | 否 |
 
 **本報告即「核准差異清單」之申請件**：上表所列全部差異均為上述三張核定令授權範圍內之變更,無任何未授權條目變動（誤變動=0）。請 MANUS 核准本清單;核准後,v5.3.7 manifest 即為新凍結基線,後續版本對其遵循 ZERO-RULES-DIFF。
 
@@ -32,8 +33,8 @@
 
 ### 2.3　P2-R3：v5.3.6（141 條）→ v5.3.7（146 條,本版）
 
-- **+5**：`governance/freeze-validation.md`（本檔）、`governance/deployment-registry.md`（DEF-003 SSOT）、`governance/tag-registry.txt`（DEF-004 期望值登記）、`scripts/verify_tags.sh` 為 v2 重寫（hash 變更列）——新增檔為 `scripts/vercel_reconcile.py`（DEF-003）、`scripts/verify_freeze.py`（DEF-002）。全部屬 COPILOT-EXEC-008 允許修改清單。
-- **hash 變更 13**：VERSION+builder 六頁+builder/version+compliance（版本字串 v5.3.6→v5.3.7 機械同步）、deploy-log、CHANGELOG、tag-protection.md、verify_tags.sh（v2）。
+- **+5 新檔**（依 scripts/verify_freeze.py 實測清單）：`governance/freeze-validation.md`（本檔）、`governance/deployment-registry.md`（DEF-003 SSOT）、`governance/tag-registry.txt`（DEF-004 期望值登記）、`scripts/vercel_reconcile.py`（DEF-003）、`scripts/verify_freeze.py`（DEF-002）。全部屬 COPILOT-EXEC-008 允許修改清單。
+- **hash 變更 13**（實測清單）：VERSION+builder 六頁+builder/version+compliance（版本字串 v5.3.6→v5.3.7 機械同步）、deploy-log、CHANGELOG、tag-protection.md、verify_tags.sh（v2 重寫,屬重算列非新檔）。
 
 ## 3. Exclusion Diff 詳列
 
@@ -79,3 +80,4 @@ curl -s https://tower.xingdeng.tw/governance/backup-manifest.sha256 | sha256sum 
 | 版本 | 日期 | 變更 |
 |---|---|---|
 | v1.0 | 2026-11-15 | 依 COPILOT-EXEC-008 建立（P2-R3 DEF-002）：三版 Diff、誤變動判定（0 筆）、核准差異清單申請 |
+| v1.1 | 2026-11-15 | P2-R4（MANUS-REVIEW-009 FAIL 修復）：§1「14 檔」筆誤更正為 13（與 verify_freeze.py 實測一致）、§2.3 新增/重算清單改附實測清單、新增 P2-R4 列 |

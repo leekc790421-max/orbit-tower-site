@@ -3,7 +3,7 @@
 > 建立：P2-R3 Defect Fix（COPILOT-EXEC-008 / MANUS-REVIEW-008 判定 DEF-003：Release Registry 與 Vercel Deploy History 不一致）
 > 狀態：v1.0（2026-11-15）
 > 權威序：**本檔 = SSOT**；同名 GitHub Release = 公開唯讀鏡像（無 Vercel 權限者之驗證入口）；deploy-log = 敘事與政策檔。三者如有出入，以本檔為準，並視為缺陷立即處理。
-> 產生方式：`VERCEL_TOKEN=*** python3 scripts/vercel_reconcile.py`（唯讀 API，可重放）。本檔數據取自 2026-11-15 02:0x UTC 實測輸出（production 部署全量 164 筆）。
+> 產生方式：`VERCEL_TOKEN=*** python3 scripts/vercel_reconcile.py`（唯讀 API，可重放）。本檔治理期數據取自 2026-11-15 實測輸出（當時全量 164 筆;v5.3.7 鏈 R1/R2 部署後全量 166 筆,已更新至 §1/§2;查證當下全量以重放輸出為準）。
 
 ---
 
@@ -12,8 +12,8 @@
 | 分期 | 期間 | 筆數 | READY | ERROR | BLOCKED | 登記方式 |
 |---|---|---|---|---|---|---|
 | 前治理期 | 2026-10-16 ~ 2026-11-08 | 147 | 136 | 9 | 2 | §3 彙總登記（無 tag/git 對應,異常筆逐筆列 ID） |
-| 治理期（v5.3.3 起） | 2026-11-13 ~ 現在 | 17（至 v5.3.6 交付） | 16 | 1 | 0 | §2 逐筆登記 |
-| 合計 | — | **164** | 152 | 10 | 2 | — |
+| 治理期（v5.3.3 起） | 2026-11-13 ~ 現在 | 19（至 v5.3.7 交付;v5.3.8 交付後見 Release v5.3.8） | 18 | 1 | 0 | §2 逐筆登記 |
+| 合計 | — | **166**（v5.3.8 交付後+其鏈） | 154 | 10 | 2 | — |
 
 > **MANUS-REVIEW-008 不一致之根因與修復**：此前 Release Registry（v5.3.5/v5.3.6）僅登記該兩版之部署鏈（9 筆），未涵蓋 v5.3.3/v5.3.4 鏈（8 筆）與前治理期（147 筆），與 Vercel Deploy History 全量 164 筆對帳自然不一致。本檔建立後：治理期 17 筆全量逐筆登記（含補建 Release v5.3.3/v5.3.4），前治理期以彙總＋異常逐筆方式登記，對帳差異歸零。
 
@@ -56,13 +56,20 @@
 | R2b 中間部署（未 commit 工作區,內容等同 R3 之腳本修正） | dpl_359GUPMyM2i6S8FxZ7bkv23xSr2S | 2026-11-15 01:43:14 | READY | （無 commit） | v5.3.6 | superseded |
 | R3 驗證腳本修正（最終） | dpl_5GFdJW9xDH58ad4jvTArFczUWv8s | 2026-11-15 01:44:16 | READY | a6772ab = tag v5.3.6 | v5.3.6 | **superseded by v5.3.7（交付時）** |
 
-### v5.3.7 鏈（P2-R3,COPILOT-EXEC-008）
+### v5.3.7 鏈（P2-R3,COPILOT-EXEC-008;tag v5.3.7 = cd1e4f05d0a0e1a8d07d7819b0372a69c3f88034,已 PINNED）
 
 | # | Deploy ID | Timestamp (UTC) | State | Commit | Release | Production State |
 |---|---|---|---|---|---|---|
-| 部署鏈 | 交付時補記 | — | — | （本 commit）= tag v5.3.7 | v5.3.7 | 見 Release v5.3.7 部署登記 |
+| R1 內容部署 | dpl_CFKXtbwdhK7kEq1vnWx3g1D8d4To | 2026-11-15 02:43:36 | READY | f154cff | v5.3.7 | superseded |
+| R2 驗證腳本 CURRENT 列修補（最終） | dpl_HDF7wwGJ73vQoi1HPhra6jnRmqxS | 2026-11-15 02:45:51 | READY | cd1e4f0 = tag v5.3.7 | v5.3.7 | **superseded by v5.3.8（交付時）** |
 
-> **一行落差規則**：Deploy ID 於部署完成後始由 Vercel 產生,「載送本檔之部署」無法在部署前自載其 ID。故每鏈僅最後一筆（現行）之 ID 登記於同名 Release（交付後即時補記,不需重新部署）,其餘歷史筆全部逐筆在本檔與 Release 呈現。此為結構性落差,非紀錄不實。
+### v5.3.8 鏈（P2-R4,MANUS-REVIEW-009 FAIL 修復）
+
+| # | Deploy ID | Timestamp (UTC) | State | Commit | Release | Production State |
+|---|---|---|---|---|---|---|
+| 部署鏈 | 現行筆見 Release v5.3.8 之部署登記（交付時補記,機制見下行聲明） | — | — | tag v5.3.8 | v5.3.8 | 見 Release v5.3.8 |
+
+> **現行筆登記機制（一行落差規則之正式化）**：Deploy ID 於部署完成後始由 Vercel 產生,「載送本檔之部署」無法在部署前自載其 ID——故本檔對**歷史輪次逐筆實登記**（含 Deploy ID/Timestamp/State/Commit,如上 v5.3.7 鏈）,僅「現行施工版之最後一筆」以「見同名 Release 部署登記」表示;該 Release 於交付後即時補記（不需重新部署）。查證順序:本檔（歷史）→同名 Release（現行筆）→ Vercel API 重放（全量）→ 線上 /VERSION（production 現況）。
 
 ## 3. 前治理期彙總（2026-10-16 ~ 2026-11-08,147 筆）
 
@@ -100,3 +107,10 @@ bash scripts/verify_tags.sh
 ```
 
 驗收等式：**Release vN 登記 = 本檔 §2 vN 鏈 = deploy-log vN 段 = Vercel Deploy History 對應筆**；現行部署 = 最新 READY = tag vN = /VERSION。
+
+## 5. 變更紀錄
+
+| 版本 | 日期 | 變更 |
+|---|---|---|
+| v1.1 | 2026-11-15 | P2-R4（MANUS-REVIEW-009 FAIL 修復）:v5.3.7 鏈 R1/R2 逐筆實登記（消除「本 commit」自參照語病）、§1 總計 164→166（含 v5.3.7 鏈 2 筆）、新增 v5.3.8 鏈列、「現行筆登記機制」正式化（歷史輪逐筆實登記,僅現行施工版最後一筆見同名 Release） |
+| v1.0 | 2026-11-15 | 依 COPILOT-EXEC-008 建立（P2-R3 DEF-003）:治理期 17 筆逐筆+前治理期 147 筆彙總 |

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# SNT Tag 三驗（DEF-004 v2, COPILOT-EXEC-008）:對 governance/tag-registry.txt 之每個 tag 驗證——
+# SNT Tag 三驗（DEF-004 v3,P2-R4:現行版自動向同名 GitHub Release 取釘死值硬驗,無需環境變數）:對 governance/tag-registry.txt 之每個 tag 驗證——
 #   (1) 存在  (2) 不可變(現值==PINNED 期望值,任何偏離 FAIL)  (3) 對應 commit 正確(含 annotated tag peel)
 # 主路徑:git ls-remote(公開 repo,無需權限、無 API 限流);備援:GitHub REST API(可設 GH_TOKEN 提高額度)。
-# CURRENT 列=現行施工版:自參照不可預先釘死,交付時登記於同名 GitHub Release(部署登記表),
-#   若設 EXPECT_v5_3_7=<sha> 環境變數則一併硬驗;否則輸出現值供與 Release 比對。
+# CURRENT 列=現行施工版:自參照不可預先釘死,交付時釘死值登記於同名 GitHub Release(部署登記表);
+#   驗證順序:EXPECT_<tag 底線化> 環境變數 → GitHub Release body 之「| <tag> | <40hex> |」釘死值(自動) → 皆無則輸出現值待比對。
 # 用法: bash scripts/verify_tags.sh [OWNER/REPO]
 REPO="${1:-leekc790421-max/orbit-tower-site}"
 URL="https://github.com/$REPO.git"
@@ -50,14 +50,19 @@ while read -r tag want state; do
   elif [ "$state" = "CURRENT" ]; then
     ncur=$((ncur+1))
     exp=$(printenv "$envname" 2>/dev/null || true)
+    if [ -z "$exp" ]; then # 無環境變數時,自動向同名 GitHub Release 取釘死值(v3;無需任何權限)
+      rel=$(curl -s --max-time 20 ${GH_TOKEN:+-H "Authorization: Bearer $GH_TOKEN"} "https://api.github.com/repos/$REPO/releases/tags/$tag")
+      exp=$(echo "$rel" | grep -oE "\| ${tag} \| [0-9a-f]{40} \|" | head -1 | grep -oE "[0-9a-f]{40}")
+      [ -n "$exp" ] && src="Release $tag 釘死值"
+    fi
     if [ -n "$exp" ]; then
       if [ "$got" = "$exp" ]; then
-        echo "OK  $tag 存在且不可變,$got(=$envname)"
+        echo "OK  $tag 存在且不可變,$got(=${src:-$envname})"
       else
-        echo "FAIL $tag 現值 $got ≠ $envname $exp"; fail=1
+        echo "FAIL $tag 現值 $got ≠ ${src:-$envname} $exp"; fail=1
       fi
     else
-      echo "?   $tag 為現行施工版,commit=$got(自參照;交付時釘於 GitHub Release $tag 部署登記,次版納入 PINNED)"
+      echo "?   $tag 為現行施工版,commit=$got(Release $tag 尚未登記釘死值或 API 不可達;補記後重跑即硬驗)"
     fi
   fi
 done < "$REG"
