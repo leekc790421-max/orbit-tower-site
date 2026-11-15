@@ -34,6 +34,7 @@ REG="${REG_FILE:-governance/tag-registry.txt}"
 echo "== SNT tag 三驗(存在/不可變/commit 正確) — repo=$REPO,期望值=$REG =="
 while read -r tag want state; do
   case "$tag" in ""|\#*) continue;; esac
+  [ "$want" = "CURRENT" ] && state="CURRENT" && want="-"
   got=$(peeled); [ -z "$got" ] && got=$(api_commit)
   if [ -z "$got" ]; then
     echo "FAIL $tag 不存在於遠端(或網路失敗)"; fail=1; continue
