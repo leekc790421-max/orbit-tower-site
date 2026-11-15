@@ -52,7 +52,7 @@ while read -r tag want state; do
     exp=$(printenv "$envname" 2>/dev/null || true)
     if [ -z "$exp" ]; then # 無環境變數時,自動向同名 GitHub Release 取釘死值(v3;無需任何權限)
       rel=$(curl -s --max-time 20 ${GH_TOKEN:+-H "Authorization: Bearer $GH_TOKEN"} "https://api.github.com/repos/$REPO/releases/tags/$tag")
-      exp=$(echo "$rel" | grep -oE "\| ${tag} \| [0-9a-f]{40} \|" | head -1 | grep -oE "[0-9a-f]{40}")
+      exp=$(echo "$rel" | grep -oE "\| ${tag} \| \*{0,2}[0-9a-f]{40}\*{0,2} \|" | head -1 | grep -oE "[0-9a-f]{40}")
       [ -n "$exp" ] && src="Release $tag 釘死值"
     fi
     if [ -n "$exp" ]; then
