@@ -11,7 +11,7 @@ immutable tag 鏈逐段比較 v5.3.4→v5.3.5→v5.3.6→v5.3.7→v5.3.8→工�
 import re, subprocess, sys
 
 REPO_REFS = ["v5.3.4", "v5.3.5", "v5.3.6", "v5.3.7", "v5.3.8", "v5.3.9", "v5.3.10"]  # immutable tags(不可移動,見 governance/tag-protection.md)
-WORKTREE_LABEL = "v5.4.3(工作區,P4 正式上線遺留項補齊輪)"  # P4 起工作區段=併行模式:Tower 交付態逐檔硬驗+新增限 orbit-site/**
+WORKTREE_LABEL = "v5.5.0(工作區,P5 VIP Productization 沙盒建置)"  # P4 起工作區段=併行模式:Tower 交付態逐檔硬驗+新增限 orbit-site/**
 PAT = re.compile(r"^([0-9a-f]{64})\s+\*?(.+?)\s*$")
 
 # ── 硬性斷言(依 governance/freeze-validation.md §1;集合=逐項精確,整數=僅計數) ──
@@ -29,7 +29,7 @@ EXPECT = {
     ("v5.3.9", "v5.3.10"): (149, 149, set(), 0,
                             {"VERSION", "builder/demo/index.html", "builder/index.html", "builder/readme/index.html", "builder/setup/index.html", "builder/sha256/index.html", "builder/version/index.html", "builder/warranty/index.html", "compliance/index.html", "governance/CHANGELOG.md", "governance/deploy-log.md", "governance/deployment-registry.md", "governance/freeze-validation.md", "governance/tag-registry.txt", "governance/deploy-replay-2026-11-15.txt", "governance/freeze-replay-2026-11-15.txt", "scripts/deploy_chain_audit.py", "scripts/verify_freeze.py"}, 0),  # P2-R6(工具修正輪)
 }
-# ── P4 併行模式(P2 結案後):Tower 交付態逐檔硬驗;僅 P4 起點核定工具調整 3 檔可異動;工作區新增限 orbit-site/** ──
+# ── P4/P5 併行模式(P2 結案後):Tower 交付態逐檔硬驗;僅 P4 起點核定工具調整 3 檔可異動;工作區新增限 orbit-site/**+vip-site/**(v1.8) ──
 P4_ALLOW_CHANGED = {"scripts/verify_freeze.py", "governance/freeze-validation.md", "governance/freeze-replay-2026-11-15.txt"}
 
 
@@ -93,7 +93,7 @@ def diff(a, b, la, lb, want=None, wt=False):
 
 
 def p4_check(tag_ref):
-    """P4 併行模式:Tower 交付態(v5.3.10 manifest)逐檔 sha256 硬驗+工作區檔案集比對(新增限 orbit-site/**,零移除)。"""
+    """P4/P5 併行模式:Tower 交付態(v5.3.10 manifest)逐檔 sha256 硬驗+工作區檔案集比對(新增限 orbit-site/**+vip-site/**,零移除)。"""
     import hashlib as _h, os as _os
     entries, _, _ = load_ref(tag_ref)
     mism, adjusted = [], []
@@ -115,7 +115,7 @@ def p4_check(tag_ref):
         for fn in fns:
             wt_tree.add(_os.path.relpath(_os.path.join(dp, fn), ".").replace(_os.sep, "/"))
     added = sorted(wt_tree - tag_tree); removed = sorted(tag_tree - wt_tree)
-    emit(f"== 工作區相對 {tag_ref} == 新增 {len(added)}(限 orbit-site/**) | 移除 {len(removed)}(限 0)")
+    emit(f"== 工作區相對 {tag_ref} == 新增 {len(added)}(限 orbit-site/**+vip-site/**) | 移除 {len(removed)}(限 0)")
     if added: emit("  新增: " + ", ".join(added))
     if removed: emit("  移除: " + ", ".join(removed))
     emit("")
@@ -124,7 +124,7 @@ def p4_check(tag_ref):
             fails.append(f"{label}（{detail}）")
     bc("P4 Tower 交付檔零非核定變更(逐檔 sha256)", not mism, ", ".join(mism[:6]))
     bc("P4 起點核定調整清單", set(adjusted) == P4_ALLOW_CHANGED, f"實測 {sorted(adjusted)} ≠ 核定 {sorted(P4_ALLOW_CHANGED)}")
-    bc("P4 工作區新增限 orbit-site/**", all(p.startswith("orbit-site/") for p in added), str([p for p in added if not p.startswith("orbit-site/")][:6]))
+    bc("P4/P5 工作區新增限 orbit-site/**+vip-site/**", all(p.startswith(("orbit-site/", "vip-site/")) for p in added), str([p for p in added if not p.startswith(("orbit-site/", "vip-site/"))][:6]))
     bc("P4 工作區零移除", not removed, ", ".join(removed[:6]))
 
 
