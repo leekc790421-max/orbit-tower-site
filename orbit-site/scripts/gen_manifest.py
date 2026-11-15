@@ -9,8 +9,8 @@ ROOT = os.path.join(os.getcwd(), "orbit-site")
 OUT = os.path.join(ROOT, "governance", "backup-manifest.sha256")
 SELF_REL = "governance/backup-manifest.sha256"
 RULES_FROZEN = [
-    "# SNT Orbit 部署完整性清單 (backup-manifest.sha256) — 站體 v5.4.3",
-    "# 生成:2026-11-15,P4 正式上線遺留項補齊輪(og:image 絕對 URL+og.png+正式聯絡通道;MANUS-REVIEW-RESULT PASS+整合執行令;部署鐵律:工作區→沙盒→L1→L2→編版→部署)",
+    "# SNT Orbit 部署完整性清單 (backup-manifest.sha256) — 站體 v5.4.4",
+    "# 生成:2026-11-15,P4 視覺規格變更輪(亮藍主視覺+白玻璃擬態+動態幾何背景層 geometry.js+og.png 換膚;GEMINI-GOV-ADDENDUM;部署鐵律:工作區→沙盒→L1→L2→編版→部署)",
     "# 涵蓋:Orbit 站部署輸出之全部檔案(HTML/CSS/SVG/MD/TXT 等,含 VERSION 與 governance/scripts),規則凍結,僅重算。",
     "# 驗證方式:於 Orbit 站輸出根目錄執行 `sha256sum -c governance/backup-manifest.sha256`,或對站點 URL 逐一比對。",
     "#",

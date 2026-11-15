@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
+<canvas id="geo-bg" aria-hidden="true"></canvas>
 <nav class="nav"><div class="wrap">
 <a class="brand" href="/"><img src="/assets/logo-orbit.svg" alt="光曦星軌 Orbit 標識"><span><b>光曦星軌 ORBIT</b><small>XINGDENG ORBIT HQ</small></span></a>
 <button class="mbtn" onclick="document.getElementById('m').classList.toggle('open')">選單</button>
@@ -87,11 +88,11 @@
 <div><h4>SNT 全站互聯</h4><a href="https://tower.xingdeng.tw/">光曦星閣 Tower</a><a href="https://tower.xingdeng.tw/compliance">Tower 合規證據</a><a href="/version/">Orbit 治理與版本</a></div>
 </div>
 <div class="wrap"><p class="copyright">聯絡通道：service@xingdeng.tw（SNT 全站服務窗口）· 標準化報價入口：<a href="/quote/">/quote/</a></p></div>
-<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.3 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
+<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.4 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
 </footer>
 <script>
 (function () {
-  var SUBMIT_NOTE = "【正式環境說明】本站為 Orbit 正式交付版（v5.4.3）:標準化報價入口已於正式環境 orbit.xingdeng.tw 上線。請以「複製/下載申請摘要」將申請內容遞送至 SNT 全站服務窗口 service@xingdeng.tw,由人工評估窗口逐件檢視。";
+  var SUBMIT_NOTE = "【正式環境說明】本站為 Orbit 正式交付版（v5.4.4）:標準化報價入口已於正式環境 orbit.xingdeng.tw 上線。請以「複製/下載申請摘要」將申請內容遞送至 SNT 全站服務窗口 service@xingdeng.tw,由人工評估窗口逐件檢視。";
   function val(id) { return document.getElementById(id).value.trim(); }
   function bad(id, on) { document.getElementById(id).classList.toggle("bad", on); return on; }
   document.getElementById("submit").addEventListener("click", function () {
@@ -135,5 +136,6 @@
   });
 })();
 </script>
+<script defer src="/assets/geometry.js"></script>
 </body>
 </html>

@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
+<canvas id="geo-bg" aria-hidden="true"></canvas>
 <nav class="nav"><div class="wrap">
 <a class="brand" href="/"><img src="/assets/logo-orbit.svg" alt="光曦星軌 Orbit 標識"><span><b>光曦星軌 ORBIT</b><small>XINGDENG ORBIT HQ</small></span></a>
 <button class="mbtn" onclick="document.getElementById('m').classList.toggle('open')">選單</button>
@@ -58,7 +59,7 @@
 <div class="note">本頁為計價結構說明，不含定價數字；各檔月費與年租折扣於人工評估後以正式報價提出。實際金額以報價單與合約為準。</div>
 </div></section>
 
-<section style="background:rgba(212,175,55,.03);border-top:1px solid rgba(212,175,55,.08)"><div class="wrap">
+<section style="background:rgba(255,255,255,.5);border-top:1px solid rgba(27,95,174,.14)"><div class="wrap">
 <div class="sec-head"><span class="kicker">商務條款</span><h2>租賃商務條款（要點）</h2><p class="lead">以下為租賃方案之條款要點；完整條款以簽約文件為準。</p></div>
 <div class="grid g2">
 <div class="card"><h3>租期與付款</h3><p>最短租期 3 個月，按月／按季預付。年約享有折扣，折扣率於報價時列明。逾期付款經催告仍未結清者，得依約暫停服務。</p></div>
@@ -74,7 +75,8 @@
 <div><h4>SNT 全站互聯</h4><a href="https://tower.xingdeng.tw/">光曦星閣 Tower</a><a href="https://tower.xingdeng.tw/compliance">Tower 合規證據</a><a href="/version/">Orbit 治理與版本</a></div>
 </div>
 <div class="wrap"><p class="copyright">聯絡通道：service@xingdeng.tw（SNT 全站服務窗口）· 標準化報價入口：<a href="/quote/">/quote/</a></p></div>
-<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.3 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
+<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.4 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
 </footer>
+<script defer src="/assets/geometry.js"></script>
 </body>
 </html>

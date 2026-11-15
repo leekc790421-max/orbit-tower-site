@@ -22,18 +22,18 @@ def rd(rel):
 # 1) 檔案完備
 FILES = ["index.html", "enterprise/index.html", "quote/index.html", "rental/index.html", "version/index.html",
          "VERSION", "assets/site.css", "assets/logo-orbit.svg", "governance/deploy-log.md",
-         "scripts/gen_manifest.py", "scripts/deploy.py", "scripts/l1_check.py", "assets/og.png"]
+         "scripts/gen_manifest.py", "scripts/deploy.py", "scripts/l1_check.py", "assets/og.png", "assets/geometry.js"]
 import contextlib
 manifest_ok = os.path.exists(os.path.join(ROOT, "governance/backup-manifest.sha256"))
 if manifest_ok: FILES.append("governance/backup-manifest.sha256")
-check("O-檔案完備（13+1 檔）", all(os.path.exists(os.path.join(ROOT, f)) for f in FILES))
-check("O-VERSION=v5.4.3", rd("VERSION").strip() == "v5.4.3")
+check("O-檔案完備（14+1 檔）", all(os.path.exists(os.path.join(ROOT, f)) for f in FILES))
+check("O-VERSION=v5.4.4", rd("VERSION").strip() == "v5.4.4")
 
 # 2) 版本字串一致（五頁頁尾 + version 頁 title/hero）
 pages = ["index.html", "enterprise/index.html", "quote/index.html", "rental/index.html", "version/index.html"]
-check("O-五頁頁尾版本字串 v5.4.3(頁尾列錨定)", all("站體 v5.4.3 · 依" in rd(p) for p in pages))
+check("O-五頁頁尾版本字串 v5.4.4(頁尾列錨定)", all("站體 v5.4.4 · 依" in rd(p) for p in pages))
 ver = rd("version/index.html")
-check("O-version 頁 title/工項/鐵律", all(k in ver for k in ["版本資訊 v5.4.3", "GEMINI-ORDER-P4-START", "正式上線", "orbit.xingdeng.tw"]))
+check("O-version 頁 title/工項/鐵律", all(k in ver for k in ["版本資訊 v5.4.4", "GEMINI-GOV-ADDENDUM", "GEMINI-ORDER-P4-START", "orbit.xingdeng.tw"]))
 check("O-version 版本域不混用", "v5.3.10（已結案）" in ver and "治理文件" in ver and "v5.1.1" in ver and "產品包文件" in ver)
 
 # 3) 內部連結閉環（頁內相對連結與資源存在）
@@ -85,7 +85,7 @@ check("O-deploy-log 鐵律+逐筆登記", all(k in dl for k in ["嚴禁直接於
 check("O-deploy.py 預設 preview（工具層防呆）", rd("scripts/deploy.py").count('sys.argv[2] if len(sys.argv) > 2 else "preview"') == 1 and 'not in ("preview", "production")' in rd("scripts/deploy.py"))
 mf = rd("governance/backup-manifest.sha256")
 rows = [l for l in mf.splitlines() if l and not l.startswith("#")]
-check("O-manifest 規則凍結檔頭", mf.startswith("# SNT Orbit 部署完整性清單") and "站體 v5.4.3" in mf and "本檔自身" in mf)
+check("O-manifest 規則凍結檔頭", mf.startswith("# SNT Orbit 部署完整性清單") and "站體 v5.4.4" in mf and "本檔自身" in mf)
 mism = []
 for line in rows:
     h, _, p = line.partition("  ")
@@ -108,6 +108,10 @@ check("O-favicon.ico 存在(直接請求路徑)", __import__("os").path.exists("
 check("O-og:image 五頁絕對 URL", all('property="og:image" content="https://orbit.xingdeng.tw/assets/og.png"' in rd(p) for p in pages))
 check("O-og.png 就位(1200×630)", os.path.getsize("orbit-site/assets/og.png") > 20000)
 check("O-正式聯絡通道 五頁頁尾", all("service@xingdeng.tw" in rd(p) for p in pages))
+css = rd("assets/site.css"); geo = rd("assets/geometry.js")
+check("O-亮藍主視覺(底色重構+白玻璃+深墨藍按鈕,零全黑殘留)", all(k in css for k in ["linear-gradient(168deg,#F2FAFF", "rgba(255,255,255,.66)", "backdrop-filter:blur(14px)", "#1E63B4,#4C97E0"]) and "--bg:#0a0b0e" not in css)
+check("O-幾何背景層 五頁(canvas+本地引用+pointer-events:none)", all('id="geo-bg"' in rd(p) and '/assets/geometry.js' in rd(p) for p in pages) and "#geo-bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}" in css)
+check("O-時間演化+無障礙降級(geometry.js)", all(k in geo for k in ["requestAnimationFrame", "prefers-reduced-motion", "visibilitychange", "Math.min(window.devicePixelRatio"]))
 check("O-quote 摘要遞送 UI(複製+下載)", all(k in q for k in ["clipboard", "execCommand", "Blob", "copy-sum", "dl-sum"]))
 check("O-quote JS 引用 id 閉合", all(i in q for i in ["qactions", "copy-sum", "dl-sum"]))
 

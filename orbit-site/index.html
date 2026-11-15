@@ -24,6 +24,7 @@
 </script>
 </head>
 <body>
+<canvas id="geo-bg" aria-hidden="true"></canvas>
 <nav class="nav"><div class="wrap">
 <a class="brand" href="/"><img src="/assets/logo-orbit.svg" alt="光曦星軌 Orbit 標識"><span><b>光曦星軌 ORBIT</b><small>XINGDENG ORBIT HQ</small></span></a>
 <button class="mbtn" onclick="document.getElementById('m').classList.toggle('open')">選單</button>
@@ -55,7 +56,7 @@
 </div>
 </div></section>
 
-<section style="background:rgba(212,175,55,.03);border-top:1px solid rgba(212,175,55,.08);border-bottom:1px solid rgba(212,175,55,.08)"><div class="wrap">
+<section style="background:rgba(255,255,255,.5);border-top:1px solid rgba(27,95,174,.14);border-bottom:1px solid rgba(27,95,174,.14)"><div class="wrap">
 <div class="sec-head"><span class="kicker">為什麼 Orbit</span><h2>把數位總部當成一棟大樓來營運</h2></div>
 <div class="grid g3">
 <div class="card"><div class="ic">🛠️</div><h3>全託管交鑰匙</h3><p>從建置、上稿到維運由同一個團隊負責：企業只需提供素材與決策，不需要自組技術團隊。交付後依維護等級持續回應。</p></div>
@@ -81,7 +82,8 @@
 <div><h4>SNT 全站互聯</h4><a href="https://tower.xingdeng.tw/">光曦星閣 Tower</a><a href="https://tower.xingdeng.tw/compliance">Tower 合規證據</a><a href="https://tower.xingdeng.tw/governance/deployment-registry.md">Tower 部署對帳 SSOT</a><a href="/version/">Orbit 治理與版本</a></div>
 </div>
 <div class="wrap"><p class="copyright">聯絡通道：service@xingdeng.tw（SNT 全站服務窗口）· 標準化報價入口：<a href="/quote/">/quote/</a></p></div>
-<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.3 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
+<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.4 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
 </footer>
+<script defer src="/assets/geometry.js"></script>
 </body>
 </html>

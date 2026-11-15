@@ -18,6 +18,8 @@
 | R2 | v5.4.1 | tag v5.4.1（交付 commit） | 見 Release v5.4.1 部署登記 | — | READY（Release v5.4.1） | preview（target=None，API 複驗） | 自我覆核修正輪（GEMINI-ORDER-SELF-REVIEW）：筆誤修正＋欄位計數修正＋版本字串同步；部署後 live 複驗見 Release v5.4.1 |
 | R3 | v5.4.2 | tag v5.4.2（交付 commit） | 見 Release v5.4.2 部署登記 | — | READY（Release v5.4.2） | preview（target=None，API 複驗） | FAIL 排查修正輪（MANUS-REVIEW-RESULT: FAIL）：quote 摘要遞送 UI 修復＋favicon.ico 補齊＋version 頁尾滯留缺陷修正；§7 事件登記 |
 | R4 | v5.4.3 | tag v5.4.3（交付 commit） | 見 Release v5.4.3 部署登記 | — | READY | preview（target=None，API 複驗） | 正式上線遺留項補齊輪：og:image＋正式聯絡通道＋gen_manifest VERSION 條目黏行修復；§8 |
+| R5 | v5.4.4 | tag v5.4.4（交付 commit） | 見 Release v5.4.4 部署登記 | — | READY | preview（target=None，API 複驗） | 視覺規格變更輪（GEMINI-GOV-ADDENDUM）：亮藍主視覺＋動態幾何背景層；L2 E2E 對比/演化/降級取證；§9 |
+| P4-PROD-2 | v5.4.4 | tag v5.4.4 | dpl_72PVWn4GuwFE8H5KH1TPn1BqdXGs（2026-11-15，正式部署） | dpl_72PVWn4G… | READY（alias 沿用 orbit.xingdeng.tw） | production | 視覺規格變更上線：live 對帳 11/11；Tower 零碰觸複證 v5.3.10 |
 | P4-PROD | v5.4.3 | tag v5.4.3 | dpl_CCZpvvogGyWxNdT8A6yqpQWciaTg（2026-11-15，正式部署） | dpl_CCZpvvog… | READY（alias API 複驗） | production（alias=orbit.xingdeng.tw） | 正式環境上線：域名自 orbit-tower-3d 切換綁定；live 對帳 10/10；Tower 零碰觸複證 v5.3.10 |
 
 ## 2. P4 開工紀錄
@@ -120,3 +122,24 @@ Manus 對 P4 沙盒 v5.4.2（R3）獨立複核判定 **PASS**；整合執行令�
 - 工單所載「deployment-registry.md / deploy-log.md 實值登記」：經 SSOT 界定，`governance/deployment-registry.md` 為 **Tower 專屬部署對帳 SSOT**，屬 Tower 凍結範圍（P4 核定調整 3 檔以外不可異動）；Orbit/Vip 部署登記分冊於本檔（與 §6 自檢第 4 項「兩站日誌分冊」原則一致），無互斥矛盾。
 - Tower 正式站零碰觸：上線後複證 tower.xingdeng.tw /VERSION=200 v5.3.10；P4 核定調整 3 檔與 orbit-site/** 新增範圍不變（freeze-validation v1.7）。
 - og:image 資產：assets/og.png（1200×630，PIL 本地產製 97,411 bytes，sha256 入 manifest）；og meta 絕對 URL=https://orbit.xingdeng.tw/assets/og.png（正式域，非臨時沙盒 URL，§7 遞延理由解除）。
+
+## 9. 視覺規格變更輪登記（GEMINI-GOV-ADDENDUM，2026-11-15）
+
+創辦人指示 P4 Orbit 主視覺全面重構。**版序決策**：v5.4.3 已為 immutable tag（正式上線遺留項補齊輪，已交付），本輪依版本序號遞增為 **v5.4.4**，不回寫已交付版本；工單所載「建議版本順升 v5.4.3」之 og:image 與正式聯絡通道已於 v5.4.3 完成，本輪僅視覺變更。
+
+### 9.1 規格變更落實對照
+
+| 規格項 | 落實 | 驗收 |
+|---|---|---|
+| 主視覺底色重構（亮藍色系） | site.css 全面換膚：多層次光感漸層（#F2FAFF→#C9E8FF→#9CCDF6→#6FB4EC→#5AA7E8，background-attachment:fixed）＋兩道白色光暈；零全黑殘留（L1 斷言 --bg:#0a0b0e 不存在） | live css 對帳＋截圖 |
+| 對比度強制校準 | 文字深墨藍（#0B1C2C/#1B3550）×純白毛玻璃卡片（rgba(255,255,255,.66)+blur(14px)）；按鈕深鈷藍×白字；頁尾深墨藍面板×白字；金色列為裝飾性保留（logo/卡片圖標/ico，非底色非正文） | **L2 E2E 實測五取樣最小對比 4.86:1 ≥ 4.5（WCAG AA）**：.lead 4.86／.tbl td 17.26／.menu a 6.00／.card p 12.56／.foot a 10.29 |
+| 不規則幾何・時間性演化 | 新增 assets/geometry.js（5.2KB，原生 Canvas 2D，零外部依賴，入 manifest）：8 片晶體切面多邊形（種子隨機 7–10 頂點），頂點半徑時間正弦偏移＋慢速自轉（±0.05rad/s）＋緩慢漂移＋半透明光影呼吸（0.32Hz）；頂層冰藍光暈呼吸明滅 | L2 E2E：frames 72 幀/1.2s（≈60fps）持續演化；手機端 RWD 演化流暢 |
+| 效能與離線鐵律 | 零外部 CDN（全站無 src=http，L1 既有斷言）；DPR≤2；visibilitychange＋IntersectionObserver 離屏暫停；manifest 15 檔雜湊清點（L1 全項重驗） | L1 34 項＋manifest live 15/15 |
+| 無障礙與互動保護 | prefers-reduced-motion → 單一靜態構圖（單幀繪製，畫面不空白，不演化）；#geo-bg pointer-events:none＋z-index:0 位於內容之下 | L2 E2E：reduced-motion 實測 frames 靜態（1→1）；elementFromPoint 命中 .btn-gold（背景層未遮擋） |
+
+### 9.2 部署與登記
+
+- R5 沙盒 dpl_CjRoY9qrK1LKkXEVgdJWqUqQumUv（preview，live 對帳 11/11）→ 正式部署 **dpl_72PVWn4GuwFE8H5KH1TPn1BqdXGs**（production，alias 沿用 orbit.xingdeng.tw）；正式站 live 對帳 11/11（/VERSION=v5.4.4、五頁 geo-bg、geometry.js sha256、亮藍 css、og.png 亮藍版 sha256、manifest 15/15）。
+- og:image 絕對 URL 不變（https://orbit.xingdeng.tw/assets/og.png），僅圖像內容同步換膚亮藍主視覺（sha256 更新入 manifest）。
+- 版本頁登記：本版（v5.4.4）＋歷史 R4（v5.4.3）列；freeze-validation v1.9（WORKTREE_LABEL 更新，新增檔 15→16 限 orbit-site/**）。
+- **P5 不受影響聲明**：P5 光曦星匯 v5.5.0 已於同日提交 Manus 獨立覆核（沙盒 R1-c 凍結送審）；本輪視覺變更僅及 Orbit 站。四站視覺識別之再統一（P5 是否跟進亮藍規範）待 Manus P5 覆核判定後，依創辦人後續指示另輪處理，本輪不擅自變更送審中之交付物。
