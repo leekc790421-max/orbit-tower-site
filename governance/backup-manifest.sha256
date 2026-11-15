@@ -1,6 +1,6 @@
 # SNT Tower Site 部署完整性清單 (backup-manifest.sha256) — 站體 v5.3.5
 # 生成:2026-11-15,P2-R1 Defect Fix 施工管線重建(COPILOT-EXEC-006 核定;依《SNT_P2-R1_缺陷調查報告》DEF-002 修復項)
-# 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 142 檔。
+# 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 139 檔。
 # 驗證方式:於部署輸出根目錄執行 `sha256sum -c governance/backup-manifest.sha256`,或對 https://tower.xingdeng.tw/<路徑> 逐一比對。
 # # 開頭為註解行,sha256sum -c 自動略過。
 #
@@ -12,7 +12,9 @@
 #   3. package.json / package-lock.json —— repo 依賴管理檔,Vercel 不對外服務(公開 URL 404,已實測)。
 #   4. sitemap.xml —— build 時由 scripts/bump-sitemap.js 自動重生(lastmod=建置日,並自 paths.txt 補登漏頁),
 #      不具位元組不變性;核驗方式:以 /sitemap.xml 即時核對 URL 清單與 paths.txt 一致性。
-#   5. .gitignore 等 repo 運維檔 —— Vercel 不對外服務(公開 URL 404,已實測)。
+#   5. .gitignore、.github/ 等 repo 運維檔與 dot 目錄 —— Vercel 不對外服務(公開 URL 404,v5.3.5 部署實測)。
+#   5b. vercel.json —— 建置時由 Vercel 正規化重序(語義與 repo 版一致,已核對;位元組不具不變性),
+#       核驗方式:以 /vercel.json 即時核對 redirects/headers/crons 設定與 repo 一致。
 #   6. A39C0B14F006967E8754E39805A5B040.txt —— 已於先前版本下線,舊 manifest 之殘留條目本版移除。
 #
 # 附錄:api/ 原始碼雜湊(Serverless,非公開 URL 可驗;供工作區與 Dashboard 查核):
@@ -29,8 +31,6 @@
 #   f4622d8651491fff5ba77b80a8da569ecbf8047e6d5027f78ab197386fa83f22  api/support.mjs
 #   dac3de3445ba87c6ec342e9ce0e2ddc47a38af9f10e1d371b6561f75ec8624e1  api/webhook.js
 #
-aab0a15e7b849ab8bed3a130472bb2bd0dbd0b10fc6cd35896a89647f62f59c1  .github/dependabot.yml
-d313dd73b7a70eeeeaaef466ba14605ebbed4f1811ef9854233a66ff7ee23db7  .github/workflows/deploy-production.yml
 3cbc87c7681f34db4617feaa2c8801931bc5e42d8d0f560e756dd4cd92885f18  .marker
 abaff22678995f1507df1d5238f6feeb120ca5cde7a452ae659d6a58fcfede8b  3d/audio-file-0.mp3
 806cff36535055036ac0ec7ef07d18dbbd5cb15cd2810c0eb8da6de5dc656f1a  3d/index.html
@@ -157,7 +157,6 @@ ba1f2f97b77d8cb39e2391e78f831e541d208737b5f54e8263b8144783efe022  structured-dat
 4a49686d5be8a890048fb32703c02ba5584fdd93bc592b78fe0afaf998c3a4e8  terms/index.html
 0cfc30d3d74a71e957d5eaa4fd9ee5e55f46cb504146fd8817d501ef407209fe  tests/48h-acceptance.test.mjs
 4e46a325be8db55b70ca6a173b5bff2ddf9d9353a83b50cd1d91a6fa9a2b4690  try/index.html
-54613b629809549858495d36048982ac663dc25661504a20d53e941f62aefb37  vercel.json
 6147759f3b3344b146e98b35281efe6d0a01b34bf735d427f98d99ec96c655a3  verification/index.html
 0c12060ea99afa86e4090647410cb85cba012209277b2361340d645861e9fdf9  verification/screenshots/builder.png
 b2c190d6fa6b30b23da9350ec6c9537ccf8eb132fb8a1dc10addde6191d7383b  verification/screenshots/demo.png
