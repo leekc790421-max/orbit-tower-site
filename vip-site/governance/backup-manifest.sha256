@@ -1,5 +1,5 @@
-# SNT Vip 部署完整性清單 (backup-manifest.sha256) — 站體 v5.5.0
-# 生成:2026-11-15,P5 VIP Productization 沙盒建置版(MANUS-REVIEW-RESULT: PASS+整合執行令+P5 規格追加令 3D 立體互動水晶球;部署鐵律:工作區→沙盒→L1→L2→編版→部署)
+# SNT Vip 部署完整性清單 (backup-manifest.sha256) — 站體 v5.5.1
+# 生成:2026-11-15,v5.5.1 修復輪(MANUS-REVIEW-RESULT: FAIL 缺失 M1/M2/M3 點對點修復;規則凍結重算;部署鐵律:工作區→沙盒→L1→L2→編版→部署)
 # 涵蓋:Vip 站部署輸出之全部檔案(HTML/CSS/JS/SVG/PNG/ICO/MD/TXT 等,含 VERSION 與 governance/scripts),規則凍結,僅重算。
 # 驗證方式:於 Vip 站輸出根目錄執行 `sha256sum -c governance/backup-manifest.sha256`,或對站點 URL 逐一比對。
 #
@@ -7,18 +7,18 @@
 #   1. governance/backup-manifest.sha256 —— 本檔自身,自參照不可行。
 #   2. .git/ —— 版本控制內部檔案,非部署輸出。
 #
-8af3ff766c87ce6de520548867f15df561a903be46b6cbf3b3440ebebf4acc9f  VERSION
-831c98fa7e416cf73d962b9f084dbd696beab4343e17fe7acca9a4814523ad2a  appointment/index.html
-05fbd14a63051eca61f4e6287a6f058ec18bd5e44bfbd970afd552ba26eeeed6  assets/crystal.js
+63c16c2db69ae6063ff03a610f9734c3396b5cc5bda2eb89187f9bc4e6d22c9e  VERSION
+c3b084f74c7124490d12ea6f89e1a254eb2bdd84d1d52fac124959f56b11f6d1  appointment/index.html
+72a0f4240c8339b2cf85f2576c037ef3a0c5cf35dc211daaaeaee3c664b2010b  assets/crystal.js
 56dcc3860fa54f152f68cd3df1a0c4537329d4fba1084eedad855bee0be97676  assets/logo-vip.svg
 d11985b857fba5ff503b5dcf00d03d9b6e828cc0294dc7083cb2fceb62c88157  assets/og.png
-778f3b5fc6464a3a325069a41b8cc766eb948a5d0a068c5fa5132315556f8bae  assets/site.css
-fd485441ebfc0f4ca69ed80a9396c18967fc2d7dc163f575b8f7df8a5a73522f  consultants/index.html
+ea2e2730e2077657005ded3c0fe9059fb01e593965bc4f77848dce8af0fb5f0f  assets/site.css
+4afed1d3cab2dbb999f884c13a865442767b9aabca007cc9e1f503d7f729d01c  consultants/index.html
 6e83f3ddadbfd478a41d33b0b940f421cc45d1dd8f03b17145d69841bf767a8c  favicon.ico
-c61a05236221d8881fa10e5b4e0acc6726571b4d0f676f2f19a021977a3ae8fa  governance/deploy-log.md
-e909155fe093c792ad90de90d1738f44f4f7b616df19ceb0a8188c488be95c8d  index.html
-21bbf61c9492ab25438a2e99158bafbacf2291d5660982b83244fce37618abcf  membership/index.html
+11a85b15d748a5948b909d93220f3167819ce1ba01f9d8e98c55496e9c0a1f83  governance/deploy-log.md
+9c2088b4f18c4f4724380c6ca557244da9cd0817c200cc4a9a119948087971f7  index.html
+1fcfa671eff3bce300d3f73f43243a0f978390b7541b3dbff1d545479d1fea0f  membership/index.html
 f66455ceed7b5fceb611d3846c3ce5c38e181df22e03f562d5d49376a1fdd933  scripts/deploy.py
-296b6a3b9bbca836d556286477634ff65d3aaebafd4c2d03b65d9ef1884dd628  scripts/gen_manifest.py
-40b591c01d2b452bad8b0d3543b49e40645adc411c790f71ab4c9faf8c2d4893  scripts/l1_check.py
-c9bea1f68f9cd7692f03776273c7adf197793aa3c7eb70bbf4770f12ebcf227a  version/index.html
+67cc5bc821b9d82ccbec980049ec196dccf7746f8f4518411f815dc97d7b2858  scripts/gen_manifest.py
+7ca72033de840e08fe2c7e6da347bcb9150c336d42a337a67a61c23a61b9ad30  scripts/l1_check.py
+91d682481b21689ed95404e25ff4e84654e570494c756ba70ba1b7256ca5803a  version/index.html

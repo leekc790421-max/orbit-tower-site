@@ -1,6 +1,6 @@
-# SNT 光曦星匯 Vip 部署日誌（deploy-log.md）— 站體 v5.5.0
+# SNT 光曦星匯 Vip 部署日誌（deploy-log.md）— 站體 v5.5.1
 
-P5 VIP Productization（光曦星匯）沙盒部署與治理日誌。依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001（v5.1.1 創辦人核定版）治理；工項依據：MANUS-REVIEW-RESULT: PASS＋整合執行令（P4 正式上線＋P5 完整建置）＋P5 規格追加令（3D 立體互動水晶球）。
+P5 VIP Productization（光曦星匯）沙盒部署與治理日誌。依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001（SNT_v5.1.2 創辦人核定版）治理；工項依據：MANUS-REVIEW-RESULT: PASS＋整合執行令（P4 正式上線＋P5 完整建置）＋P5 規格追加令（3D 立體互動水晶球）。
 
 ## 1. 部署鐵律（SNT-DEPLOY-001）
 
@@ -68,3 +68,21 @@ P5 VIP Productization（光曦星匯）沙盒部署與治理日誌。依 SNT-GOV
 - L2 動態驗證：E2E 互動實測（3D 拖曳/縮放/脈衝/降級＋預約表單閉環：填表→送出→摘要→複製→下載）＋桌面/手機雙端 3D 渲染截圖存證。
 - 保護線重放：Tower L1／Orbit L1／verify_freeze（146/149＋3 核定調整＋新增限 orbit-site/**＋vip-site/**）／verify_tags 7 PINNED。
 - 全數綠燈後一次性打包提交 Manus 獨立覆核；**本單位不自行宣告 PASS**。
+
+## 8. v5.5.1 修復輪（MANUS-REVIEW-RESULT: FAIL 攔截）
+
+**覆核結果**：P4（v5.4.4）＋P5（v5.5.0）聯合獨立覆核判定 FAIL（2026-11-15）。本節僅登記 P5 沙盒修復輪；**P4 正式站維持 v5.4.4 現狀零變更**（隔離紅線；vip.xingdeng.tw 既有服務同樣零碰觸）。
+
+### 8.1 缺失對照與點對點修復
+
+| 缺失 | 根因 | 修復 | 驗證 |
+|---|---|---|---|
+| M1 3D 行動端/無硬體加速互動效能與降級 | v1.0 矩陣暫存逐幀 `new Float32Array`（GC 抖動）；無 FPS 自適應；`powerPreference=high-performance` 強制高效能路徑；`pointercancel` 未處理（拖曳態卡死風險）；`contextrestored` 無守衛 reload（無限迴圈風險）；reduced-motion 未尊重 | crystal.js v2.0：矩陣全預分配（零逐幀配置實作）；FPS 自適應降級器 qlv 0→3（<26fps 逐級：DPR 1.25 → DPR 1＋星塵半載/減環 → 靜態降級，脈衝瞬間豁免，前 3 秒編譯寬限）；低階裝置（hardwareConcurrency≤2）啟始保守；powerPreference=default；pointercancel 歸位；sessionStorage 恢復防迴圈（單 session 最多自動重載一次）；prefers-reduced-motion 直接靜態降級 | L1 V-M1 五項＋L2 E2E 三環境（桌面/手機觸控/reduced-motion）實測＋quality/fps/dpr 取樣掛鉤 |
+| M2 跨站定價與閉環一致性 | 方案卡無機器可讀級距標記；無 Tower 標準方案對照導流；預約表單未接收方案參數；頁腳主站誤標「光曦星軌」（應為星樞） | 方案卡 data-tier/data-tier-name/data-price；JSON-LD AggregateOffer（TWD 7800/13900/24800，offer.url 指向 Tower packages）；三卡 Tower t1/t2/t3 對照連結（目標頁 live 200 實測）；預約表單 `?plan=` URLSearchParams 預填＋prefilled 標記；五頁頁腳「SNT 主站（光曦星樞）」修正 | L1 V-M2 五項＋E2E 參數預填/JSON-LD 解析斷言 |
+| M3 靜態防線與資源清點對齊 | manifest 檢核缺「頁面內嵌資源⊆清單」閉環斷言 | gen_manifest 規則頭 v5.5.1 重生（規則凍結重算）；L1 新增 V-M3 內嵌資源閉環＋關鍵資源涵蓋檢查；部署後 live 逐檔 sha256 對帳（v5.5.0 慣例延續） | L1 V-M3 兩項＋manifest 全項重驗＋（部署後）live 對帳 |
+
+### 8.2 R2 部署登記（v5.5.1）
+
+- 沙盒重新部署：**待 VERCEL_TOKEN 憑證重建後執行** `python3 vip-site/scripts/deploy.py vip-site preview`（工具層防呆維持 preview 預設）；R1-c 沙盒（vip-site-q531crnpj-xfls.vercel.app，v5.5.0）現仍服務中，作為 Manus 既有覆核基準，未做任何變更。
+- 本輪 L2 動態驗證以**本地沙盒等價環境**（localhost 靜態伺服器，同一部署輸出檔案）完成全量取證（3D 三環境＋表單閉環＋雙端截圖）；部署後將按同一腳本對新沙盒 URL 複跑並補登 Deploy ID。
+- 保護線：Orbit L1／Tower L1／verify_freeze（146/149＋3 核定調整＋新增限 orbit-site/**＋vip-site/**）／verify_tags 7 PINNED 重放全綠；**本單位不自行宣告 PASS**，修復完成即重新提請 MANUS-REVIEW 獨立複查。

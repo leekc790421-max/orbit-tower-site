@@ -50,9 +50,9 @@
 <div class="fld" id="f-plan"><label for="plan">會員方案興趣 <em>（必填）</em></label>
 <select id="plan">
 <option value="">請選擇…</option>
-<option>光曦星匯・T1 標準會員（NT$7,800）</option>
-<option>光曦星匯・T2 進階會員（NT$13,900）</option>
-<option>光曦星匯・T3 旗艦會員（NT$24,800）</option>
+<option value="t1">光曦星匯・T1 標準會員（NT$7,800）</option>
+<option value="t2">光曦星匯・T2 進階會員（NT$13,900）</option>
+<option value="t3">光曦星匯・T3 旗艦會員（NT$24,800）</option>
 <option>尚未確定，請協助評估</option>
 </select><p class="err">請選擇會員方案興趣</p></div>
 <div class="fld"><label for="advisor">期望顧問類型 <em>（選填）</em></label>
@@ -78,20 +78,36 @@
 <div class="step"><h3>人工對接</h3><p>窗口檢視需求，必要時以 Email 往返確認，指派顧問。</p></div>
 <div class="step"><h3>回覆方案</h3><p>回覆會員方案建議（T1／T2／T3）、權益與時程，供決策。</p></div>
 </div>
-<div class="note">本站為 P5 沙盒建置版（v5.5.0）：預約摘要之複製／下載為沙盒端閉環展示；正式環境遞送通道（顧問窗口信箱／API）於正式配置後啟用。</div>
+<div class="note">本站為 P5 沙盒建置版（v5.5.1）：預約摘要之複製／下載為沙盒端閉環展示；正式環境遞送通道（顧問窗口信箱／API）於正式配置後啟用。</div>
 </div></section>
 
 <footer class="foot"><div class="wrap">
 <div><h4>光曦星匯 VIP</h4><p>高端文化顧問中心與 VIP 會員服務系統——會員權益、文化顧問、命理顧問與一對一專屬諮詢。</p></div>
 <div><h4>站內導覽</h4><a href="/membership/">會員方案</a><a href="/consultants/">顧問服務</a><a href="/appointment/">預約評估</a><a href="/version/">版本資訊</a></div>
-<div><h4>SNT 全站互聯</h4><a href="https://xingdeng.tw/">SNT 主站（光曦星軌）</a><a href="https://tower.xingdeng.tw/">光曦星閣 Tower</a><a href="https://orbit.xingdeng.tw/">光曦星軌 Orbit（企業數位總部）</a><a href="/version/">Vip 治理與版本</a></div>
+<div><h4>SNT 全站互聯</h4><a href="https://xingdeng.tw/">SNT 主站（光曦星樞）</a><a href="https://tower.xingdeng.tw/">光曦星閣 Tower</a><a href="https://orbit.xingdeng.tw/">光曦星軌 Orbit（企業數位總部）</a><a href="/version/">Vip 治理與版本</a></div>
 </div>
 <div class="wrap"><p class="copyright">聯絡通道：service@xingdeng.tw（SNT 全站服務窗口）· 預約評估入口：<a href="/appointment/">/appointment/</a></p></div>
-<div class="wrap"><p class="copyright">© 2026 光曦星匯 Vip · SNT 四站改造工程 P5 · 站體 v5.5.0 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
+<div class="wrap"><p class="copyright">© 2026 光曦星匯 Vip · SNT 四站改造工程 P5 · 站體 v5.5.1 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
 </footer>
 <script>
+/* v5.5.1 M2:會員方案頁 ?plan= 參數預填對接（跨站資料閉環） */
 (function () {
-  var SUBMIT_NOTE = "【P5 沙盒階段說明】本站為光曦星匯 P5 沙盒建置版（v5.5.0）:預約評估入口之介面與驗證邏輯已就位,遞送通道（顧問窗口信箱/API）於正式環境配置後啟用;屆時無需重新填寫。";
+  try {
+    var p = (new URLSearchParams(location.search)).get("plan");
+    if (p) {
+      var map = { t1: 1, t2: 2, t3: 3 };
+      var idx = map[p.toLowerCase()];
+      if (idx) {
+        document.getElementById("plan").selectedIndex = idx;
+        document.getElementById("f-plan").classList.add("prefilled");
+      }
+    }
+  } catch (e) {}
+})();
+</script>
+<script>
+(function () {
+  var SUBMIT_NOTE = "【P5 沙盒階段說明】本站為光曦星匯 P5 沙盒建置版（v5.5.1）:預約評估入口之介面與驗證邏輯已就位,遞送通道（顧問窗口信箱/API）於正式環境配置後啟用;屆時無需重新填寫。";
   function val(id) { return document.getElementById(id).value.trim(); }
   function bad(id, on) { document.getElementById(id).classList.toggle("bad", on); return on; }
   document.getElementById("submit").addEventListener("click", function () {
@@ -104,11 +120,13 @@
     if (fail) { document.querySelector(".fld.bad").scrollIntoView({ block: "center", behavior: "smooth" }); return; }
     var d = new Date();
     var no = "VIP-" + d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0") + "-" + String(Math.floor(1000 + Math.random() * 9000));
+    var planSel = document.getElementById("plan");
+    var planTxt = planSel.options[planSel.selectedIndex] ? planSel.options[planSel.selectedIndex].text + "［代碼 " + planSel.value + "］" : val("plan");
     var lines = [
       "預約編號：" + no, "申請時間：" + d.toLocaleString("zh-TW", { hour12: false }),
       "────────────────",
       "公司名稱：" + val("company"), "聯絡人：" + val("name"), "Email：" + val("email"),
-      "連絡電話：" + (val("phone") || "未填"), "會員方案興趣：" + val("plan"),
+      "連絡電話：" + (val("phone") || "未填"), "會員方案興趣：" + planTxt,
       "期望顧問類型：" + (val("advisor") || "由顧問窗口建議"),
       "────────────────", "需求概述：", val("need")
     ].join("\n");

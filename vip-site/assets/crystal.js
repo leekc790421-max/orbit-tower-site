@@ -1,5 +1,13 @@
-/* 光曦星匯 Vip · 3D 立體互動水晶球引擎 v1.0（P5,站體 v5.5.0）
-   規格追加令（P5 v5.5.0）:WebGL 立體渲染管線——空間景深/Fresnel 折射高光/內部星塵與能量流;
+/* 光曦星匯 Vip · 3D 立體互動水晶球引擎 v2.0（P5,站體 v5.5.1 修復輪 M1）
+   v5.5.1 修復（MANUS-REVIEW-RESULT: FAIL 缺失 M1:行動端/無硬體加速環境互動效能與降級）:
+   ①零逐幀配置實作——矩陣暫存 MX/MY/MS/MR/MRY 全預分配,消除 GC 抖動（v1.0 註解宣稱但實際殘留逐幀 new Float32Array,本版徹底修正）
+   ②FPS 自適應降級器 qlv 0→3:低階裝置啟始保守（hardwareConcurrency≤2 → DPR 1.25）;持續低影格率（<26fps,6 秒載入寬限+連續兩窗低影格才降級,防載入抖動誤判;脈衝瞬間豁免）逐級降載:
+     qlv1=DPR 1.25 → qlv2=DPR 1＋星塵半載＋星軌減環 → qlv3=優雅降級靜態模式（狀態明示,功能不受影響）
+   ③行動端觸控強化:pointercancel 歸位（防止拖曳態卡死）;tap-highlight 抑制（CSS）
+   ④prefers-reduced-motion 尊重:命中即直接靜態降級,不啟動渲染迴圈
+   ⑤contextlost/restored 恢復防迴圈:sessionStorage 守衛,單 session 最多自動重載一次
+   ⑥powerPreference 改 default（避免強制高效能 GPU 路徑,行動端省電且相容性更廣）
+   保留規格:WebGL 立體渲染管線——空間景深/Fresnel 折射高光/內部星塵與能量流;
    拖曳旋轉(慣性)·滾輪縮放·觸控滑動·點擊能量脈衝(色溫切換+狀態聯動);WebGL 不支援環境優雅降級。
    自研管線:零外部未控依賴。效能:單一 rAF 迴圈、零逐幀配置、DPR≤2、離屏/隱藏自動暫停、context 防洩漏。 */
 (function () {
@@ -7,10 +15,16 @@
   var cv = document.getElementById("crystal");
   var statusEl = document.getElementById("orb-status");
   if (!cv) return;
-  var hooks = { mode: "fallback", rotY: function () { return 0; }, zoom: function () { return 0; }, bursts: function () { return 0; }, temp: function () { return 0; } };
+  var hooks = { mode: "fallback", rotY: function () { return 0; }, zoom: function () { return 0; }, bursts: function () { return 0; }, temp: function () { return 0; }, quality: function () { return 0; }, fps: function () { return 0; }, dpr: function () { return 1; } };
   window.__orb = hooks;
+  var running = true;
 
+  /* ── prefers-reduced-motion:命中即靜態降級,不啟動渲染 ── */
+  function reducedMotion() {
+    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
   function fallback(msg) {
+    running = false;
     cv.style.display = "none";
     var fb = document.getElementById("orb-fallback");
     if (fb) fb.style.display = "grid";
@@ -19,8 +33,9 @@
     hooks.mode = "fallback";
   }
   function setStatus(t) { if (statusEl) statusEl.textContent = t; }
+  if (reducedMotion()) { fallback("prefers-reduced-motion"); return; }
 
-  var gl = cv.getContext("webgl", { antialias: true, alpha: true, powerPreference: "high-performance" }) ||
+  var gl = cv.getContext("webgl", { antialias: true, alpha: true, powerPreference: "default" }) ||
            cv.getContext("experimental-webgl", { antialias: true, alpha: true });
   if (!gl) { fallback("WebGL 不支援"); return; }
 
@@ -102,9 +117,9 @@
   var LAT = 36, LON = 56, R = 1.0;
   var sv = [], si = [];
   for (var la = 0; la <= LAT; la++) {
-    var th = la / LAT * Math.PI, st = Math.sin(th), ct = Math.cos(th);
+    var th = la / LAT * Math.PI, st2 = Math.sin(th), ct = Math.cos(th);
     for (var lo = 0; lo <= LON; lo++) {
-      var ph = lo / LON * Math.PI * 2, x = st * Math.cos(ph), y = ct, z = st * Math.sin(ph);
+      var ph = lo / LON * Math.PI * 2, x = st2 * Math.cos(ph), y = ct, z = st2 * Math.sin(ph);
       sv.push(x * R, y * R, z * R, x, y, z);
     }
   }
@@ -115,7 +130,7 @@
   var sphereVBO = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, sphereVBO);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(sv), gl.STATIC_DRAW);
   var sphereIBO = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sphereIBO);
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(si), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, new Uint16Array(si), gl.STATIC_DRAW);
   var SPH_N = si.length;
 
   /* ── 內部星塵(種子隨機,均勻球內 0.86R)── */
@@ -141,8 +156,9 @@
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(rv), gl.STATIC_DRAW);
   var RINGS = [{ r: 1.42, tilt: 0.42, sp: 0.28 }, { r: 1.66, tilt: -0.30, sp: -0.20 }, { r: 1.88, tilt: 0.12, sp: 0.13 }];
 
-  /* ── 矩陣(行主序,最小集)── */
+  /* ── 矩陣(行主序,最小集;全部預分配——零逐幀配置)── */
   var M = new Float32Array(16), MP = new Float32Array(16), MV = new Float32Array(16), MT = new Float32Array(16);
+  var MX = new Float32Array(16), MY = new Float32Array(16), MS = new Float32Array(16), MR = new Float32Array(16), MRY = new Float32Array(16);
   function mI(o) { o.set([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]); }
   function mPersp(o, fovy, asp, n, f) { var t = 1 / Math.tan(fovy / 2); o.set([t/asp,0,0,0, 0,t,0,0, 0,0,(f+n)/(n-f),-1, 0,0,2*f*n/(n-f),0]); }
   function mMul(o, x, y) { for (var c = 0; c < 4; c++) for (var r2 = 0; r2 < 4; r2++) { var s = 0;
@@ -163,6 +179,19 @@
     setStatus(STATUSES[STATUS_IDX]);
   }
 
+  /* ── FPS 自適應降級器(qlv 0→3;連續低影格率才觸發,脈衝瞬間豁免)── */
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var qlv = 0, fpsAcc = 0, fpsN = 0, lastFps = 60, PN_DRAW = PN, RING_DRAW = RINGS.length, lowStreak = 0;
+  if ((navigator.hardwareConcurrency || 4) <= 2) { qlv = 1; dpr = Math.min(dpr, 1.25); } /* 低階裝置啟始保守 */
+  function degrade() {
+    if (qlv >= 3) { fallback("連續低影格率(" + Math.round(lastFps) + "fps)"); return; }
+    qlv++;
+    if (qlv === 1) { dpr = Math.min(window.devicePixelRatio || 1, 1.25); setStatus("節能模式 · 已調降解析度"); }
+    else if (qlv === 2) { dpr = 1; PN_DRAW = Math.floor(PN / 2); RING_DRAW = 2; setStatus("節能模式 · 已調降星塵負載"); }
+    else if (qlv === 3) { fallback("連續低影格率(" + Math.round(lastFps) + "fps)"); return; }
+    fit();
+  }
+
   /* ── 互動:拖曳(慣性)/滾輪/觸控/點擊/懸停 ── */
   cv.addEventListener("pointerdown", function (e) {
     st.drag = true; st.moved = 0; st.px = e.clientX; st.py = e.clientY; st.pt = performance.now();
@@ -181,6 +210,7 @@
     if (!st.drag) return; st.drag = false;
     if (st.moved < 8 && performance.now() - st.pt < 400) pulse();  /* 點擊(非拖曳)→能量脈衝 */
   });
+  cv.addEventListener("pointercancel", function () { st.drag = false; st.hover = 0; }); /* v5.5.1:行動端歸位防卡死 */
   cv.addEventListener("pointerleave", function () { st.drag = false; });
   cv.addEventListener("pointerenter", function () { st.hover = 1; });
   cv.addEventListener("pointerout", function () { st.hover = 0; });
@@ -189,8 +219,7 @@
     st.dist = Math.max(2.15, Math.min(4.6, st.dist + e.deltaY * 0.0016));
   }, { passive: false });
 
-  /* ── 尺寸(DPR≤2)與可見性守衛 ── */
-  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  /* ── 尺寸(DPR 分級)與可見性守衛 ── */
   function fit() {
     var w = cv.clientWidth || 300, h = cv.clientHeight || w;
     var W = Math.round(w * dpr), H = Math.round(h * dpr);
@@ -205,10 +234,16 @@
     new IntersectionObserver(function (en) { onscreen = en[0].isIntersecting; }, { threshold: 0.02 }).observe(cv);
   }
   cv.addEventListener("webglcontextlost", function (e) { e.preventDefault(); running = false; });
-  cv.addEventListener("webglcontextrestored", function () { location.reload(); });
+  cv.addEventListener("webglcontextrestored", function () {
+    /* v5.5.1:恢復防迴圈——單一 session 最多自動重載一次,防無限 reload */
+    try {
+      if (!sessionStorage.getItem("orb-reload-v551")) { sessionStorage.setItem("orb-reload-v551", "1"); location.reload(); }
+      else fallback("context restored(重載守衛命中)");
+    } catch (err) { fallback("context restored"); }
+  });
 
-  /* ── 渲染迴圈(單 rAF;零逐幀配置)── */
-  var running = true, last = performance.now();
+  /* ── 渲染迴圈(單 rAF;零逐幀配置——矩陣全用預分配暫存)── */
+  var last = performance.now();
   mI(M); fit();
   setStatus("水晶球待感應 · 拖曳旋轉 / 點擊感應");
   function frame(now) {
@@ -216,6 +251,10 @@
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (!(visible && onscreen)) { requestAnimationFrame(frame); return; }
     var t = (now - st.t0) / 1000;
+    /* FPS 取樣:50 幀窗均;6 秒寬限+連續兩窗 <26fps 才降級(防載入抖動誤判;脈衝瞬間豁免) */
+    fpsAcc += dt; fpsN++;
+    if (fpsN >= 50) { lastFps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0;
+      if (lastFps < 26 && t > 6 && st.burst < 0.3) { lowStreak++; if (lowStreak >= 2) degrade(); } else lowStreak = 0; }
     /* 慣性+自轉+脈衝衰減 */
     if (!st.drag) { st.ry += st.vy; st.rx += st.vx; st.vy *= Math.exp(-dt * 3); st.vx *= Math.exp(-dt * 3);
       st.ry += dt * 0.16 * (1 + (st.speed - 1) * 0.6); }
@@ -226,8 +265,8 @@
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     mPersp(MP, 0.66, cv.width / cv.height, 0.1, 100);
     mTrans(MV, 0, 0, -st.dist);
-    mRotX(M, st.rx); var MX = new Float32Array(M);
-    mRotY(M, st.ry); var MY = new Float32Array(M);
+    mRotX(M, st.rx); MX.set(M);
+    mRotY(M, st.ry); MY.set(M);
     mMul(M, MX, MY);  /* model = rotX·rotY */
     /* 球體 */
     gl.enable(gl.DEPTH_TEST); gl.depthMask(true); gl.disable(gl.BLEND);
@@ -242,25 +281,25 @@
     gl.uniform1f(pS.u.uBurst, st.burst); gl.uniform1f(pS.u.uHover, st.hover);
     gl.uniform3f(pS.u.uCam, 0, 0, st.dist);
     gl.drawElements(gl.TRIANGLES, SPH_N, gl.UNSIGNED_SHORT, 0);
-    /* 星軌環 */
+    /* 星軌環(qlv≥2 減為 2 環) */
     gl.depthMask(false); gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
     gl.useProgram(pR.p);
     gl.bindBuffer(gl.ARRAY_BUFFER, rVBO);
     gl.enableVertexAttribArray(pR.a.aPos); gl.vertexAttribPointer(pR.a.aPos, 3, gl.FLOAT, false, 0, 0);
     gl.uniformMatrix4fv(pR.u.uProj, false, MP); gl.uniformMatrix4fv(pR.u.uView, false, MV);
     gl.uniform1f(pR.u.uTemp, st.temp); gl.uniform1f(pR.u.uHover, st.hover);
-    for (var i = 0; i < RINGS.length; i++) {
+    for (var i = 0; i < RING_DRAW; i++) {
       var g = RINGS[i];
-      mScale(MT, g.r); var MS = new Float32Array(MT);
-      mRotY(M, t * g.sp); var MR = new Float32Array(M);
-      mMul(M, MR, MS); var MRY = new Float32Array(M);
+      mScale(MT, g.r); MS.set(MT);
+      mRotY(M, t * g.sp); MR.set(M);
+      mMul(M, MR, MS); MRY.set(M); /* rotY(spin)·scale */
       mRotX(M, g.tilt + Math.sin(t * 0.3 + i) * 0.06);
-      mMul(M, M, MRY); /* rotX(tilt)·rotY(spin)·scale */
+      mMul(M, M, MRY); /* rotX(tilt)·前述 */
       gl.uniformMatrix4fv(pR.u.uModel, false, M);
       gl.uniform1f(pR.u.uPulse, st.burst);
       gl.drawArrays(gl.LINE_LOOP, 0, RN);
     }
-    /* 內部星塵(POINTS 加色) */
+    /* 內部星塵(POINTS 加色;qlv≥2 半載) */
     gl.useProgram(pP.p);
     gl.bindBuffer(gl.ARRAY_BUFFER, pVBO);
     gl.enableVertexAttribArray(pP.a.aPos); gl.vertexAttribPointer(pP.a.aPos, 3, gl.FLOAT, false, 0, 0);
@@ -271,18 +310,21 @@
     gl.uniformMatrix4fv(pP.u.uProj, false, MP); gl.uniformMatrix4fv(pP.u.uView, false, MV);
     gl.uniform1f(pP.u.uTime, t); gl.uniform1f(pP.u.uBurst, st.burst);
     gl.uniform1f(pP.u.uSpeed, st.speed); gl.uniform1f(pP.u.uTemp, st.temp);
-    gl.drawArrays(gl.POINTS, 0, PN);
+    gl.drawArrays(gl.POINTS, 0, PN_DRAW);
     gl.depthMask(true);
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
   setStatus("水晶球待感應 · 拖曳旋轉 / 點擊感應");
 
-  /* ── E2E/驗收掛鉤(唯讀取樣+脈衝觸發)── */
+  /* ── E2E/驗收掛鉤(唯讀取樣+脈衝觸發;v5.5.1 增 quality/fps/dpr 取樣)── */
   hooks.mode = "webgl";
   hooks.rotY = function () { return st.ry; };
   hooks.zoom = function () { return st.dist; };
   hooks.bursts = function () { return st.bursts; };
   hooks.temp = function () { return st.temp; };
+  hooks.quality = function () { return qlv; };
+  hooks.fps = function () { return Math.round(lastFps); };
+  hooks.dpr = function () { return dpr; };
   hooks.pulse = function () { pulse(); };
 })();

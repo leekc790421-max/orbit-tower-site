@@ -9,8 +9,8 @@ ROOT = os.path.join(os.getcwd(), "vip-site")
 OUT = os.path.join(ROOT, "governance", "backup-manifest.sha256")
 SELF_REL = "governance/backup-manifest.sha256"
 RULES_FROZEN = [
-    "# SNT Vip 部署完整性清單 (backup-manifest.sha256) — 站體 v5.5.0",
-    "# 生成:2026-11-15,P5 VIP Productization 沙盒建置版(MANUS-REVIEW-RESULT: PASS+整合執行令+P5 規格追加令 3D 立體互動水晶球;部署鐵律:工作區→沙盒→L1→L2→編版→部署)",
+    "# SNT Vip 部署完整性清單 (backup-manifest.sha256) — 站體 v5.5.1",
+    "# 生成:2026-11-15,v5.5.1 修復輪(MANUS-REVIEW-RESULT: FAIL 缺失 M1/M2/M3 點對點修復;規則凍結重算;部署鐵律:工作區→沙盒→L1→L2→編版→部署)",
     "# 涵蓋:Vip 站部署輸出之全部檔案(HTML/CSS/JS/SVG/PNG/ICO/MD/TXT 等,含 VERSION 與 governance/scripts),規則凍結,僅重算。",
     "# 驗證方式:於 Vip 站輸出根目錄執行 `sha256sum -c governance/backup-manifest.sha256`,或對站點 URL 逐一比對。",
     "#",

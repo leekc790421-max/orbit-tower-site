@@ -1,4 +1,4 @@
-/* 光曦星匯 Vip · 高端文化顧問與 VIP 會員服務 — 站體 v5.5.0 (P5 沙盒) · 視覺延續 SNT 四站深色金語言 */
+/* 光曦星匯 Vip · 高端文化顧問與 VIP 會員服務 — 站體 v5.5.1 (P5 沙盒修復輪) · 視覺延續 SNT 四站深色金語言 */
 :root{
   --gold:#d4af37;--gold-l:#f3e5ab;--gold-d:#b8952e;--ice:#7cc7e8;--ice-d:#3d8fb5;
   --bg:#0a0b0e;--panel:#12141a;--panel-2:#161922;--ink:#e7e8ec;--mut:#a7aab2;--faint:#6b6f78;
@@ -105,3 +105,14 @@ h3{font-size:17.5px;font-weight:800;margin-bottom:8px}
   .frow{grid-template-columns:1fr}
 }
 @media(max-width:560px){.g3,.g2,.steps{grid-template-columns:1fr}.hero{padding:64px 0 44px}}
+
+/* v5.5.1 修復輪 M1:行動端觸控/降級強化 + M2 預填與對照標記 */
+#crystal{-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+#orb-fallback{touch-action:pan-y}
+.fld.prefilled label::after{content:"（已依方案卡連結預填）";color:var(--ok);font-size:12px;margin-left:8px;font-weight:500}
+small.xref{display:block;margin-top:6px;font-size:12px;color:var(--faint)}
+small.xref a{color:var(--gold-l)}
+@media (prefers-reduced-motion: reduce){
+  #crystal{display:none!important}
+  #orb-fallback{display:grid!important}
+}
