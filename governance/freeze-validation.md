@@ -16,7 +16,9 @@
 | P2-R3（v5.3.6→v5.3.7） | 141→146 條（+5 驗證檔,見 §2.3）；13 檔 hash 重算（與 scripts/verify_freeze.py 實測一致） | **零** | **零**（唯一差異=計數行→「共 146 檔」） | COPILOT-EXEC-008（允許修改：治理文件/Release Registry/Deploy Log/Tag Validation/Freeze Rules/相關驗證檔案） | 否 | 否 |
 | P2-R4（v5.3.7→v5.3.8） | 146→146 條（+0/−0,無新檔）；15 檔 hash 重算（scripts/verify_freeze.py v2 實測;git 檔案層級另含 manifest 本檔重算,共 16 檔——manifest 自我排除不入條目集） | **零** | **零**（唯一差異=計數行不變→「共 146 檔」不變） | MANUS-REVIEW-009 FAIL 之缺失修復（治理驗證檔範圍） | 否 | 否 |
 | P2-R5（v5.3.8→v5.3.9） | 146→149 條（+3 驗證/存證檔:scripts/deploy_chain_audit.py、governance/deploy-replay-2026-11-15.txt、governance/freeze-replay-2026-11-15.txt）；15 檔 hash 重算（實測=verify_freeze.py v2 工作區段;git 層級另含 manifest 本檔重算） | **零** | **零**（唯一差異=計數行→「共 149 檔」） | Manus P2-R4 複查修繕方案（DEF-002 工具補強+DEF-003 部署鏈重建;治理/驗證檔範圍） | 否 | 否 |
-| P2-R6（v5.3.9→v5.3.10,本版） | 149→149 條（+0/−0,無新檔）；18 檔 hash 重算（實測=verify_freeze.py v2 工作區段:工具修正+雙存證重生成+版本字串+治理檔;freeze-replay 自參照列入） | **零** | **零**（唯一差異=計數行不變→「共 149 檔」不變） | 自行覆核①發現:deploy_chain_audit.py 內容核實候選取樣漏列 :MANIFEST 路徑致存證判定行失真;依 Manus 方案③以新版本發佈修正,不覆寫 v5.3.9 | 否 | 否 |
+| P2-R6（v5.3.9→v5.3.10） | 149→149 條（+0/−0,無新檔）；18 檔 hash 重算（實測=verify_freeze.py v2 工作區段:工具修正+雙存證重生成+版本字串+治理檔;freeze-replay 自參照列入） | **零** | **零**（唯一差異=計數行不變→「共 149 檔」不變） | 自行覆核①發現:deploy_chain_audit.py 內容核實候選取樣漏列 :MANIFEST 路徑致存證判定行失真;依 Manus 方案③以新版本發佈修正,不覆寫 v5.3.9 | 否 | 否 |
+
+**P4 併行施工聲明（2026-11-15,P4 啟動後生效）**：P2/P3 已結案（v5.3.10 取得 Manus PASS）。P4 Orbit Productization 施工起，scripts/verify_freeze.py 升級 **P4 併行模式**：immutable tag 鏈止於 v5.3.10（六段硬性斷言不變，v5.3.9→v5.3.10 段=上列 P2-R6 核定差異），工作區段改為「**Tower 交付態逐檔硬驗**」——以 v5.3.10 manifest 之 149 檔逐檔 sha256 硬驗，僅 **P4 起點核定工具調整 3 檔**可異動（scripts/verify_freeze.py、governance/freeze-validation.md、governance/freeze-replay-2026-11-15.txt），其餘 146 檔零變更；工作區新增限 `orbit-site/**`（P4 Orbit 站體，部署至獨立 Vercel 專案），零移除。Tower 線上交付態不受 P4 施工影響。
 
 **本報告即「核准差異清單」之申請件**：上表所列全部差異均為上述三張核定令授權範圍內之變更,無任何未授權條目變動（誤變動=0）。請 MANUS 核准本清單;核准後,v5.3.7 manifest 即為新凍結基線,後續版本對其遵循 ZERO-RULES-DIFF。
 
@@ -82,6 +84,7 @@ curl -s https://tower.xingdeng.tw/governance/backup-manifest.sha256 | sha256sum 
 | 版本 | 日期 | 變更 |
 |---|---|---|
 | v1.0 | 2026-11-15 | 依 COPILOT-EXEC-008 建立（P2-R3 DEF-002）：三版 Diff、誤變動判定（0 筆）、核准差異清單申請 |
+| v1.4 | 2026-11-15 | P4 併行聲明+工具 P4 併行模式:鏈延至 v5.3.10（六段 immutable tag 硬性斷言）;工作區段改 Tower 交付態逐檔硬驗（146 檔零變更+3 檔核定調整）+工作區新增限 orbit-site/**+零移除 |
 | v1.3 | 2026-11-15 | P2-R6（自行覆核①工具修正輪）:新增 P2-R6 列;verify_freeze.py 鏈延長——六 immutable tag v5.3.4→v5.3.9（新增 v5.3.8→v5.3.9 段硬性斷言=+3/−0/15 檔）+工作區 v5.3.10（無新增/無移除/規則零差異）;freeze-replay 存證重跑 |
 | v1.2 | 2026-11-15 | P2-R5（Manus P2-R4 複查修繕方案④）:P2-R4 列補實測值（16 檔）;新增 P2-R5 列;scripts/verify_freeze.py 升級 v2——五點鏈 v5.3.4→v5.3.8+工作區、四段 immutable tag 硬性斷言（條目/新增/移除/hash 變更/規則差異,不符即 exit 1）、工作區結構斷言;重跑輸出存證 governance/freeze-replay-2026-11-15.txt |
 | v1.1 | 2026-11-15 | P2-R4（MANUS-REVIEW-009 FAIL 修復）：§1「14 檔」筆誤更正為 13（與 verify_freeze.py 實測一致）、§2.3 新增/重算清單改附實測清單、新增 P2-R4 列 |

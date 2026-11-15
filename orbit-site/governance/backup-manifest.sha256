@@ -1,0 +1,20 @@
+# SNT Orbit 部署完整性清單 (backup-manifest.sha256) — 站體 v5.4.0
+# 生成:2026-11-15,P4 Orbit Productization 沙盒交付(GEMINI-ORDER-P4-START;部署鐵律:工作區→沙盒→L1→L2→編版→部署)
+# 涵蓋:Orbit 站部署輸出之全部檔案(HTML/CSS/SVG/MD/TXT 等,含 VERSION 與 governance/scripts),規則凍結,僅重算。
+# 驗證方式:於 Orbit 站輸出根目錄執行 `sha256sum -c governance/backup-manifest.sha256`,或對站點 URL 逐一比對。
+#
+# 排除規則:
+#   1. governance/backup-manifest.sha256 —— 本檔自身,自參照不可行。
+#   2. .git/ —— 版本控制內部檔案,非部署輸出。
+#19942996006f1aaa789302780836e7f02b6246c84cc9acdd73cc177081669097  VERSION
+a5cad888d0aab10f15217273b556d2ed610c398ad620d8a31c6b465f706a9e4d  assets/logo-orbit.svg
+f7b7c7cb25df637d4962fdaa9982a1ab3ac3c62874ef610a3bc73d6f36e972bb  assets/site.css
+63ad01764db85e8e3239120c8b012937cb69a95418f0180acee7fd140c19130b  enterprise/index.html
+ff78956ba9ffc4981e987f3cbbc34b56561cdcc75ca39170e3712826ba91c098  governance/deploy-log.md
+08b3cee370155df3adf871a7d071307b97363603b59e9a61dde72da1f4b6e7e3  index.html
+21731e0697dd49695c1ecf821b216935ad00d94392b5ac1a1f7bdafd671d74c3  quote/index.html
+59d1efa84bd506f7625e64d2fee824836057d2105e0f054ba935bbffb24367d2  rental/index.html
+04b8932008c87bc7d77b00e8cc70f49805af1539ef5f81442c615f8e20febfde  scripts/deploy.py
+1866052a5f006dd8be69137403062f384e49cec19bab993f14b1aef127257935  scripts/gen_manifest.py
+f2fa422456fb46ad4bdaa75d601c9f660b97d57095709ffc2605f8b67b721a2f  scripts/l1_check.py
+d48d3b0d3926cf644dbc1fa121510b36ea254590e2c0a75e7411933eac8e4b4b  version/index.html

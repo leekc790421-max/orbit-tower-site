@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>報價入口 Quote Portal｜人工評估申請｜光曦星軌 Orbit</title>
+<meta name="description" content="光曦星軌標準化報價入口：填寫結構化申請，由人工評估窗口逐件檢視，回覆方案建議與正式報價。">
+<meta property="og:title" content="報價入口 Quote Portal｜光曦星軌 Orbit">
+<meta property="og:description" content="標準化報價入口：結構化申請＋人工逐件評估。">
+<link rel="icon" type="image/svg+xml" href="/assets/logo-orbit.svg">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+<a class="brand" href="/"><img src="/assets/logo-orbit.svg" alt="光曦星軌 Orbit 標識"><span><b>光曦星軌 ORBIT</b><small>XINGDENG ORBIT HQ</small></span></a>
+<button class="mbtn" onclick="document.getElementById('m').classList.toggle('open')">選單</button>
+<ul class="menu" id="m">
+<li><a href="/">首頁</a></li>
+<li><a href="/enterprise/">企業方案</a></li>
+<li><a href="/quote/" class="on">報價入口</a></li>
+<li><a href="/rental/">租賃方案</a></li>
+<li><a href="/version/">版本資訊</a></li>
+</ul>
+</div></nav>
+
+<header class="hero" style="padding:64px 0 44px"><div class="wrap">
+<span class="kicker">Quote Portal · 人工評估</span>
+<h1>報價入口：一次填齊，人工逐件評估</h1>
+<p class="lead">本表單為標準化報價入口。提交後由人工評估窗口逐件檢視——我們不提供自動報價，回覆內容為方案建議與正式報價依據。</p>
+</div></header>
+
+<section style="padding-top:20px"><div class="wrap">
+<div class="form" id="qform">
+<div class="frow">
+<div class="fld" id="f-company"><label for="company">公司名稱 <em>（必填）</em></label><input id="company" type="text" autocomplete="organization" placeholder="例：某某股份有限公司"><p class="err">請填寫公司名稱</p></div>
+<div class="fld" id="f-name"><label for="name">聯絡人 <em>（必填）</em></label><input id="name" type="text" autocomplete="name" placeholder="例：王大明"><p class="err">請填寫聯絡人</p></div>
+</div>
+<div class="frow">
+<div class="fld" id="f-email"><label for="email">Email <em>（必填，評估回覆用）</em></label><input id="email" type="email" autocomplete="email" placeholder="name@company.com"><p class="err">請填寫有效 Email</p></div>
+<div class="fld" id="f-phone"><label for="phone">連絡電話 <em>（選填）</em></label><input id="phone" type="tel" autocomplete="tel" placeholder="例：02-1234-5678"></div>
+</div>
+<div class="fld" id="f-plan"><label for="plan">方案興趣 <em>（必填）</em></label>
+<select id="plan">
+<option value="">請選擇…</option>
+<option>企業數位總部・標準 Standard</option>
+<option>企業數位總部・進階 Advanced（含 AI 對話模組）</option>
+<option>企業數位總部・旗艦 Flagship（客製評估）</option>
+<option>數位總部租賃方案 Rental</option>
+<option>尚未確定，請協助評估</option>
+</select><p class="err">請選擇方案興趣</p></div>
+<div class="fld"><label for="budget">預算區間 <em>（選填，僅供評估參考）</em></label>
+<select id="budget">
+<option value="">暫不提供</option>
+<option>10 萬以內</option>
+<option>10 萬 – 30 萬</option>
+<option>30 萬 – 60 萬</option>
+<option>60 萬以上</option>
+</select></div>
+<div class="fld" id="f-need"><label for="need">需求概述 <em>（必填，20 字以上）</em></label><textarea id="need" rows="5" placeholder="請描述：目前狀況、希望達成的目標、預計內容（如產品數、語系）、期望時程…"></textarea><p class="err">請填寫至少 20 字的需求概述</p></div>
+<button class="btn btn-gold" type="button" id="submit">送出申請</button>
+<p class="note" style="margin-top:14px">提交即表示同意申請內容用於方案評估。我們不將申請資料用於評估以外用途；細節見站體治理文件與後續簽署之保密條款。</p>
+<div class="summary" id="summary"></div>
+<div class="done" id="done"></div>
+</div>
+</div></section>
+
+<section style="padding-top:26px"><div class="wrap">
+<div class="sec-head"><span class="kicker">評估說明</span><h2>送出後會發生什麼</h2></div>
+<div class="steps" style="grid-template-columns:repeat(3,1fr)">
+<div class="step"><h3>收件確認</h3><p>申請進入人工評估佇列，逐件編號管理。</p></div>
+<div class="step"><h3>人工評估</h3><p>評估窗口檢視需求，必要時以 Email 往返確認。</p></div>
+<div class="step"><h3>回覆報價</h3><p>回覆方案建議、時程與正式報價依據，供企業決策。</p></div>
+</div>
+</div></section>
+
+<footer class="foot"><div class="wrap">
+<div><h4>光曦星軌 ORBIT</h4><p>企業數位總部——企業展示、企業方案、人工評估、標準化報價入口與租賃方案。</p></div>
+<div><h4>站內導覽</h4><a href="/">首頁</a><a href="/enterprise/">企業方案</a><a href="/rental/">租賃方案</a><a href="/version/">版本資訊</a></div>
+<div><h4>SNT 全站互聯</h4><a href="https://tower.xingdeng.tw/">光曦星閣 Tower</a><a href="https://tower.xingdeng.tw/compliance">Tower 合規證據</a><a href="/version/">Orbit 治理與版本</a></div>
+</div>
+<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.0 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
+</footer>
+<script>
+(function () {
+  var SUBMIT_NOTE = "【沙盒階段說明】本站為 P4 沙盒交付版：標準化報價入口之介面與驗證邏輯已就位,遞送通道（人工評估窗口信箱/API）於正式環境配置後啟用;屆時無需重新填寫。";
+  function val(id) { return document.getElementById(id).value.trim(); }
+  function bad(id, on) { document.getElementById(id).classList.toggle("bad", on); return on; }
+  document.getElementById("submit").addEventListener("click", function () {
+    var fail = false;
+    fail = bad("f-company", !val("company")) || fail;
+    fail = bad("f-name", !val("name")) || fail;
+    fail = bad("f-email", !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val("email"))) || fail;
+    fail = bad("f-plan", !val("plan")) || fail;
+    fail = bad("f-need", val("need").length < 20) || fail;
+    if (fail) { document.querySelector(".fld.bad").scrollIntoView({ block: "center", behavior: "smooth" }); return; }
+    var d = new Date();
+    var no = "ORB-" + d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0") + "-" + String(Math.floor(1000 + Math.random() * 9000));
+    var lines = [
+      "申請編號：" + no, "申請時間：" + d.toLocaleString("zh-TW", { hour12: false }),
+      "────────────────",
+      "公司名稱：" + val("company"), "聯絡人：" + val("name"), "Email：" + val("email"),
+      "連絡電話：" + (val("phone") || "未填"), "方案興趣：" + val("plan"),
+      "預算區間：" + (val("budget") || "暫不提供"),
+      "────────────────", "需求概述：", val("need")
+    ].join("\n");
+    var s = document.getElementById("summary");
+    s.textContent = lines; s.style.display = "block";
+    var done = document.getElementById("done");
+    done.textContent = "✅ 申請已生成（" + no + "）。" + SUBMIT_NOTE;
+    done.style.display = "block";
+    done.scrollIntoView({ block: "center", behavior: "smooth" });
+  });
+})();
+</script>
+</body>
+</html>

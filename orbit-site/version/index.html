@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>版本資訊 v5.4.0｜光曦星軌 Orbit</title>
+<meta name="description" content="光曦星軌 Orbit 站體版本資訊：v5.4.0 P4 沙盒交付版。版本域定義、P4 工項狀態、沙盒部署登記與驗證。">
+<meta property="og:title" content="版本資訊 v5.4.0｜光曦星軌 Orbit">
+<meta property="og:description" content="Orbit 站體 v5.4.0：P4 沙盒交付版，治理與驗證紀錄公開。">
+<link rel="icon" type="image/svg+xml" href="/assets/logo-orbit.svg">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"光曦星軌 Orbit 企業數位總部","version":"v5.4.0","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://orbit.xingdeng.tw/"}
+</script>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+<a class="brand" href="/"><img src="/assets/logo-orbit.svg" alt="光曦星軌 Orbit 標識"><span><b>光曦星軌 ORBIT</b><small>XINGDENG ORBIT HQ</small></span></a>
+<button class="mbtn" onclick="document.getElementById('m').classList.toggle('open')">選單</button>
+<ul class="menu" id="m">
+<li><a href="/">首頁</a></li>
+<li><a href="/enterprise/">企業方案</a></li>
+<li><a href="/quote/">報價入口</a></li>
+<li><a href="/rental/">租賃方案</a></li>
+<li><a href="/version/" class="on">版本資訊</a></li>
+</ul>
+</div></nav>
+
+<header class="hero" style="padding:60px 0 40px"><div class="wrap">
+<span class="kicker">Version · 治理透明</span>
+<h1>版本資訊 v5.4.0</h1>
+<p style="font-size:14px;opacity:.7;margin-top:8px">v5.4.0 · P4 沙盒交付版 · 2026-11-15</p>
+</div></header>
+
+<section style="padding-top:16px"><div class="wrap">
+<div class="sec-head"><span class="kicker">版本域定義</span><h2>版本域（v5.1.1 核定 · 不得混用）</h2></div>
+<table class="tbl">
+<tr><th style="width:26%">域</th><th>版本</th><th style="width:34%">說明</th></tr>
+<tr><td><b>Orbit 站體</b></td><td><b>v5.4.x</b>（本站 v5.4.0）</td><td>P4 Orbit Productization 起始版本</td></tr>
+<tr><td>Tower 站體</td><td>v5.3.10（已結案）</td><td>光曦星閣，P2/P3 已取得 Manus PASS</td></tr>
+<tr><td>治理文件</td><td>v5.1.1</td><td>SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001</td></tr>
+<tr><td>產品包文件</td><td>v5.2.0</td><td>README / Setup / Warranty</td></tr>
+</table>
+</div></section>
+
+<section><div class="wrap">
+<div class="sec-head"><span class="kicker">工項狀態</span><h2>P4 核心建置工項（GEMINI-ORDER-P4-START）</h2></div>
+<table class="tbl">
+<tr><th style="width:34%">工項</th><th style="width:14%">狀態</th><th>本版落實</th></tr>
+<tr><td>① 企業數位總部展示架構</td><td>✅ 沙盒交付</td><td>首頁主視覺與定位、/enterprise/ 三級方案展示、品牌命名光曦星軌對齊 SNT v5.1.1、與 Tower 全站互聯（頁尾/連結）</td></tr>
+<tr><td>② 人工評估與報價入口</td><td>✅ 沙盒交付</td><td>/quote/ 標準化報價入口：結構化欄位＋前端驗證＋申請摘要生成；人工評估流程說明。遞送通道（窗口信箱/API）為正式環境配置項，沙盒以摘要確認呈現入口邏輯（頁內明示）</td></tr>
+<tr><td>③ 租賃方案模組</td><td>✅ 沙盒交付</td><td>/rental/ 三檔方案、計價邏輯（三因素結構）與商務條款要點；定價數字一律經人工評估報價提出（頁內明示）</td></tr>
+<tr><td>部署鐵律遵循</td><td>✅</td><td>工作區開發→沙盒測試→L1→L2→備份編版 v5.4.0→沙盒（preview）部署；Production（orbit.xingdeng.tw）未觸碰，待 Manus PASS 後執行</td></tr>
+</table>
+</div></section>
+
+<section><div class="wrap">
+<div class="sec-head"><span class="kicker">部署登記</span><h2>沙盒部署登記與驗證</h2></div>
+<table class="tbl">
+<tr><th style="width:26%">項目</th><th>內容</th></tr>
+<tr><td>本版（v5.4.0）</td><td>沙盒部署：見 GitHub Release <a href="https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.4.0">v5.4.0</a> 部署登記（Deploy ID/Timestamp/沙盒 URL）</td></tr>
+<tr><td>凍結完整性</td><td>Orbit manifest（<a href="/governance/backup-manifest.sha256">/governance/backup-manifest.sha256</a>）涵蓋部署輸出全部檔案，sha256sum -c 全數 OK</td></tr>
+<tr><td>Tower 併行保護</td><td>Tower 站 v5.3.10 交付態 149 檔零變更（scripts/verify_freeze.py P4 併行模式逐檔硬驗）</td></tr>
+<tr><td>治理</td><td>SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001；待 Manus 獨立覆核（P4 沙盒輪）</td></tr>
+</table>
+<p class="note">正式站 orbit.xingdeng.tw 域名於取得 Manus PASS 後配置；本沙盒版以 preview 唯一 URL 交付覆核。</p>
+</div></section>
+
+<footer class="foot"><div class="wrap">
+<div><h4>光曦星軌 ORBIT</h4><p>企業數位總部——企業展示、企業方案、人工評估、標準化報價入口與租賃方案。</p></div>
+<div><h4>站內導覽</h4><a href="/">首頁</a><a href="/enterprise/">企業方案</a><a href="/quote/">報價入口</a><a href="/rental/">租賃方案</a></div>
+<div><h4>SNT 全站互聯</h4><a href="https://tower.xingdeng.tw/">光曦星閣 Tower</a><a href="https://tower.xingdeng.tw/compliance">Tower 合規證據</a><a href="https://tower.xingdeng.tw/governance/deployment-registry.md">Tower 部署對帳 SSOT</a></div>
+</div>
+<div class="wrap"><p class="copyright">© 2026 光曦星軌 Orbit · SNT 四站改造工程 P4 · 站體 v5.4.0 · 依 SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001 治理</p></div>
+</footer>
+</body>
+</html>
