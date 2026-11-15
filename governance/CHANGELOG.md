@@ -7,6 +7,23 @@
 
 ---
 
+## v5.3.10 defect-fix · 2026-11-15 · P2-R6 Defect Fix (自行覆核工具修正輪)
+
+### 變更摘要
+
+P2-R5 交付後之自行覆核（依創辦人指示「完成後先自行覆核一次」）發現:scripts/deploy_chain_audit.py 內容核實之候選取樣漏列 `:MANIFEST` 路徑（`git show` 取到 commit 物件而非 manifest blob）,致已入庫存證 governance/deploy-replay-2026-11-15.txt 之「判定」行失真（live 與候選全不符→「需排查」;實際 live manifest=HEAD blob,交付當時已人工驗證 afe12092…＝79a4e8a blob ✓）。依 Manus 修繕方案③同一機制:**不覆寫 v5.3.9,以新版本 v5.3.10 發佈修正**。
+
+| # | 修正 | 內容 |
+|---|---|---|
+| 1 | deploy_chain_audit.py | 候選取樣改為 `git show <ref>:governance/backup-manifest.sha256`（immutable tags+77924c1+HEAD）;重放判定恢復正確 |
+| 2 | 存證重生成 | governance/deploy-replay-2026-11-15.txt 以修正後工具重生成（v5.3.10 交付前快照:169 筆,最新 READY=dpl_Gm3Foct…=v5.3.9 R1,判定=內容核實✓）;governance/freeze-replay-2026-11-15.txt 隨鏈延長重跑（v5.3.4→v5.3.9 五段 immutable tag 硬性斷言+v5.3.10 工作區結構斷言） |
+| 3 | 對帳 | deployment-registry.md §1 重算 169→170;§2 v5.3.9 鏈 R1 實登記（dpl_Gm3Foct…內容雜湊核實✓）+v5.3.10 鏈列 |
+| 4 | tag | v5.3.9 釘死值不動納入 tag-registry.txt PINNED（×7）;本版 tag v5.3.10=main HEAD |
+
+站體程式零變更;manifest 規則凍結,同步重算（149 條不變）。授權依據:創辦人指示自行覆核+Manus 修繕方案③機制。P4 Orbit Productization 維持全面暫停。
+
+---
+
 ## v5.3.9 defect-fix · 2026-11-15 · P2-R5 Defect Fix (Manus P2-R4 複查修繕方案)
 
 ### 變更摘要

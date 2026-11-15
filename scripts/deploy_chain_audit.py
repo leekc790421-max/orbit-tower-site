@@ -21,7 +21,7 @@ WINDOWS = {  # 鏈重建窗口（UTC,含端點;依 deploy-log 交付時序）
     "v5.3.7 鏈": ("2026-11-15 02:40:00", "2026-11-15 02:50:00"),
     "v5.3.8 鏈": ("2026-11-15 03:25:00", "2026-11-15 03:35:00"),
 }
-TAGS = ["v5.3.3", "v5.3.4", "v5.3.5", "v5.3.6", "v5.3.7", "v5.3.8"]
+TAGS = [t for t in subprocess.run(["git", "tag", "--list", "v5.3.*"], capture_output=True, text=True).stdout.split()]  # 動態列全部 immutable tags
 
 TOKEN = os.environ.get("VERCEL_TOKEN", "")
 if not TOKEN:
@@ -91,8 +91,8 @@ try:
     live = urllib.request.urlopen(PROD + "/" + MANIFEST, timeout=30).read()
     h_live = hashlib.sha256(live).hexdigest()
     say(f"  - live = `{h_live[:16]}…`（{len(live)} bytes）")
-    cands = [(t, git_bytes("show", f"{t}^{{commit}}")) for t in TAGS]
-    cands += [("77924c1（中間 commit,v5.3.8 R1 工作紀錄對應）", git_bytes("show", "77924c1")), ("HEAD", git_bytes("show", "HEAD"))]
+    cands = [(t, git_bytes("show", f"{t}^{{commit}}:{MANIFEST}")) for t in TAGS]
+    cands += [("77924c1（中間 commit,v5.3.8 R1 工作紀錄對應）", git_bytes("show", f"77924c1:{MANIFEST}")), ("HEAD", git_bytes("show", f"HEAD:{MANIFEST}"))]
     say("- 候選 commit 之 git blob sha256:")
     hits = []
     for label, blob in cands:

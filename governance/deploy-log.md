@@ -34,7 +34,8 @@
 | v5.3.5 R5 最終 | 2026-11-15 00:20 | 2265813 = tag v5.3.5 | dpl_EsNZSj64yKsH9CdUksaRSZ1THnVK | Production | ✅ PASS | MANUS REVIEW:DEF-002 PASS;DEF-001/003/004 FAIL | ✅ COPILOT-EXEC-006 | READY;P2-R1 最終 Production,至 v5.3.6 部署前之現行 |
 | v5.3.7 | 2026-11-15 02:43~02:45 | f154cff→cd1e4f0 = tag v5.3.7 | 2 筆全鏈:deployment-registry.md §2 與 Release v5.3.7(R1 dpl_CFKXtbwd…/R2 dpl_HDF7wwGJ… 現行) | Production | ✅ PASS | MANUS-REVIEW-009:**FAIL**(治理驗證檔一致性缺失,見下) | ✅ COPILOT-EXEC-008 | Production(至 v5.3.8) |
 | v5.3.8 | 2026-11-15 03:28~03:30 | 77924c1→0d439d1 = tag v5.3.8 | 2 筆全鏈:deployment-registry.md §2 與 Release v5.3.8 更正紀錄(R1 dpl_FcfPbs9…內容未能追溯※/R2 dpl_A98SQNRU…內容核實✓) | Production | ✅ PASS | Manus P2-R4 複查:**FAIL**(部署對帳滯後/Release 現行筆誤植/commit 未核實/凍結工具缺段→修繕方案四項,見下) | ✅ MANUS-REVIEW-009 修復 | Production(至 v5.3.9) |
-| v5.3.9 | 2026-11-15 | (tag v5.3.9,現行) | 部署登記:deployment-registry.md §2 v5.3.9 鏈+Release v5.3.9(現行筆交付時補記) | Production | ✅ PASS | ⏳ 待 Manus 獨立複查(REVIEW-010) | ✅ Manus P2-R4 複查修繕方案 | Production(現行) |
+| v5.3.9 | 2026-11-15 04:16 | 79a4e8a = tag v5.3.9 | 1 筆:dpl_Gm3FoctstLKBaCgrpwRs3NfXK8Fk(內容雜湊核實✓:live manifest afe12092…＝git blob);registry §2+Release v5.3.9 | Production | ✅ PASS | ⏳ 待 Manus 獨立複查(REVIEW-010) | ✅ Manus P2-R4 複查修繕方案 | Production(至 v5.3.10) |
+| v5.3.10 | 2026-11-15 | (tag v5.3.10,現行) | 部署登記:deployment-registry.md §2 v5.3.10 鏈+Release v5.3.10(現行筆交付時補記) | Production | ✅ PASS | 自行覆核①:deploy_chain_audit.py 候選取樣修正(詳 CHANGELOG v5.3.10) | ✅ P2-R6 工具修正輪 | Production(現行) |
 | v5.3.6 | 2026-11-15 01:31~01:44 | 05c19a1→a887ed8→a6772ab = tag v5.3.6 | 4 筆全鏈:見 deployment-registry.md §2 與 Release v5.3.6(R1 dpl_F8HNArEf…/R2 dpl_J5qt2THBw…/R2b dpl_359GUPMy…/R3 dpl_5GFdJW9x…) | Production | ✅ PASS | MANUS-REVIEW-008:**FAIL**(三項治理驗證強化要求,見下) | ✅ COPILOT-EXEC-007 | Production(至 v5.3.7) |
 
 **備註:**
@@ -59,10 +60,11 @@
 
 ## 回滾紀錄
 
-v5.3.9 部署至 Production(2026-11-15),取代 v5.3.8 最終態(0d439d1/dpl_A98SQNRU…)。v5.3.8 部署至 Production(2026-11-15),取代 v5.3.7 最終態(cd1e4f0/dpl_HDF7wwGJ…)。v5.3.7 部署至 Production(2026-11-15),取代 v5.3.6 最終態(a6772ab/dpl_5GFdJW9x…)。v5.3.6 部署至 Production(2026-11-15),取代 v5.3.5 最終態(2265813/dpl_EsNZSj64yKs…)。v5.3.5 全鏈(2026-11-15 00:07~00:20,含 R3 失敗)取代 v5.3.4 governance R2(ca81640)。v5.3.4(2026-11-14)取代 v5.3.3(2026-11-13)。v5.3.3 取代 v5.0.0(2026-11-13,EXEC-ORDER-BLOCKER-001)。
+v5.3.10 部署至 Production(2026-11-15),取代 v5.3.9 最終態(79a4e8a/dpl_Gm3FoctstLKBaCgrpwRs3NfXK8Fk)。v5.3.9 部署至 Production(2026-11-15),取代 v5.3.8 最終態(0d439d1/dpl_A98SQNRU…)。v5.3.8 部署至 Production(2026-11-15),取代 v5.3.7 最終態(cd1e4f0/dpl_HDF7wwGJ…)。v5.3.7 部署至 Production(2026-11-15),取代 v5.3.6 最終態(a6772ab/dpl_5GFdJW9x…)。v5.3.6 部署至 Production(2026-11-15),取代 v5.3.5 最終態(2265813/dpl_EsNZSj64yKs…)。v5.3.5 全鏈(2026-11-15 00:07~00:20,含 R3 失敗)取代 v5.3.4 governance R2(ca81640)。v5.3.4(2026-11-14)取代 v5.3.3(2026-11-13)。v5.3.3 取代 v5.0.0(2026-11-13,EXEC-ORDER-BLOCKER-001)。
 
 回滾目標:
-- Production 回滾一階:v5.3.8 最終態 dpl_A98SQNRUFfZzfh8KqsuorgF6Lw79(0d439d1 = tag v5.3.8)
+- Production 回滾一階:v5.3.9 最終態 dpl_Gm3FoctstLKBaCgrpwRs3NfXK8Fk(79a4e8a = tag v5.3.9)
+- Production 回滾一階(前):v5.3.8 最終態 dpl_A98SQNRUFfZzfh8KqsuorgF6Lw79(0d439d1 = tag v5.3.8)
 - Production 回滾一階(前):v5.3.7 最終態 dpl_HDF7wwGJ73vQoi1HPhra6jnRmqxS(cd1e4f0 = tag v5.3.7)
 - Production 回滾一階(前):v5.3.6 最終態 dpl_5GFdJW9xDH58ad4jvTArFczUWv8s(a6772ab = tag v5.3.6)
 - Production 回滾一階(前):v5.3.5 最終態 dpl_EsNZSj64yKsH9CdUksaRSZ1THnVK(2265813 = tag v5.3.5)
@@ -70,7 +72,7 @@ v5.3.9 部署至 Production(2026-11-15),取代 v5.3.8 最終態(0d439d1/dpl_A98S
 - Production 回滾二階:v5.3.4 defect-fix dpl_7yipkLRPEPPUfao8jxKtuMSbqyoA(f0fade8)
 - Production 回滾三階:v5.3.3 dpl_EX6nGdnZ3USxc3yTJH9EvcefhN4E(cab67f8)
 - Production 回滾原始:dpl_339z6KanPgCPxRdk91T1qzLH67j7(v5.0.0)
-- 原始碼回滾:git checkout v5.3.9^ (即 v5.3.8=0d439d1)、v5.3.7=cd1e4f0、v5.3.6=a6772ab、v5.3.5=2265813、v5.3.4=ca81640、v5.3.3、或任意 commit
+- 原始碼回滾:git checkout v5.3.10^ (即 v5.3.9=79a4e8a)、v5.3.8=0d439d1、v5.3.7=cd1e4f0、v5.3.6=a6772ab、v5.3.5=2265813、v5.3.4=ca81640、v5.3.3、或任意 commit
 
 ---
 
@@ -92,7 +94,8 @@ v5.3.9 部署至 Production(2026-11-15),取代 v5.3.8 最終態(0d439d1/dpl_A98S
 | git-tag-v5.3.6 | 2026-11-15 | v5.3.6 commit(a6772ab)不可變參照;PINNED 於 tag-registry.txt | GitHub tag v5.3.6 | git checkout v5.3.6 還原 ✅ |
 | git-tag-v5.3.7 | 2026-11-15 | v5.3.7 commit(cd1e4f05…)不可變參照;已 PINNED 於 tag-registry.txt | GitHub tag v5.3.7 | git checkout v5.3.7 還原 ✅ |
 | git-tag-v5.3.8 | 2026-11-15 | v5.3.8 commit(0d439d11…)不可變參照;已 PINNED 於 tag-registry.txt | GitHub tag v5.3.8 | git checkout v5.3.8 還原 ✅ |
-| git-tag-v5.3.9 | 2026-11-15 | v5.3.9 commit 不可變參照(現行);CURRENT→交付時釘於 Release v5.3.9 | GitHub tag v5.3.9 | git checkout v5.3.9 還原 ✅ |
+| git-tag-v5.3.9 | 2026-11-15 | v5.3.9 commit(79a4e8ac…)不可變參照;已 PINNED 於 tag-registry.txt | GitHub tag v5.3.9 | git checkout v5.3.9 還原 ✅ |
+| git-tag-v5.3.10 | 2026-11-15 | v5.3.10 commit 不可變參照(現行);CURRENT→交付時釘於 Release v5.3.10 | GitHub tag v5.3.10 | git checkout v5.3.10 還原 ✅ |
 
 ---
 
@@ -107,6 +110,7 @@ v5.3.9 部署至 Production(2026-11-15),取代 v5.3.8 最終態(0d439d1/dpl_A98S
 | v5.3.4 defect-fix | 2026-11-14 | ✅ PASS | DEF-001~004 修復僅觸及 nav CSS + burger JS + manifest + deploy-log + CHANGELOG,未觸及定價/品牌/承諾文案。R1~R7 全清零。實跑 redline_check.py + agent-browser 4 viewport(320/360/390/428px)手機導覽驗證——本紀錄之 4 viewport 測試對象為修復後內容,與 MANUS 覆核(修復前 ef665d0,量得 538px 溢位)為不同版本狀態,兩者不矛盾。(日期校正同上;測試時點註記為 DEF-003 修復項) |
 | v5.3.5 | 2026-11-15 | ✅ PASS | P2-R1 變更僅觸及治理檔/版本字串/vercel.json 別名,未觸及定價(T1 NT$7,800/T2 NT$13,900/T3 NT$24,800)/品牌(光曦星樞/閣/軌/匯)/承諾文案。R1~R7 全清零。manifest 預驗證全數一致;git diff 白名單核對僅 13 檔。 |
 | v5.3.6 | 2026-11-15 | ✅ PASS | P2-R2 變更:assets/site.css(行動選單可捲動,1 檔)+治理檔(deploy-log/CHANGELOG/tag-protection.md/verify_tags.sh)+版本字串同步 9 檔;未觸及定價/品牌/承諾文案;DEF-002 manifest 規則凍結,僅同步重算。**實際點擊驗收:4 寬度(320/360/390/428)×2 頁(/,/builder/version)×7 入口=64/64 PASS(可見/可點/可導頁/可收合,真實 CDP 點擊)**,沙盒與部署後線上各執行一輪。R1~R7 全清零。 |
+| v5.3.10 | 2026-11-15 | ✅ PASS | P2-R6 變更:deploy_chain_audit.py 候選取樣修正(:MANIFEST);deploy-replay/freeze-replay 存證重生成;registry §1 170+§2 v5.3.9 鏈實登記;tag-registry v5.3.9 PINNED(×7);verify_freeze 鏈延至 v5.3.10;版本字串同步。站體程式零變更;manifest 149 條不變僅重算。 |
 | v5.3.9 | 2026-11-15 | ✅ PASS | P2-R5 變更:①registry §1 重算 169+§2 v5.3.8 鏈實登記+v5.3.9 鏈;②Release v5.3.8 更正紀錄(保留原誤紀錄);③新版本發佈(本版),v5.3.8 納入 PINNED;④verify_freeze.py v2+deploy_chain_audit.py+雙存證檔;版本字串同步;manifest 146→149(規則凍結僅重算+3 新檔)。站體程式零變更。 |
 | v5.3.8 | 2026-11-15 | ✅ PASS | P2-R4 變更:僅治理/驗證檔(freeze-validation.md 筆誤更正+P2-R4 列、deployment-registry.md v5.3.7 鏈實登記+總計更新、deploy-log/CHANGELOG、tag-registry.txt v5.3.7 改 PINNED、verify_tags.sh v3 Release 自取釘死值硬驗)+版本字串同步;站體程式零變更;manifest 規則凍結僅重算。R1~R7 全清零。 |
 | v5.3.7 | 2026-11-15 | ✅ PASS | P2-R3 變更:僅治理/驗證檔(freeze-validation.md/tag-registry.txt/deployment-registry.md/verify_tags.sh v2/vercel_reconcile.py/verify_freeze.py 新增+deploy-log/CHANGELOG/tag-protection.md 更新)+版本字串同步 9 檔;未觸及任何頁面內容/定價/品牌/承諾文案;站體程式(site.css/JS)零變更;manifest 規則凍結僅重算。R1~R7 全清零。 |

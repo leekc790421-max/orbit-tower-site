@@ -10,8 +10,8 @@ immutable tag 鏈逐段比較 v5.3.4→v5.3.5→v5.3.6→v5.3.7→v5.3.8→工�
 """
 import re, subprocess, sys
 
-REPO_REFS = ["v5.3.4", "v5.3.5", "v5.3.6", "v5.3.7", "v5.3.8"]  # immutable tags(不可移動,見 governance/tag-protection.md)
-WORKTREE_LABEL = "v5.3.9(工作區)"  # 交付時=tag v5.3.9;次版施工時更新此標籤與期望
+REPO_REFS = ["v5.3.4", "v5.3.5", "v5.3.6", "v5.3.7", "v5.3.8", "v5.3.9"]  # immutable tags(不可移動,見 governance/tag-protection.md)
+WORKTREE_LABEL = "v5.3.10(工作區)"  # 交付時=tag v5.3.10;次版施工時更新此標籤與期望
 PAT = re.compile(r"^([0-9a-f]{64})\s+\*?(.+?)\s*$")
 
 # ── 硬性斷言(依 governance/freeze-validation.md §1;集合=逐項精確,整數=僅計數) ──
@@ -22,14 +22,17 @@ EXPECT = {
     ("v5.3.6", "v5.3.7"): (141, 146, {"governance/deployment-registry.md", "governance/freeze-validation.md", "governance/tag-registry.txt", "scripts/vercel_reconcile.py", "scripts/verify_freeze.py"}, 0,
                             {"VERSION", "builder/demo/index.html", "builder/index.html", "builder/readme/index.html", "builder/setup/index.html", "builder/sha256/index.html", "builder/version/index.html", "builder/warranty/index.html", "compliance/index.html", "governance/CHANGELOG.md", "governance/deploy-log.md", "governance/tag-protection.md", "scripts/verify_tags.sh"}, 1),  # P2-R3
     ("v5.3.7", "v5.3.8"): (146, 146, set(), 0,
-                            {"VERSION", "builder/demo/index.html", "builder/index.html", "builder/readme/index.html", "builder/setup/index.html", "builder/sha256/index.html", "builder/version/index.html", "builder/warranty/index.html", "compliance/index.html", "governance/CHANGELOG.md", "governance/deploy-log.md", "governance/deployment-registry.md", "governance/freeze-validation.md", "governance/tag-registry.txt", "scripts/verify_tags.sh"}, 0),  # P2-R4(本次補強段;manifest 本檔自我排除不入條目集,git 層級另含其重算)
+                            {"VERSION", "builder/demo/index.html", "builder/index.html", "builder/readme/index.html", "builder/setup/index.html", "builder/sha256/index.html", "builder/version/index.html", "builder/warranty/index.html", "compliance/index.html", "governance/CHANGELOG.md", "governance/deploy-log.md", "governance/deployment-registry.md", "governance/freeze-validation.md", "governance/tag-registry.txt", "scripts/verify_tags.sh"}, 0),  # P2-R4(manifest 本檔自我排除不入條目集,git 層級另含其重算)
+    ("v5.3.8", "v5.3.9"): (146, 149,
+                            {"scripts/deploy_chain_audit.py", "governance/deploy-replay-2026-11-15.txt", "governance/freeze-replay-2026-11-15.txt"}, 0,
+                            {"VERSION", "builder/demo/index.html", "builder/index.html", "builder/readme/index.html", "builder/setup/index.html", "builder/sha256/index.html", "builder/version/index.html", "builder/warranty/index.html", "compliance/index.html", "governance/CHANGELOG.md", "governance/deploy-log.md", "governance/deployment-registry.md", "governance/freeze-validation.md", "governance/tag-registry.txt", "scripts/verify_freeze.py"}, 1),  # P2-R5
 }
-# 工作區段(下一版施工內容)結構斷言:新增限核准清單、無移除、規則差異=計數行 1 行
+# 工作區段(下一版施工內容)結構斷言:無新增/無移除、規則差異=0(計數行 149 不變)
 WORKTREE_EXPECT = dict(
-    added={"scripts/deploy_chain_audit.py", "governance/deploy-replay-2026-11-15.txt", "governance/freeze-replay-2026-11-15.txt"},
-    removed=0, rules=1,
-    changed={"VERSION", "builder/demo/index.html", "builder/index.html", "builder/readme/index.html", "builder/setup/index.html", "builder/sha256/index.html", "builder/version/index.html", "builder/warranty/index.html", "compliance/index.html", "governance/CHANGELOG.md", "governance/deploy-log.md", "governance/deployment-registry.md", "governance/freeze-validation.md", "governance/tag-registry.txt", "scripts/verify_freeze.py"},
-)
+    added=set(),
+    removed=0, rules=0,
+    changed={"VERSION", "builder/demo/index.html", "builder/index.html", "builder/readme/index.html", "builder/setup/index.html", "builder/sha256/index.html", "builder/version/index.html", "builder/warranty/index.html", "compliance/index.html", "governance/CHANGELOG.md", "governance/deploy-log.md", "governance/deployment-registry.md", "governance/freeze-validation.md", "governance/tag-registry.txt", "governance/deploy-replay-2026-11-15.txt", "governance/freeze-replay-2026-11-15.txt", "scripts/deploy_chain_audit.py", "scripts/verify_freeze.py"},
+)  # freeze-replay 自參照:存證隨鏈延長重跑,自身列入變更集(內容僅列檔名集合,與自身位元組無關,收斂一致)
 
 
 def load_ref(ref):

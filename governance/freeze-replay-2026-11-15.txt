@@ -120,13 +120,16 @@ SNT Freeze Validation 重放 v2(git immutable tag 鏈 + 工作區)
 == v5.3.7 → v5.3.8 == 條目 146→146 | 新增 0 | 移除 0 | hash 變更 15 | 檔頭規則差異行 0
   hash 變更(授權修改): VERSION, builder/demo/index.html, builder/index.html, builder/readme/index.html, builder/setup/index.html, builder/sha256/index.html, builder/version/index.html, builder/warranty/index.html, compliance/index.html, governance/CHANGELOG.md, governance/deploy-log.md, governance/deployment-registry.md, governance/freeze-validation.md, governance/tag-registry.txt, scripts/verify_tags.sh
 
-== v5.3.8 → v5.3.9(工作區) == 條目 146→149 | 新增 3 | 移除 0 | hash 變更 15 | 檔頭規則差異行 1
+== v5.3.8 → v5.3.9 == 條目 146→149 | 新增 3 | 移除 0 | hash 變更 15 | 檔頭規則差異行 1
   新增: governance/deploy-replay-2026-11-15.txt, governance/freeze-replay-2026-11-15.txt, scripts/deploy_chain_audit.py
   hash 變更(授權修改): VERSION, builder/demo/index.html, builder/index.html, builder/readme/index.html, builder/setup/index.html, builder/sha256/index.html, builder/version/index.html, builder/warranty/index.html, compliance/index.html, governance/CHANGELOG.md, governance/deploy-log.md, governance/deployment-registry.md, governance/freeze-validation.md, governance/tag-registry.txt, scripts/verify_freeze.py
   規則 L3:
     v5.3.8: # 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 146 檔。
-    v5.3.9(工作區): # 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 149 檔。
+    v5.3.9: # 涵蓋:部署輸出之全部檔案(HTML/CSS/JS/JSON/MD/TXT/XML/SVG/YML 等,含 VERSION 與 governance 三檔),共 149 檔。
+
+== v5.3.9 → v5.3.10(工作區) == 條目 149→149 | 新增 0 | 移除 0 | hash 變更 18 | 檔頭規則差異行 0
+  hash 變更(授權修改): VERSION, builder/demo/index.html, builder/index.html, builder/readme/index.html, builder/setup/index.html, builder/sha256/index.html, builder/version/index.html, builder/warranty/index.html, compliance/index.html, governance/CHANGELOG.md, governance/deploy-log.md, governance/deploy-replay-2026-11-15.txt, governance/deployment-registry.md, governance/freeze-replay-2026-11-15.txt, governance/freeze-validation.md, governance/tag-registry.txt, scripts/deploy_chain_audit.py, scripts/verify_freeze.py
 
 對照 governance/freeze-validation.md 之判定:全部差異應屬該文件所列核准變更;出現未列差異 = 疑似誤變動。
 
-== 硬性斷言結果 == 全部通過 ✅（4 段 immutable tag 比較 + 工作區結構斷言）
+== 硬性斷言結果 == 全部通過 ✅（5 段 immutable tag 比較 + 工作區結構斷言）

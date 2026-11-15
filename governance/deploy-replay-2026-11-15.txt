@@ -1,9 +1,9 @@
 # SNT 部署鏈稽核重放（scripts/deploy_chain_audit.py,Vercel API 唯讀;可重放）
-# 重放時間:2026-11-15 04:13:34 UTC
+# 重放時間:2026-11-15 04:22:34 UTC
 
-## 1. 全量 production 部署:168 筆
-狀態分布:BLOCKED 2, ERROR 10, READY 156
-最新 READY:dpl_A98SQNRUFfZzfh8KqsuorgF6Lw79（2026-11-15 03:30:26 UTC）
+## 1. 全量 production 部署:169 筆
+狀態分布:BLOCKED 2, ERROR 10, READY 157
+最新 READY:dpl_Gm3FoctstLKBaCgrpwRs3NfXK8Fk（2026-11-15 04:16:21 UTC）
 
 ## 2. v5.3.7 鏈（Vercel API 原始紀錄重建;窗口 2026-11-15 02:40:00~2026-11-15 02:50:00 UTC）
 
@@ -22,18 +22,19 @@
 ## 3. 內容層級核實（內容雜湊法）
 
 - 現行 production（https://tower.xingdeng.tw,公開無需權限）之 governance/backup-manifest.sha256 sha256:
-  - live = `40a51dbd65c180d0…`（16250 bytes）
+  - live = `afe12092ee895141…`（16558 bytes）
 - 候選 commit 之 git blob sha256:
-  - v5.3.3（首行 commit cab67）= `6cc149b733768b7b…`
-  - v5.3.4（首行 commit ca816）= `47cdbd42eed961ce…`
-  - v5.3.5（首行 commit 22658）= `f4a8f6026b3b1468…`
-  - v5.3.6（首行 commit a6772）= `208367d2abc898fe…`
-  - v5.3.7（首行 commit cd1e4）= `7b1c83491a51a896…`
-  - v5.3.8（首行 commit 0d439）= `9c711c69a3c58d4d…`
-  - 77924c1（中間 commit,v5.3.8 R1 工作紀錄對應）（首行 commit 77924）= `e729a972788e3a4d…`
-  - HEAD（首行 commit 0d439）= `9c711c69a3c58d4d…`
+  - v5.3.3（首行 806cff365350）= `aeaeb24409c1ced0…`
+  - v5.3.4（首行 806cff365350）= `edb3c1e46217c296…`
+  - v5.3.5（首行 # SNT Tower ）= `21ec3b33d1c112cf…`
+  - v5.3.6（首行 # SNT Tower ）= `ba283ef8ece76309…`
+  - v5.3.7（首行 # SNT Tower ）= `d0edf48118d79ca7…`
+  - v5.3.8（首行 # SNT Tower ）= `40a51dbd65c180d0…`
+  - v5.3.9（首行 # SNT Tower ）= `afe12092ee895141…` ← **與 live 一致**
+  - 77924c1（中間 commit,v5.3.8 R1 工作紀錄對應）（首行 # SNT Tower ）= `4229b71ca81c6aad…`
+  - HEAD（首行 # SNT Tower ）= `afe12092ee895141…` ← **與 live 一致**
 
-- **判定:live 與全部候選 commit 不符 → 未能追溯,需排查**
+- **判定:現行 production 內容 = v5.3.9 內容雜湊核實 ✓**
 
 ## 4. 核實邊界（誠實揭露,不猜填）
 - 部署唯一 URL（*-xfls.vercel.app）回 HTTP 302「Protected by Vercel Authentication」（Deployment Protection/SSO）→ 歷史筆內容無法自 URL 公開取樣。
