@@ -21,7 +21,7 @@ function deliveryLine(product) {
     const map = JSON.parse(process.env.DELIVERY_MAP || '{}');
     for (const key of Object.keys(map)) if (product.includes(key)) return map[key];
   } catch {}
-  return '交付說明：AI 數位總部啟動清單已備妥，24 小時內於您的信箱收到進度（如未收到請回覆本信）。';
+  return '交付說明：AI 數位總部啟動清單已備妥，24 小時內於你的信箱收到進度（如未收到請回覆本信）。';
 }
 async function receipt(email, name, subject, text) {
   if (!email || !process.env.RESEND_API_KEY) return 'no-key'; // 無鑰：留待插鑰後的手動/下次 tick，不中斷入帳
@@ -134,8 +134,8 @@ module.exports = async function handler(req, res) {
       try { await sql`INSERT INTO leads (kind, email, name, intent, message, page, funnel_score, funnel_tier, order_status, quote_id, amount, currency, product, paid_at, nurture_seq, nurture_step)
         VALUES ('order-paid', ${email}, ${name}, 'kit_purchase', 'webhook', '/api/webhook', 70, 'hot', 'paid', ${ref || 'stripe:' + (o.payment_intent || o.id || '')}, ${amount}, ${currency}, ${product}, now(), 'paid::done', 999)`; } catch (e) { console.log('WEBHOOK_PERSIST_FAIL ' + String(e.message).slice(0, 120)); }
     }
-    const subj = '已收到的款項 — 光曦星軌 訂單生效（' + product + '）';
-    const txt = name + ' 您好，\n\n款項 NT$' + amount + '（' + currency.toUpperCase() + '）已確認，自動收據如下：\n  項目：' + product + '\n  訂單參考：' + ref + '\n\n' + deliveryLine(product) + '\n\n— 光曦星閣 光曦星軌（本信由系統自動核發）';
+    const subj = '收到你的款項了 — 光曦星軌 訂單已生效（' + product + '）';
+    const txt = name + ' 你好，\n\n收到你的款項了，NT$' + amount + '（' + currency.toUpperCase() + '）已經確認。\n  買的是：' + product + '\n  訂單編號：' + ref + '\n\n' + deliveryLine(product) + '\n\n— 光曦星閣 光曦星軌（這封是系統自動寄的）';
     const rc = await receipt(email, name, subj, txt);
     return res.status(200).json({ ok: true, event: 'paid', persisted: !!sql, receipt: rc });
   }

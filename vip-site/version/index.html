@@ -46,7 +46,7 @@
 <tr><td><b>Vip 站體</b></td><td><b>v5.5.x</b>（本站 v5.5.1）——P5 VIP Productization 修復輪（MANUS-REVIEW-RESULT: FAIL 缺失 M1/M2/M3 點對點修復）</td></tr>
 <tr><td><b>治理文件</b></td><td>SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001（SNT_v5.1.2 創辦人核定版）</td></tr>
 <tr><td><b>工程階段</b></td><td>P5（四站生態最終站）——P4 Orbit 正式上線（orbit.xingdeng.tw，v5.4.3）後接續</td></tr>
-<tr><td><b>工項依據</b></td><td>GEMINI 整合執行令（P4 正式上線＋P5 完整建置）＋P5 規格追加令（3D 立體互動水晶球）</td></tr>
+<tr><td><b>工項依據</b></td><td>GEMINI 串起來執行令（P4 正式上線＋P5 完整建置）＋P5 規格追加令（3D 立體互動水晶球）</td></tr>
 </table>
 </div></section>
 
@@ -54,14 +54,14 @@
 <div class="sec-head"><span class="kicker">部署登記</span><h2>沙盒部署登記與驗證</h2></div>
 <table class="tbl">
 <tr><th style="width:26%">項目</th><th>內容</th></tr>
-<tr><td>本版（v5.5.1）</td><td>沙盒修復輪：<b>M1</b>（3D 行動端/無硬體加速——矩陣預分配零逐幀配置、FPS 自適應降級 qlv 0→3、pointercancel 歸位、prefers-reduced-motion 尊重、contextlost 恢復防迴圈、powerPreference=default）／<b>M2</b>（跨站定價閉環收斂——data-tier 機器可讀標記、JSON-LD offers、Tower t1/t2/t3 對照導流、?plan= 參數預填、四站標籤修正）／<b>M3</b>（manifest 資源清點重對齊——內嵌資源閉環檢查）；L1 全項＋L2 E2E（含 reduced-motion 降級路徑與參數預填）重跑；重新提請 Manus 獨立複查</td></tr>
+<tr><td>本版（v5.5.1）</td><td>沙盒修復輪：<b>M1</b>（3D 行動端/無硬體加速——組合預分配零逐幀配置、FPS 自適應降級 qlv 0→3、pointercancel 歸位、prefers-reduced-motion 尊重、contextlost 恢復防迴圈、powerPreference=default）／<b>M2</b>（跨站定價從頭接到尾收斂——data-tier 機器可讀標記、JSON-LD offers、Tower t1/t2/t3 對照導流、?plan= 參數預填、四站標籤修正）／<b>M3</b>（manifest 資源清點重對齊——內嵌資源從頭接到尾檢查）；L1 全項＋L2 E2E（含 reduced-motion 降級路徑與參數預填）重跑；重新提請 Manus 獨立複查</td></tr>
 <tr><td>前版（v5.5.0）</td><td>沙盒部署：見 GitHub Release <a href="https://github.com/leekc790421-max/orbit-tower-site/releases/tag/v5.5.0">v5.5.0</a> 部署登記（Deploy ID/Timestamp/沙盒 URL；含 L1/L2 自檢與雙端 3D 取證）</td></tr>
 <tr><td>凍結完整性</td><td>Vip manifest（<a href="/governance/backup-manifest.sha256">/governance/backup-manifest.sha256</a>）涵蓋部署輸出全部檔案，sha256sum -c 全數 OK；Tower/Orbit 既有檔案零變更（verify_freeze P5 併行模式，新增範圍 orbit-site/**＋vip-site/**）</td></tr>
 <tr><td>3D 元件合規</td><td>assets/crystal.js 自研 WebGL 管線（Fresnel／折射高光／星塵／能量流；拖曳·滾輪·觸控·點擊；WebGL 不支援環境優雅降級）；零外部未控依賴，納入 manifest 雜湊清點</td></tr>
 <tr><td>定價鐵律</td><td>T1：7,800／T2：13,900／T3：24,800——嚴格對齊 SNT 標準方案級距，跨站計價邏輯零偏差（L1 逐字驗證）</td></tr>
 <tr><td>治理</td><td>SNT-GOV-001 / SNT-DEPLOY-001 / SNT-REVIEW-001；待 Manus 獨立覆核（P5 沙盒輪）</td></tr>
 </table>
-<p class="note">正式域 vip.xingdeng.tw 現由既有專案服務（光曜星棧 CosmoSphere，本輪盤點取證）；P5 沙盒階段對其<b>零碰觸</b>——正式切換於取得 Manus PASS 後另輪執行，並比照 P4 慣例於 deploy-log 事實登記（切換前狀態取證→切換→live 對帳）。</p>
+<p class="note">正式域 vip.xingdeng.tw 現由既有專案服務（光曜星棧 CosmoSphere，本輪清點取證）；P5 沙盒階段對其<b>零碰觸</b>——正式切換於取得 Manus PASS 後另輪執行，並比照 P4 慣例於 deploy-log 事實登記（切換前狀態取證→切換→live 對帳）。</p>
 </div></section>
 
 <footer class="foot"><div class="wrap">

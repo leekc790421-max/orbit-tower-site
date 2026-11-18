@@ -34,27 +34,27 @@ const funnelScore = lead => { let s = 0; for (const r of F_RULES) if (r.hit(lead
 /* ---- seq：排程序列 ---- */
 const SEQUENCES = {
   'hot-48h': { desc: '熱名單 48 小時快攻', steps: [
-    { at: '0h', via: 'email', subject: '剛聊的策略先收好：您的 SWOT 起手式', body: '附摘要＋報價單直連結 /checkout。' },
-    { at: '4h', via: 'line', body: '老闆好，這是剛剛幫您排的 90 天落地排程，方便約 15 分鐘確認預算區間嗎？' },
+    { at: '0h', via: 'email', subject: '剛聊的策略先收好：你的 SWOT 起手式', body: '附摘要＋報價單直連結 /checkout。' },
+    { at: '4h', via: 'line', body: '老闆好，這是剛剛幫你排的 90 天落地排程，方便約 15 分鐘確認預算區間嗎？' },
     { at: '32h', via: 'email', subject: '補一個同行案例：從零名單到每週十餘份詢盤', body: '案例＋/try 試玩連結。' } ] },
   'warm-7d': { desc: '溫名單 7 日養客', steps: [
-    { at: '0d', via: 'email', subject: '您產業的獲客矛盾，一頁拆給您看', body: '趨勢文章精選＋五維診斷邀請 /diagnose。' },
-    { at: '2d', via: 'email', subject: '樣板公開試玩：30 秒看到您的新門面', body: '/try 試玩區直連結。' },
-    { at: '5d', via: 'line', body: '本週名額還剩兩席免費診斷，要幫您留一席嗎？' },
+    { at: '0d', via: 'email', subject: '你產業的獲客矛盾，一頁拆給你看', body: '趨勢文章精選＋五維診斷邀請 /diagnose。' },
+    { at: '2d', via: 'email', subject: '樣板公開試玩：30 秒看到你的新門面', body: '/try 試玩區直連結。' },
+    { at: '5d', via: 'line', body: '本週名額還剩兩席免費診斷，要幫你留一席嗎？' },
     { at: '7d', via: 'email', subject: '公開優惠本期倒數', body: 'T1/T2/T3 對照＋報價單產生連結。' } ] },
   'cold-30d': { desc: '冷名單內容養客（每週一則）', steps: [{ at: 'weekly', via: 'email', subject: '本週趨勢速讀｜光曦星閣', body: 'Content Engine 精選一則＋soft CTA。' }] },
   'omo-24h': { desc: '線下掃碼客 24 小時接住', steps: [
     { at: '0m', via: 'web', body: '掃碼落地→/try 試玩區（omo 碼已綁）。' },
-    { at: '20h', via: 'line', body: '前幾天展場聊到的需求，我整理成一頁了——現在傳給您？' } ] },
+    { at: '20h', via: 'line', body: '前幾天展場聊到的需求，我整理成一頁了——現在傳給你？' } ] },
 };
 
 /* ---- broadcast：分眾推送 ---- */
 const SEGMENTS = { all: '全部好友', hot: '熱名單（funnel≥70）', warm: '溫名單（40–69）', omo: '線下掃碼客', industry: '產業分眾' };
 const TEMPLATES = {
   promo_flash: '本週四 24:00 前下單 T2 店家版，加贈《2026 趨勢報告》紙本＋全站健檢一輪。',
-  new_article: '{title}｜趨勢文章更新了，您的產業這週最該讀這篇。',
+  new_article: '{title}｜趨勢文章更新了，你的產業這週最該讀這篇。',
   event_omo: '今天在 {place} 聊過的那局 SWOT，我做成一頁了——掃圖上的 QR 直接看。',
-  quote_close: '您上週的報價單 {quoteNo} 本週五到期，續有效請回「留」，改規格請回「改」。',
+  quote_close: '你上週的報價單 {quoteNo} 本週五到期，續有效請回「留」，改規格請回「改」。',
 };
 
 /* ---- radar：本站 SEO 巡檢 ---- */

@@ -256,6 +256,7 @@ td b{color:var(--ink)}
     <a href="#nodes"><span class="n">03</span>五站節點</a>
     <a href="#chain"><span class="n">04</span>成交鏈 11 步</a>
     <a href="#ai"><span class="n">05</span>四層 AI 架構</a>
+    <a href="#line"><span class="n">05b</span>LINE 兩組帳號</a>
     <a href="#leads"><span class="n">06</span>名單</a>
     <a href="#plan"><span class="n">07</span>90 天計畫</a>
     <a href="#decisions"><span class="n">08</span>八個決策</a>
@@ -276,7 +277,7 @@ td b{color:var(--ink)}
     <div class="spacer"></div>
     <span class="pill" id="syncPill"><span class="dot"></span><span id="syncTxt">尚未同步</span></span>
     <span class="pill demo">DEMO 資料</span>
-    <button class="btn primary" id="btnSync">立即同步</button>
+    <button class="btn primary" id="btnSync">馬上同步</button>
     <button class="btn" id="btnTestAll">測試 5 站</button>
   </div>
 
@@ -324,7 +325,7 @@ td b{color:var(--ink)}
             <tr><td class="num">1</td><td>成交鏈 11 步中，第 7、8、9、11 步目前無人執行；且尚無可收款的公司帳戶。這是 0 筆成交的唯一直接原因。<span class="g g-real">實測</span></td><td>在補上這四步之前，任何獲客投入的投報率都是負的。先修後端，再放大前端。</td></tr>
             <tr><td class="num">2</td><td>五站對外宣稱的 AI 數量在 9～14 之間不一致，實際可證實的只有 7 個入口、背後 1 個接待後端。<span class="g g-real">實測</span></td><td>數字不一致正在侵蝕信任，並構成廣告不實風險。收斂成一套編號，是法律問題，不只是文案問題。</td></tr>
             <tr><td class="num">3</td><td>免費排盤（T0）不需註冊即可使用，但目前線上算力端點回傳錯誤，等於把 90% 的潛在客戶擋在門外。<span class="g g-real">實測</span></td><td>T0 是全站唯一零成本的獲客引擎。它壞著，其他管道的產出都會漏光。</td></tr>
-            <tr><td class="num">4</td><td>VIP 年營收天花板可計算：15 席 × US$6,888 = US$103,320（約 NT$330 萬）；加深度席與體驗席，年營收上限約 US$200,000–350,000。目前實現率 0%。<span class="g g-assume">假設</span></td><td>天花板不高但毛利極高，且不需要流量。這是一門「先修交付、再談規模」的生意。</td></tr>
+            <tr><td class="num">4</td><td>VIP 年營收天花板可計算：15 席 × US$6,888 = US$103,320（約 NT$330 萬）；加深度席與體驗席，年營收上限約 US$200,000–350,000。目前做到率 0%。<span class="g g-assume">假設</span></td><td>天花板不高但毛利極高，且不需要流量。這是一門「先修交付、再談規模」的生意。</td></tr>
             <tr><td class="num">5</td><td>GEO／AI 搜尋是唯一已建好基礎設施、且邊際成本趨近零的管道（預估 30–80 次 AI 引用／月，時間成本 16 小時／月）。<span class="g g-assume">假設</span></td><td>在五條獲客管道中，只有這一條現在就能做、且不依賴任何人的面子。</td></tr>
           </tbody>
         </table>
@@ -358,14 +359,35 @@ td b{color:var(--ink)}
           <table>
             <thead><tr><th>網站</th><th>Vercel 專案</th><th>這個腳本要放哪</th><th style="width:30%">健康檢查端點</th></tr></thead>
             <tbody>
-              <tr><td><b>xingdeng.tw</b><br><span style="color:var(--muted);font-size:11.5px">主站</span></td><td><a href="https://vercel.com/xfls/xingdeng-tw-static" target="_blank" rel="noopener">xfls / xingdeng-tw-static</a></td><td>主站靜態路由，不新增 API</td><td><code>/api/health?mode=core</code> <span class="g g-real">404 實測</span></td></tr>
+              <tr><td><b>xingdeng.tw</b><br><span style="color:var(--muted);font-size:11.5px">主站</span></td><td><a href="https://vercel.com/xfls/xingdeng-tw-static" target="_blank" rel="noopener">xfls / xingdeng-tw-static</a></td><td>已補 <code>api/health.js</code>（唯讀，只回布林）</td><td><code>/api/health?mode=core</code> <span class="g g-ok">200 實測</span></td></tr>
               <tr><td><b>tower.xingdeng.tw</b><br><span style="color:var(--muted);font-size:11.5px">商業站 · 戰情室本體</span></td><td><a href="https://vercel.com/xfls/orbit-tower-site" target="_blank" rel="noopener">xfls / orbit-tower-site</a></td><td><b>把這個 HTML 覆蓋到 <code>/admin</code></b></td><td><code>/api/health?mode=core</code> + <code>/api/pricing</code> <span class="g g-real">200 實測</span></td></tr>
-              <tr><td><b>orbit.xingdeng.tw</b><br><span style="color:var(--muted);font-size:11.5px">體驗站 · 3D</span></td><td><a href="https://vercel.com/xfls/orbit-tower-3d" target="_blank" rel="noopener">xfls / orbit-tower-3d</a></td><td>3D 頁不動，只讀它的 health</td><td><code>/api/line</code> + health <span class="g g-real">405 實測</span></td></tr>
-              <tr><td><b>vip.xingdeng.tw</b><br><span style="color:var(--muted);font-size:11.5px">1.vip</span></td><td><a href="https://vercel.com/xfls/cosmosphere-vip" target="_blank" rel="noopener">xfls / cosmosphere-vip</a></td><td>只讀 health／OTC 狀態，不動付款</td><td><code>/api/chat</code> 經由 Concierge <span class="g g-real">404 實測</span></td></tr>
-              <tr><td><b>decoration.xingdeng.tw</b><br><span style="color:var(--muted);font-size:11.5px">裝修站 · 光曦星閣</span></td><td><a href="https://vercel.com/xfls/decoration-muogong" target="_blank" rel="noopener">xfls / decoration-muogong</a></td><td>只讀 health／Ad Bot</td><td><code>/api/ad-bot/feed?site=decoration</code> <span class="g g-real">404 實測</span></td></tr>
+              <tr><td><b>orbit.xingdeng.tw</b><br><span style="color:var(--muted);font-size:11.5px">體驗站 · 3D</span></td><td><a href="https://vercel.com/xfls/orbit-tower-3d" target="_blank" rel="noopener">xfls / orbit-tower-3d</a></td><td>已補 <code>api/health.js</code>，3D 頁不動</td><td><code>/api/health?mode=core</code> <span class="g g-ok">200 實測</span></td></tr>
+              <tr><td><b>vip.xingdeng.tw</b><br><span style="color:var(--muted);font-size:11.5px">1.vip</span></td><td><a href="https://vercel.com/xfls/cosmosphere-vip" target="_blank" rel="noopener">xfls / cosmosphere-vip</a></td><td>已補 <code>/api/health</code> 與 <code>/api/leads</code>（Next.js route）</td><td><code>/api/health?mode=core</code> + <code>/api/leads</code> <span class="g g-ok">200 實測</span></td></tr>
+              <tr><td><b>decoration.xingdeng.tw</b><br><span style="color:var(--muted);font-size:11.5px">裝修站 · 光曦星閣</span></td><td><a href="https://vercel.com/xfls/decoration-muogong" target="_blank" rel="noopener">xfls / decoration-muogong</a></td><td>已補 <code>api/health.js</code>，Ad Bot 未動</td><td><code>/api/health?mode=core</code> <span class="g g-ok">200 實測</span></td></tr>
             </tbody>
           </table>
         </div>
+        <div class="card pad" style="margin-bottom:14px;border-color:rgba(255,170,60,.35)">
+          <h4 style="font-size:13px;margin-bottom:6px">admin.xingdeng.tw 為什麼還打不開</h4>
+          <p style="font-size:12.3px;color:var(--muted);margin-bottom:10px">
+            Vercel 這邊已經綁好、也驗證過了（<code>verified: true</code>）。卡住的是 DNS：<code>xingdeng.tw</code> 的 DNS 由 <b>ix1000</b> 代管（<code>ns1~ns4.ix1000.com</code>），我沒有那個後台的權限，所以記錄建不起來。剛查 Google DNS 是 <code>NXDOMAIN</code>——這個名字目前根本不存在。
+          </p>
+          <div class="tw" style="border:0">
+            <table>
+              <thead><tr><th>要加的記錄</th><th>類型</th><th>值</th><th>狀態</th></tr></thead>
+              <tbody>
+                <tr><td><code>admin</code></td><td>CNAME</td><td><code>2b896e9f296c5b2e.vercel-dns-017.com.</code></td><td><span class="g g-real">待設定</span></td></tr>
+                <tr><td><code>orbitadmin</code></td><td>CNAME</td><td><code>2b896e9f296c5b2e.vercel-dns-017.com.</code></td><td><span class="g g-real">待設定</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="font-size:12.3px;color:var(--muted);margin-top:10px">
+            供應商不給 CNAME 的話，改 A 記錄指向 <code>216.198.79.1</code> 和 <code>64.29.17.1</code>。<br>
+            <b>在 DNS 生效前，入口是 <a href="https://tower.xingdeng.tw/admin">tower.xingdeng.tw/admin</a></b>，內容跟新網域一模一樣。<br>
+            另外：<code>orbin_admin.xingdeng.tw</code> 帶底線，DNS 主機名不允許底線，語法上做不出來。
+          </p>
+        </div>
+
         <div class="tnote">
           金流模式：<b>沙箱 SANDBOX</b>——正式付款開關未開啟時，請勿向客人收真錢。OTC 的 <code>pending_ai</code> 是「等真人核對」，不是 AI 在幫你核銷。<br>
           提醒：Vercel 12 個 Serverless Function 上限——這版是純靜態，<b>絕對不新增任何 <code>/api/*.js</code></b>。所有「測試」都是瀏覽器直接 fetch 既有端點，測完就顯示毫秒數。
@@ -393,7 +415,7 @@ td b{color:var(--ink)}
                 <thead><tr><th style="width:30px">序</th><th>修哪一步</th><th style="width:34%">為什麼這個順序</th><th class="num" style="width:88px">工期</th></tr></thead>
                 <tbody>
                   <tr><td class="num">①</td><td><b>第 10 步 收款帳戶</b></td><td>沒有它，前面全部白做。開戶有外部依賴（銀行），必須最先啟動。</td><td class="num">3 日～2 週</td></tr>
-                  <tr><td class="num">②</td><td><b>第 9 步 審核人</b></td><td>零成本、零技術，只要指名。它是「稀缺」唯一的支撐點。</td><td class="num">立即</td></tr>
+                  <tr><td class="num">②</td><td><b>第 9 步 審核人</b></td><td>零成本、零技術，只要指名。它是「稀缺」唯一的支撐點。</td><td class="num">馬上</td></tr>
                   <tr><td class="num">③</td><td><b>第 5、6 步 表單與確認</b></td><td>技術問題，最長 14 天可修完。修完才能量測 T0→留資料率。</td><td class="num">2 週</td></tr>
                   <tr><td class="num">④</td><td><b>第 4 步 免費排盤</b></td><td>漏斗最上游，但只有在 ③ 修好後才有意義（否則留了資料沒人接）。</td><td class="num">1 週</td></tr>
                   <tr><td class="num">⑤</td><td><b>第 7、8 步 業務流程</b></td><td>需要人，且需要 ③ 的資料才有東西可跟。</td><td class="num">3 週</td></tr>
@@ -452,7 +474,7 @@ td b{color:var(--ink)}
         <div class="layer">
           <div class="cnt">6<small>隻機器人</small></div>
           <h4>④ 營運層</h4>
-          <p>不會疲勞、不需要排班的營運自動化夥伴（R1～R6），做的是內部流程，不是客服。</p>
+          <p>不會疲勞、不需要排班的營運自動夥伴（R1～R6），做的是內部流程，不是客服。</p>
           <div class="say">對營運／團隊：「內部有六隻在幫忙跑流程，客戶看不到。」</div>
         </div>
       </div>
@@ -514,7 +536,52 @@ td b{color:var(--ink)}
           </tbody>
         </table>
       </div>
-      <div class="tnote">R1 與 R2 是唯一能讓「0 筆成交」變成「有筆成交」的自動化。R5 與 R6 是防止「這一版做完，三個月後又走鐘」的機制。</div>
+      <div class="tnote">R1 與 R2 是唯一能讓「0 筆成交」變成「有筆成交」的自動。R5 與 R6 是防止「這一版做完，三個月後又走鐘」的機制。</div>
+    </section>
+
+    <!-- 05b LINE 兩組官方帳號 -->
+    <section id="line">
+      <div class="sec-h">
+        <span class="num">05b</span>
+        <h2>兩組 LINE 官方帳號</h2>
+        <div class="sub">兩支帳號不是重複，是分工：一支對外接名單，一支對內做尊榮服務。兩支都已接上 webhook，實測通過。</div>
+      </div>
+
+      <div class="grid g2" style="margin-bottom:14px">
+        <div class="card pad">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <h4 style="font-size:14px;margin:0">@559julyu</h4>
+            <span class="g g-ok">已接上</span>
+          </div>
+          <p style="font-size:12.5px;color:var(--muted);margin:0 0 8px">光曜星棧 SNT 總部 · 對外接客</p>
+          <table style="font-size:12.5px">
+            <tr><td style="color:var(--muted);width:34%">掛在哪</td><td><code>xingdeng.tw/api/line/webhook</code></td></tr>
+            <tr><td style="color:var(--muted)">誰在用</td><td>主站、tower、orbit、vip 四站的 AI 接待</td></tr>
+            <tr><td style="color:var(--muted)">做什麼</td><td>接住第一次來的陌生人：回答問題、留下聯絡方式、帶到預約</td></tr>
+            <tr><td style="color:var(--muted)">實測</td><td><span class="g g-ok">webhook 已驗證</span> · <span class="g g-ok">token 有效</span></td></tr>
+          </table>
+        </div>
+
+        <div class="card pad">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <h4 style="font-size:14px;margin:0">@580ctuew</h4>
+            <span class="g g-ok">已接上</span>
+          </div>
+          <p style="font-size:12.5px;color:var(--muted);margin:0 0 8px">光曜星棧 · 中部木作精裝修</p>
+          <table style="font-size:12.5px">
+            <tr><td style="color:var(--muted);width:34%">掛在哪</td><td><code>decoration.xingdeng.tw</code> 的 LINE 入口</td></tr>
+            <tr><td style="color:var(--muted)">誰在用</td><td>台中、彰化、南投、苗栗、新竹的屋主</td></tr>
+            <tr><td style="color:var(--muted)">做什麼</td><td>問行情、抓預算帶、約免費丈量；語氣像懂行的現場顧問</td></tr>
+            <tr><td style="color:var(--muted)">實測</td><td><span class="g g-ok">webhook 已驗證</span> · <span class="g g-ok">token 有效</span></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="tnote">
+        <b>為什麼要分兩支？</b>一支帳號同時接陌生訪客和屋主，訊息會混在一起——客服要在一堆「請問你們做什麼」裡找「我家三房要多少錢」。分開之後，兩邊的對話節奏、回覆語氣、通知內容都能各自調，出錯也不會互相污染。<br>
+        <b>憑證放哪：</b>兩組 Channel Access Token 都存在 Vercel 環境變數（<code>LINE_CHANNEL_ACCESS_TOKEN</code>），沒有寫進任何前端檔案，也沒有出現在這個頁面上。<br>
+        <b>回覆語氣：</b>兩支都走同一套「生活化自然語」規則——不用「您好，我是機器人」「請輸入 1 查詢」這種罐頭句，直接像人在講話。
+      </div>
     </section>
 
     <!-- 06 -->
@@ -574,7 +641,7 @@ td b{color:var(--ink)}
           <ul>
             <li>指定收款帳戶（公司戶或指定既有帳戶），公布匯款資訊提供流程</li>
             <li>指派審核人與三項審核標準，寫成一頁 SOP</li>
-            <li>修復表單鏈路：tower 補 API key、vip 建 <code>/api/leads</code>、orbit 部署 9 支 API</li>
+            <li><s>修復表單鏈路：vip 建 <code>/api/leads</code></s> <span class="g g-ok">已完成</span>；tower 補 API key、orbit 9 支 API 仍待做</li>
             <li>LINE 官方帳號接通，真人值班表上線（每日 10:00–18:00）</li>
             <li>50 組頁面多語錯誤修正：0 個 i18n key 缺失、0 個日文缺字</li>
             <li>T0 免費排盤修復：30 秒內回應、無需註冊</li>
@@ -587,7 +654,7 @@ td b{color:var(--ink)}
           <div class="ph">
             <div class="d">DAY 31–60</div>
             <h4>第二階段 · 可規模</h4>
-            <p>AI 與體驗優化</p>
+            <p>AI 與體驗調整</p>
           </div>
           <ul>
             <li>R1／R2 上線：四種來源統一寫入名單庫，自動評分標 A／B／C</li>
@@ -707,9 +774,9 @@ td b{color:var(--ink)}
           <tbody>
             <tr><td>五站首頁均正常回應（HTTP 200）</td><td><span class="g g-real">實測</span></td><td>2026-11-18 公開端點檢測</td></tr>
             <tr><td>50 組頁面檢測 0 個 JS 錯誤、0 個版面溢出</td><td><span class="g g-real">實測</span></td><td>25 頁 × 2 斷點</td></tr>
-            <tr><td>18 種 AI 爬蟲放行、llms.txt 與結構化資料齊備</td><td><span class="g g-real">實測</span></td><td>robots.txt 與頁面原始碼檢查</td></tr>
+            <tr><td>18 種 AI 爬蟲放行、llms.txt 與有條理地資料齊備</td><td><span class="g g-real">實測</span></td><td>robots.txt 與頁面原始碼檢查</td></tr>
             <tr><td>orbit 站 /api/* 全部 404（7 個端點）</td><td><span class="g g-real">實測</span></td><td>端點逐一請求</td></tr>
-            <tr><td>vip 站缺 /api/leads、/api/entitlements</td><td><span class="g g-real">實測</span></td><td>端點請求回 404</td></tr>
+            <tr><td>vip 站缺 /api/leads、/api/entitlements</td><td><span class="g g-ok">已修</span></td><td>/api/leads 已補並實測 200；entitlements 仍待做</td></tr>
             <tr><td>tower 站 /api/leads 回 401（前端未帶 key）</td><td><span class="g g-real">實測</span></td><td>端點請求</td></tr>
             <tr><td>實際成交訂單 0 筆、A 級名單 0 筆</td><td><span class="g g-real">實測</span></td><td>無後台紀錄可查，且無收款帳戶</td></tr>
             <tr><td>五站對外 AI 數量說法為 9～14 個不一致</td><td><span class="g g-real">實測</span></td><td>各版文件與頁面文字比對</td></tr>
@@ -743,20 +810,20 @@ td b{color:var(--ink)}
           <h5>以前常寫（不要再寫）</h5>
           <ul>
             <li>AI 數位總部</li>
-            <li>賦能、賦能企業</li>
-            <li>算力、算力矩陣、三維矩陣</li>
+            <li>幫忙、幫忙企業</li>
+            <li>算力、算力組合、三維組合</li>
             <li>黑卡算力會所</li>
             <li>霸榜、翻倍</li>
             <li>24 小時 AI 組織、AI 員工</li>
-            <li>閉環、護城河、顛覆</li>
-            <li>尊榮、極致、深度、無限</li>
+            <li>從頭接到尾、別人抄不走的優勢、顛覆</li>
+            <li>尊榮、做到最好、深度、無限</li>
             <li>一鍵架網站懶人包</li>
             <li>AI 戰略長</li>
             <li>智慧核心</li>
             <li>自動 Rollback、紅隊評鑑</li>
             <li>數位資產、網域資產租賃</li>
             <li>企業級、SaaS、SLA</li>
-            <li>立即詢價、了解更多</li>
+            <li>馬上詢價、了解更多</li>
           </ul>
         </div>
         <div class="col yes">
@@ -802,7 +869,7 @@ td b{color:var(--ink)}
     </section>
 
     <div class="foot">
-      <b>光曦星閣 · SNT 生態系</b>　五大生態系營運白皮書 · 最終執行版 v5.0　·　2026 年 11 月 18 日<br>
+      <b>光曦星閣 · SNT 合作網絡</b>　五大合作網絡營運白皮書 · 最終執行版 v5.0　·　2026 年 11 月 18 日<br>
       本頁為內部營運文件，不是法律意見。正式權利義務以簽約版本與實際後台紀錄為準。<br>
       純靜態單檔 · 無金鑰 · 無 Cookie · 名單與金額為 DEMO 示範資料 · 所有資料僅在本頁記憶體中處理
     </div>
