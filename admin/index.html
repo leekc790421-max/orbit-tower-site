@@ -215,7 +215,7 @@ td.num-cell{font-family:var(--mono);font-variant-numeric:tabular-nums;white-spac
 .btn.mini:hover{border-color:var(--cyan);color:#075985}
 
 /* ── alerts ── */
-.alert{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-left:3px solid var(--ink3);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff;transition:opacity .2s}
+.alert{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:flex-start;border:1px solid var(--line);border-left:3px solid var(--ink3);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff;transition:opacity .2s}
 .alert.high{border-left-color:var(--bad);background:linear-gradient(90deg,#FFF5F5,#fff 40%)}
 .alert.mid{border-left-color:#D97706;background:linear-gradient(90deg,#FFFBEB,#fff 40%)}
 .alert.low{border-left-color:var(--cyan);background:linear-gradient(90deg,#F0FAFF,#fff 40%)}
@@ -225,7 +225,7 @@ td.num-cell{font-family:var(--mono);font-variant-numeric:tabular-nums;white-spac
 .alert.mid .lv{background:#FEF3C7;color:#92400E}
 .alert.low .lv{background:#E0F2FE;color:#075985}
 .alert .msg{flex:1 1 160px;font-size:12.8px;min-width:0;word-break:break-word;overflow-wrap:anywhere;white-space:normal}
-.alert .tm{font-family:var(--mono);font-size:11px;color:var(--ink3);flex-shrink:0}
+.alert .tm{font-family:var(--mono);font-size:11px;color:var(--ink3);flex-shrink:0;margin-left:auto}
 .alert .act{background:none;border:1px solid var(--line2);border-radius:7px;font-size:11px;padding:3px 8px;cursor:pointer;color:var(--ink2);font-family:inherit;flex-shrink:0}
 .alert .act:hover{border-color:var(--cyan);color:var(--cyan)}
 
@@ -261,6 +261,10 @@ code{background:#EFF4FA;padding:1.5px 6px;border-radius:5px;font-size:11.5px;fon
 #chartTip.on{opacity:1}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media(max-width:520px){
+  .alert .msg{flex:1 1 100%;order:2;font-size:12.5px}
+  .alert .lv{order:1}
+  .alert .tm{order:3;margin-left:0}
+  .alert .act{order:4;margin-left:auto}
   .wrap{padding:10px 10px 32px}
   .top{padding:10px 12px;gap:10px}
   .brand b{font-size:15px}
