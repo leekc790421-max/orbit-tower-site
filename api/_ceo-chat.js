@@ -5,9 +5,12 @@
    1. 門禁與監控室一致：X-CC-Key = SHA-256(密碼)，不符一律 401。
    2. Context Awareness：每次對話前即時讀取 Neon（leads / ad_bot_tasks / ad_bot_dispatch / ad_bot_quota / growth_event / subscription_events），
       以「真實數字」餵給 LLM，禁止模型自行編造。
-   3. 多引擎降級：Gemini → Z.ai → 規則引擎（永不白屏）。
+   3. v7.1 整合：LLM 層委派 _snt-core.js 的三層無縫切換（L1 免費閘道 → L2 Z.ai → L3 本地規則），
+      與 @559julyu 總部 LINE 機器人、站內 Concierge 共用同一套語感與定價引擎。
    4. 全程 try/catch；LLM 或 DB 逾時回傳友善提示，HTTP 仍為 200。
    5. 串流：text/event-stream（SSE），逐字輸出；不支援時自動退回一次性 JSON。 */
+
+const CORE = require('./_snt-core.js');
 
 const CC_KEY = 'c0430001866f79d9fcdfdbbd8b75bed967ffe86007b78603648db586cf0d4866';
 const TZ = 'Asia/Taipei';
@@ -129,6 +132,10 @@ async function buildContext() {
 
 /* ---------- System Prompt ---------- */
 function systemPrompt(ctxText) {
+  const inf = CORE.clampInflation(process.env.SNT_INFLATION);
+  const infTxt = inf.toFixed(2);
+  const q = (k) => CORE.calculateDynamicQuote(k, inf).price_ex_vat.toLocaleString();
+
   return `你是「SNT v6.0 光曜星樞」的 AI CEO，代號 A.C LEE。你正在中央營運監控室（Command Center）與最高指揮官對話。
 
 【角色與語氣】
@@ -141,6 +148,13 @@ function systemPrompt(ctxText) {
 2. 若指揮官要求「調整排程／派發／修改設定」等寫入動作：你必須說明這需要實際執行，並列出「建議動作 + 影響範圍 + 風險」，然後請指揮官確認。你不可聲稱已經執行完成。
 3. 回答長度：一般 3–8 行；需要分析時可用條列，但不要長篇大論。
 4. 涉及金額一律標明幣別（NT$）。
+5. 絕不洩漏底層成本、毛利公式或內部試算表。
+
+【核准公開定價（物調係數 ${infTxt}，未稅，已自動校準至千元）】
+- SaaS 訂閱（含 14 天免綁約試用）：Starter NT$${CORE.SAAS_TIERS.Starter.price.toLocaleString()}/月、Pro NT$${CORE.SAAS_TIERS.Pro.price.toLocaleString()}/月、Enterprise NT$${CORE.SAAS_TIERS.Enterprise.price.toLocaleString()}/月。
+- 系統建置／買斷：Personal NT$${q('Personal')} 起｜LINE 商業擴編（22w 級）NT$${q('LINE_22W')} 起｜Business NT$${q('Business')} 起｜Store 旗艦 NT$${q('Store')} 起｜Professional NT$${q('Professional')} 起｜Enterprise NT$${q('Enterprise')} 起。
+- LINE 擴編模組（可單點加購或無限疊加）：L-01 多租戶 OA 矩陣｜L-02 LIFF 微商城與估價｜L-03 動態選單分眾｜L-04 裂變推薦與二級分潤｜L-05 AI 看圖估價與自動跟單。
+- 中部木作行情：衣櫃 NT$6,200–7,500/尺起；收納櫃 NT$5,000–12,000/尺；系統櫃高櫃 NT$4,500–9,000/尺。
 
 【五大站點職責】
 - decoration.xingdeng.tw：中部屋主精裝修／木作獲客，LINE @580ctuew
@@ -152,99 +166,29 @@ function systemPrompt(ctxText) {
 ${ctxText}`;
 }
 
-/* ---------- LLM 呼叫（多引擎降級） ---------- */
-const BREAKER = (globalThis.__ceoBreaker = globalThis.__ceoBreaker || { gemini: 0, zai: 0, openai: 0 });
-const BREAK_MS = 10 * 60 * 1000;
-const tripped = (p) => Date.now() < (BREAKER[p] || 0);
-const trip = (p) => { BREAKER[p] = Date.now() + BREAK_MS; };
-
+/* ---------- LLM 呼叫：委派雙軌智能核心（三層無縫切換） ----------
+   注意：核心在「定價／方案意圖」時會刻意回傳 local_strategist（避免 LLM 編造價格），
+   那是「正確且有內容」的回覆，不可視為失敗而掉進營運總覽保底。
+   因此只要核心有給出實質內容，就採用它；只有完全空回覆才算降級。 */
 async function callLLM(messages, system, ms) {
-  const attempts = [];
-
-  // 1) Gemini
-  const gk = process.env.GEMINI_API_KEY || process.env.GEMINI_API;
-  if (gk && tripped('gemini')) attempts.push({ p: 'gemini', skipped: 'breaker' });
-  else if (gk) {
-    try {
-      const t0 = Date.now();
-      const ac = new AbortController();
-      const timer = setTimeout(() => ac.abort(), ms);
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL || 'gemini-2.5-flash'}:generateContent`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': gk },
-        signal: ac.signal,
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: system }] },
-          contents: messages.map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.content).slice(0, 4000) }] })),
-          generationConfig: { temperature: 0.6, maxOutputTokens: 1200 }
-        })
-      });
-      clearTimeout(timer);
-      const j = await r.json();
-      const text = j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts && j.candidates[0].content.parts[0] && j.candidates[0].content.parts[0].text;
-      if (r.ok && text) { BREAKER.gemini = 0; return { ok: true, provider: 'gemini', text, ms: Date.now() - t0, attempts }; }
-      if (r.status === 401 || r.status === 403 || r.status === 429) trip('gemini');
-      attempts.push({ p: 'gemini', error: 'HTTP ' + r.status });
-    } catch (e) { attempts.push({ p: 'gemini', error: String(e.message).slice(0, 80) }); }
-  } else attempts.push({ p: 'gemini', skipped: 'no-key' });
-
-  // 2) Z.ai (GLM)
-  const zk = process.env.ZAI_API_KEY || process.env.Z_AI_API_KEY;
-  if (zk && tripped('zai')) attempts.push({ p: 'zai', skipped: 'breaker' });
-  else if (zk) {
-    try {
-      const t0 = Date.now();
-      const ac = new AbortController();
-      const timer = setTimeout(() => ac.abort(), ms);
-      const r = await fetch('https://api.z.ai/api/paas/v4/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + zk },
-        signal: ac.signal,
-        body: JSON.stringify({
-          model: process.env.ZAI_MODEL || 'glm-4.5-flash',
-          messages: [{ role: 'system', content: system }].concat(messages.map((m) => ({ role: m.role, content: String(m.content).slice(0, 4000) }))),
-          temperature: 0.6,
-          max_tokens: 1200
-        })
-      });
-      clearTimeout(timer);
-      const j = await r.json();
-      const text = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
-      if (r.ok && text) { BREAKER.zai = 0; return { ok: true, provider: 'zai', text, ms: Date.now() - t0, attempts }; }
-      if (r.status === 401 || r.status === 403 || r.status === 429) trip('zai');
-      attempts.push({ p: 'zai', error: 'HTTP ' + r.status });
-    } catch (e) { attempts.push({ p: 'zai', error: String(e.message).slice(0, 80) }); }
-  } else attempts.push({ p: 'zai', skipped: 'no-key' });
-
-  // 3) OpenAI
-  const ok_ = process.env.OPENAI_API_KEY;
-  if (ok_ && tripped('openai')) attempts.push({ p: 'openai', skipped: 'breaker' });
-  else if (ok_) {
-    try {
-      const t0 = Date.now();
-      const ac = new AbortController();
-      const timer = setTimeout(() => ac.abort(), ms);
-      const r = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + ok_ },
-        signal: ac.signal,
-        body: JSON.stringify({
-          model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
-          messages: [{ role: 'system', content: system }].concat(messages.map((m) => ({ role: m.role, content: String(m.content).slice(0, 4000) }))),
-          temperature: 0.6,
-          max_tokens: 1200
-        })
-      });
-      clearTimeout(timer);
-      const j = await r.json();
-      const text = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
-      if (r.ok && text) { BREAKER.openai = 0; return { ok: true, provider: 'openai', text, ms: Date.now() - t0, attempts }; }
-      if (r.status === 401 || r.status === 403 || r.status === 429) trip('openai');
-      attempts.push({ p: 'openai', error: 'HTTP ' + r.status });
-    } catch (e) { attempts.push({ p: 'openai', error: String(e.message).slice(0, 80) }); }
-  } else attempts.push({ p: 'openai', skipped: 'no-key' });
-
-  return { ok: false, provider: null, text: null, attempts };
+  const out = await CORE.generateSmartResponse(messages, {
+    inflation: CORE.clampInflation(process.env.SNT_INFLATION),
+    site: 'hq',
+    systemOverride: system
+  });
+  const text = String(out.reply || '').trim();
+  const pricingIntent = CORE.isPricingIntent(
+    [...messages].reverse().find(m => m.role === 'user')?.content || ''
+  );
+  /* 定價意圖走策略引擎是設計行為，視為成功；其他情況 local_strategist 才算降級 */
+  const ok = text.length > 20 && (out.engine !== 'local_strategist' || pricingIntent);
+  return {
+    ok,
+    provider: out.engine,
+    text,
+    ms: 0,
+    attempts: out.attempts || []
+  };
 }
 
 /* ---------- 規則引擎（LLM 全掛時的保底，仍用真實數據） ---------- */
