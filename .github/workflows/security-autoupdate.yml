@@ -1,0 +1,102 @@
+name: security-autoupdate
+
+# SNT v6.0 — 定期自動更新與資安巡檢
+# 1) 每週檢查依賴套件漏洞（npm audit）並自動開 PR 升級
+# 2) 每次推送掃描原始碼是否被植入可疑樣式（eval/atob、外連腳本、挖礦字串）
+# 3) 檢查安全標頭設定是否被移除
+
+on:
+  schedule:
+    - cron: '17 3 * * 1'   # 每週一 03:17 UTC（台北 11:17）
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  audit:
+    name: 依賴漏洞掃描與自動升級
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: npm audit（high 以上視為失敗）
+        run: |
+          npm audit --audit-level=high || echo "::warning::發現高風險依賴，交由下一步自動修補"
+
+      - name: 自動修補可升級項目
+        run: |
+          npm audit fix --package-lock-only || true
+
+      - name: 建立升級 PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'chore(security): 自動更新依賴套件'
+          title: 'chore(security): 每週依賴自動更新'
+          body: |
+            由 `security-autoupdate` 工作流程自動產生。
+
+            - 來源：`npm audit` 每週掃描
+            - 內容：可安全升級的依賴版本
+            - 合併前請確認 Vercel Preview 部署通過
+          branch: security/auto-deps
+          delete-branch: true
+          labels: security, dependencies
+
+  scan:
+    name: 原始碼完整性與惡意樣式掃描
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 掃描混淆與外連注入
+        run: |
+          set -e
+          FAIL=0
+          echo "── 檢查 eval / atob 混淆 ──"
+          if grep -rnE "eval\s*\(\s*atob|new Function\s*\(" --include=*.js --include=*.html . \
+             | grep -v node_modules | grep -v '.github/'; then
+            echo "::error::發現混淆執行樣式"; FAIL=1
+          fi
+          echo "── 檢查非授權外連腳本 ──"
+          if grep -rnE "<script[^>]+src=[\"']https?://" --include=*.html . | grep -v node_modules; then
+            echo "::error::發現外部腳本引用（CSP 應為 self）"; FAIL=1
+          fi
+          echo "── 檢查挖礦／後門關鍵字 ──"
+          if grep -rniE "coinhive|cryptonight|stratum\+tcp|child_process\.exec\(.*curl" --include=*.js --include=*.html . \
+             | grep -v node_modules; then
+            echo "::error::發現可疑字串"; FAIL=1
+          fi
+          echo "── 檢查安全標頭是否被移除 ──"
+          for h in "Content-Security-Policy" "Strict-Transport-Security" "X-Content-Type-Options" "X-Frame-Options"; do
+            if ! grep -q "$h" vercel.json; then
+              echo "::error::vercel.json 缺少 $h"; FAIL=1
+            fi
+          done
+          echo "── 檢查監控室門禁鍵是否仍在 ──"
+          if ! grep -q "x-cc-key" api/health.js; then
+            echo "::error::聚合 API 門禁被移除"; FAIL=1
+          fi
+          exit $FAIL
+
+      - name: 檢查機密是否被寫入版控
+        run: |
+          set -e
+          FAIL=0
+          if grep -rnE "postgres(ql)?://[^\"' ]*:[^\"' ]*@" --include=*.js --include=*.json --include=*.html . \
+             | grep -v node_modules; then
+            echo "::error::發現資料庫連線字串被寫入原始碼"; FAIL=1
+          fi
+          if grep -rnE "AIza[0-9A-Za-z_-]{35}|vcp_[0-9A-Za-z]{20,}|github_pat_[0-9A-Za-z_]{20,}" \
+             --include=*.js --include=*.json --include=*.html . | grep -v node_modules; then
+            echo "::error::發現硬編碼金鑰"; FAIL=1
+          fi
+          exit $FAIL

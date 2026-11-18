@@ -156,6 +156,97 @@ module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Access-Control-Allow-Origin', '*');
 
+  // ── 全站指令廣播（/admin 專用）────────────────────────────────────
+  if (req.query && req.query.mode === 'broadcast') {
+    try {
+      const bc = require('./_broadcast');
+      return await bc(req, res);
+    } catch (e) {
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(200).json({
+        ok: false,
+        error: 'broadcast_unavailable',
+        message: '廣播模組暫時無法啟動，請稍後再試。',
+        results: []
+      });
+    }
+  }
+
+  // ── AI CEO 互動對話終端（/admin 專用）──────────────────────────────
+  // 同樣掛在既有函式內，避免 Hobby 12 函式上限；門禁與監控室一致。
+  if (req.query && req.query.mode === 'chat') {
+    try {
+      const chat = require('./_ceo-chat');
+      return await chat(req, res);
+    } catch (e) {
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(200).json({
+        ok: false,
+        degraded: true,
+        provider: 'rule',
+        reply: '（AI CEO 終端暫時無法啟動，請稍後再試。監控室其他模組不受影響。）',
+        error: String((e && e.message) || e).slice(0, 160)
+      });
+    }
+  }
+
+  // ── Command Center 聚合 API（/admin 專用）────────────────────────────
+  // 掛在既有函式內，避免 Hobby 12 函式上限；只讀、逐區塊 try/catch。
+  if (req.query && req.query.mode === 'cc') {
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'content-type');
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    if (req.method === 'OPTIONS') return res.status(204).end();
+    // 門禁：前端以 SHA-256(密碼) 作為通行鍵；未帶或不符一律 401，不外洩任何營運數據。
+    const CC_KEY = 'c0430001866f79d9fcdfdbbd8b75bed967ffe86007b78603648db586cf0d4866';
+    const given = String(req.headers['x-cc-key'] || '').trim().toLowerCase();
+
+    // 濫用防護：每 IP 每分鐘上限（暖實例記憶體計數，冷啟動歸零；僅為第一層減壓）
+    const ip = String(
+      (req.headers['x-forwarded-for'] || '').split(',')[0].trim() ||
+      req.headers['x-real-ip'] || 'unknown'
+    ).slice(0, 64);
+    const now = Date.now();
+    const bucket = (globalThis.__ccRate = globalThis.__ccRate || new Map());
+    const rec = bucket.get(ip) || { n: 0, t: now };
+    if (now - rec.t > 60000) { rec.n = 0; rec.t = now; }
+    rec.n += 1;
+    bucket.set(ip, rec);
+    if (bucket.size > 5000) bucket.clear();
+    res.setHeader('X-RateLimit-Limit', '60');
+    res.setHeader('X-RateLimit-Remaining', String(Math.max(0, 60 - rec.n)));
+    if (rec.n > 60) {
+      res.setHeader('Retry-After', '60');
+      return res.status(429).json({ schema: 'snt-cc-v1', error: 'rate_limited' });
+    }
+
+    if (given !== CC_KEY) {
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(401).json({ schema: 'snt-cc-v1', error: 'unauthorized', hint: 'X-CC-Key required' });
+    }
+    try {
+      const { build } = require('./_cc');
+      const payload = await build();
+      res.setHeader('Cache-Control', 'no-store, max-age=0');
+      return res.status(200).json(payload);
+    } catch (e) {
+      // 聚合層整體失敗時仍回 200 + 明確降級狀態，前端不會白屏
+      return res.status(200).json({
+        schema: 'snt-cc-v1',
+        generated_at: new Date().toISOString(),
+        degraded: ['aggregator: ' + String((e && e.message) || e).slice(0, 200)],
+        db: { ok: false, ms: 0 },
+        sites: [],
+        adbot: null,
+        saas: null,
+        ceo: null,
+        line: [],
+        probe: [],
+        kpi: null
+      });
+    }
+  }
+
   // CEO 巡站模式
   if (req.query && req.query.mode === 'ceo-check') {
     const result = await ceoCheck();

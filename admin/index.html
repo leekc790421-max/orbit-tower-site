@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>SNT v6.0｜中央營運監控室 Command Center</title>
+<meta name="theme-color" content="#05070C">
+<style>
+:root{
+  --bg:#05070C; --bg2:#080B12; --panel:rgba(15,20,30,.72); --panel2:rgba(20,26,38,.6);
+  --line:rgba(148,163,184,.14); --line2:rgba(148,163,184,.26);
+  --ink:#E8EDF6; --ink2:#9AA8BE; --ink3:#5F6E85;
+  --gold:#D4AF37; --gold2:#EDCF70; --cyan:#22D3EE; --blue:#4F8CFF;
+  --ok:#34D399; --warn:#FBBF24; --bad:#F87171;
+  --mono:ui-monospace,"SFMono-Regular","IBM Plex Mono",Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
+  --r:14px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--sans);
+  font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  min-height:100vh; overflow-x:hidden;
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(900px 520px at 12% -8%, rgba(212,175,55,.10), transparent 62%),
+    radial-gradient(820px 480px at 88% 4%, rgba(34,211,238,.09), transparent 60%),
+    radial-gradient(700px 700px at 50% 118%, rgba(79,140,255,.07), transparent 65%);
+}
+body::after{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+  background-image:linear-gradient(rgba(148,163,184,.045) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(148,163,184,.045) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 78%);
+  -webkit-mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 78%);
+}
+.wrap{position:relative; z-index:1; width:min(1560px,calc(100% - 40px)); margin-inline:auto}
+.mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+/* ───────── gate ───────── */
+#gate{position:relative; z-index:1; min-height:100vh; display:grid; place-items:center; padding:32px 20px}
+.gate-card{
+  width:min(430px,100%); background:linear-gradient(180deg,rgba(18,24,36,.92),rgba(9,12,19,.96));
+  border:1px solid var(--line2); border-radius:20px; padding:38px 34px 30px;
+  box-shadow:0 40px 90px -40px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.05);
+  position:relative; overflow:hidden;
+}
+.gate-card::before{
+  content:""; position:absolute; left:0; right:0; top:0; height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--cyan),transparent);
+  opacity:.85;
+}
+.gate-card::after{
+  content:""; position:absolute; left:-40%; top:0; width:40%; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.07),transparent);
+  animation:sweep 5.5s ease-in-out infinite;
+}
+@keyframes sweep{0%{left:-45%}55%{left:105%}100%{left:105%}}
+.gate-mark{display:flex; align-items:center; gap:13px; margin-bottom:26px}
+.hex{
+  width:44px; height:44px; flex:none; display:grid; place-items:center;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  background:linear-gradient(150deg,var(--gold2),var(--gold) 45%,#8a6d1c);
+  color:#0A0A0A; font-weight:800; font-size:15px; letter-spacing:.02em;
+}
+.gate-mark b{display:block; font-size:15px; letter-spacing:.06em}
+.gate-mark span{display:block; font-family:var(--mono); font-size:9.5px; letter-spacing:.22em; color:var(--ink3); margin-top:3px}
+.gate-title{font-size:21px; font-weight:700; margin:0 0 6px; letter-spacing:.02em}
+.gate-sub{color:var(--ink2); font-size:12.5px; margin:0 0 24px; line-height:1.7}
+.field{position:relative; margin-bottom:14px}
+.field label{display:block; font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--ink3); margin-bottom:8px}
+.field input{
+  width:100%; padding:14px 46px 14px 15px; border-radius:11px; font-size:15px;
+  background:rgba(5,7,12,.85); color:var(--ink); border:1px solid var(--line2);
+  font-family:var(--mono); letter-spacing:.16em; outline:none; transition:border-color .18s, box-shadow .18s;
+}
+.field input::placeholder{color:#3C4759; letter-spacing:.1em}
+.field input:focus{border-color:rgba(212,175,55,.6); box-shadow:0 0 0 3px rgba(212,175,55,.12)}
+.field .eye{
+  position:absolute; right:8px; bottom:7px; width:32px; height:32px; border:0; border-radius:8px;
+  background:transparent; color:var(--ink3); cursor:pointer; font-size:14px; line-height:1;
+}
+.field .eye:hover{color:var(--gold2); background:rgba(212,175,55,.08)}
+.btn-unlock{
+  width:100%; padding:14px; border:0; border-radius:11px; cursor:pointer;
+  font-family:var(--sans); font-size:14.5px; font-weight:700; letter-spacing:.06em;
+  color:#0A0A0A; background:linear-gradient(135deg,var(--gold2),var(--gold));
+  box-shadow:0 14px 34px -14px rgba(212,175,55,.75); transition:transform .16s, box-shadow .16s, filter .16s;
+}
+.btn-unlock:hover{transform:translateY(-1px); box-shadow:0 18px 40px -14px rgba(212,175,55,.9)}
+.btn-unlock:active{transform:translateY(0)}
+.btn-unlock[disabled]{filter:grayscale(.5) brightness(.8); cursor:progress}
+.gate-msg{
+  margin-top:14px; min-height:20px; font-size:12.5px; color:var(--bad);
+  display:flex; align-items:center; gap:7px; opacity:0; transition:opacity .2s;
+}
+.gate-msg.on{opacity:1}
+.gate-msg.info{color:var(--ink2)}
+.shake{animation:shake .38s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-6px)}40%,60%{transform:translateX(6px)}}
+.gate-foot{
+  margin-top:24px; padding-top:16px; border-top:1px solid var(--line);
+  display:flex; justify-content:space-between; gap:10px;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.14em; color:var(--ink3);
+}
+
+/* ───────── app shell ───────── */
+#app{padding:0 0 56px}
+.topbar{
+  position:sticky; top:0; z-index:40; backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  background:rgba(5,7,12,.82); border-bottom:1px solid var(--line);
+}
+.topbar-in{display:flex; align-items:center; gap:16px; padding:13px 0; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:11px; min-width:0}
+.brand .hex{width:34px; height:34px; font-size:12px}
+.brand b{display:block; font-size:13.5px; letter-spacing:.05em; white-space:nowrap}
+.brand span{display:block; font-family:var(--mono); font-size:9px; letter-spacing:.2em; color:var(--ink3); margin-top:2px}
+.topbar .spacer{flex:1}
+.pill{
+  display:inline-flex; align-items:center; gap:7px; padding:6px 12px; border-radius:99px;
+  border:1px solid var(--line2); background:rgba(15,20,30,.7);
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; color:var(--ink2); white-space:nowrap;
+}
+.pill .dot{width:6px; height:6px; border-radius:50%; background:var(--ok); box-shadow:0 0 8px var(--ok)}
+.pill.warn .dot{background:var(--warn); box-shadow:0 0 8px var(--warn)}
+.pill.bad .dot{background:var(--bad); box-shadow:0 0 8px var(--bad)}
+.pill.idle .dot{background:var(--ink3); box-shadow:none}
+.icon-btn{
+  width:34px; height:34px; border-radius:9px; border:1px solid var(--line2);
+  background:rgba(15,20,30,.7); color:var(--ink2); cursor:pointer; font-size:14px;
+  display:grid; place-items:center; transition:.16s;
+}
+.icon-btn:hover{color:var(--gold2); border-color:rgba(212,175,55,.5); background:rgba(212,175,55,.08)}
+.icon-btn.spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.banner{
+  margin-top:16px; padding:11px 15px; border-radius:11px; font-size:12.5px;
+  border:1px solid rgba(251,191,36,.32); background:rgba(251,191,36,.07); color:#FDE68A;
+  display:flex; gap:9px; align-items:flex-start;
+}
+.banner b{color:#FBBF24; font-weight:700}
+.banner.hide{display:none}
+
+/* ───────── kpi strip ───────── */
+.kpis{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:12px; margin-top:20px}
+.kpi{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--r);
+  padding:14px 15px; position:relative; overflow:hidden;
+}
+.kpi::after{content:""; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--gold); opacity:.55}
+.kpi .k{font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; color:var(--ink3); display:block; margin-bottom:7px}
+.kpi .v{font-family:var(--mono); font-size:23px; font-weight:600; letter-spacing:-.02em; line-height:1.1}
+.kpi .v small{font-size:11px; color:var(--ink3); margin-left:3px; font-weight:400}
+.kpi .s{font-size:11px; color:var(--ink3); margin-top:5px; display:block}
+
+/* ───────── sections ───────── */
+.sec{margin-top:34px}
+.sec-head{display:flex; align-items:baseline; gap:12px; margin-bottom:14px; flex-wrap:wrap}
+.sec-head h2{
+  font-size:15px; font-weight:700; margin:0; letter-spacing:.04em;
+  display:flex; align-items:center; gap:9px;
+}
+.sec-head h2::before{content:""; width:3px; height:15px; border-radius:2px; background:linear-gradient(180deg,var(--gold2),var(--cyan))}
+.sec-head .hint{font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--ink3)}
+.sec-head .spacer{flex:1}
+
+/* ───────── 5-col site grid ───────── */
+.grid5{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:13px}
+.site{
+  background:linear-gradient(180deg,rgba(18,24,36,.8),rgba(9,12,19,.86));
+  border:1px solid var(--line); border-radius:var(--r); padding:0; overflow:hidden;
+  display:flex; flex-direction:column; position:relative;
+  transition:transform .2s cubic-bezier(.16,1,.3,1), border-color .2s, box-shadow .2s;
+}
+.site:hover{transform:translateY(-3px); border-color:var(--line2); box-shadow:0 22px 44px -26px rgba(0,0,0,.9)}
+.site .bar{height:2px; background:var(--accent); opacity:.9}
+.site header{padding:14px 15px 11px; display:flex; gap:10px; align-items:flex-start}
+.site header .dot{
+  width:7px; height:7px; border-radius:50%; margin-top:6px; flex:none;
+  background:var(--accent); box-shadow:0 0 9px var(--accent);
+}
+.site header .dot.off{background:var(--bad); box-shadow:0 0 9px var(--bad)}
+.site h3{font-size:13px; font-weight:700; margin:0; line-height:1.35; letter-spacing:.01em}
+.site .host{font-family:var(--mono); font-size:9.5px; color:var(--ink3); margin:3px 0 0; letter-spacing:.04em; word-break:break-all}
+.site .role{
+  font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--accent) 34%,transparent);
+  background:color-mix(in srgb,var(--accent) 9%,transparent);
+  padding:2px 7px; border-radius:99px; margin-left:auto; white-space:nowrap; flex:none;
+}
+.site .metrics{padding:0 15px 12px; display:flex; flex-direction:column; gap:11px; flex:1}
+.metric{border-top:1px dashed rgba(148,163,184,.13); padding-top:10px}
+.metric:first-child{border-top:0; padding-top:0}
+.metric .l{font-size:10.5px; color:var(--ink2); display:block; letter-spacing:.02em}
+.metric .v{
+  font-family:var(--mono); font-size:22px; font-weight:600; letter-spacing:-.02em;
+  line-height:1.15; display:block; margin-top:2px; color:var(--ink);
+}
+.metric .v small{font-size:10.5px; color:var(--ink3); margin-left:3px; font-weight:400; letter-spacing:0}
+.metric .v.na{color:var(--ink3); font-size:17px}
+.metric .s{font-size:10px; color:var(--ink3); display:block; margin-top:2px; line-height:1.45}
+.site footer{
+  padding:9px 15px; border-top:1px solid var(--line); background:rgba(5,7,12,.5);
+  display:flex; align-items:center; gap:7px;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; color:var(--ink3);
+}
+.site footer .st{width:5px; height:5px; border-radius:50%; background:var(--ok)}
+.site footer .st.bad{background:var(--bad)}
+.site footer .ms{margin-left:auto}
+
+/* ───────── panels ───────── */
+.panels{display:grid; grid-template-columns:1.15fr 1fr; gap:13px}
+.panel{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--r);
+  padding:16px 17px; min-width:0;
+}
+.panel h3{
+  font-size:12.5px; font-weight:700; margin:0 0 3px; letter-spacing:.04em;
+  display:flex; align-items:center; gap:8px;
+}
+.panel h3 .tag{
+  font-family:var(--mono); font-size:9px; letter-spacing:.12em; color:var(--ink3);
+  border:1px solid var(--line2); padding:1px 6px; border-radius:99px; font-weight:400;
+}
+.panel .desc{font-size:11px; color:var(--ink3); margin:0 0 14px}
+
+/* quota gauge */
+.gauge{margin:6px 0 4px}
+.gauge .row{display:flex; align-items:baseline; gap:8px; margin-bottom:9px}
+.gauge .big{font-family:var(--mono); font-size:30px; font-weight:600; letter-spacing:-.03em; line-height:1}
+.gauge .of{font-family:var(--mono); font-size:12px; color:var(--ink3)}
+.gauge .pctv{margin-left:auto; font-family:var(--mono); font-size:12px; font-weight:600}
+.track{height:9px; border-radius:99px; background:rgba(148,163,184,.13); overflow:hidden; position:relative}
+.fill{height:100%; border-radius:99px; transition:width .7s cubic-bezier(.16,1,.3,1); width:0}
+.fill.ok{background:linear-gradient(90deg,#34D399,#22D3EE)}
+.fill.warn{background:linear-gradient(90deg,#FBBF24,#F59E0B)}
+.fill.critical{background:linear-gradient(90deg,#F87171,#EF4444)}
+.ticks{display:flex; justify-content:space-between; font-family:var(--mono); font-size:9px; color:var(--ink3); margin-top:6px; letter-spacing:.08em}
+.qmeta{display:flex; gap:14px; flex-wrap:wrap; margin-top:12px; padding-top:11px; border-top:1px dashed rgba(148,163,184,.13)}
+.qmeta div{font-size:10.5px; color:var(--ink3)}
+.qmeta b{display:block; font-family:var(--mono); font-size:12.5px; color:var(--ink2); font-weight:600; margin-top:2px}
+
+/* tables */
+.tbl{width:100%; border-collapse:collapse; font-size:11.5px}
+.tbl th{
+  text-align:left; font-family:var(--mono); font-size:9px; letter-spacing:.14em;
+  color:var(--ink3); font-weight:500; padding:0 8px 7px 0; border-bottom:1px solid var(--line);
+  white-space:nowrap;
+}
+.tbl td{padding:7px 8px 7px 0; border-bottom:1px dashed rgba(148,163,184,.1); vertical-align:top; color:var(--ink2)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td.n{font-family:var(--mono); font-variant-numeric:tabular-nums; color:var(--ink); white-space:nowrap}
+.tbl td.mono{font-family:var(--mono); font-size:10px; color:var(--ink3); white-space:nowrap}
+.tbl .empty{color:var(--ink3); font-size:11px; padding:14px 0; text-align:center}
+.badge{
+  display:inline-block; font-family:var(--mono); font-size:9px; letter-spacing:.08em;
+  padding:1px 6px; border-radius:4px; border:1px solid; white-space:nowrap;
+}
+.badge.ok{color:var(--ok); border-color:rgba(52,211,153,.4); background:rgba(52,211,153,.1)}
+.badge.warn{color:var(--warn); border-color:rgba(251,191,36,.4); background:rgba(251,191,36,.1)}
+.badge.bad{color:var(--bad); border-color:rgba(248,113,113,.4); background:rgba(248,113,113,.1)}
+.badge.idle{color:var(--ink3); border-color:var(--line2); background:rgba(148,163,184,.07)}
+
+/* asset matrix */
+.matrix{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:9px; margin-top:4px}
+.mx{
+  border:1px solid var(--line); border-radius:10px; padding:10px 11px;
+  background:rgba(5,7,12,.45);
+}
+.mx .nm{font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:var(--ink3); display:block; margin-bottom:7px; text-transform:uppercase}
+.mx .ln{display:flex; align-items:baseline; gap:5px; font-size:10.5px; color:var(--ink2); margin-top:4px}
+.mx .ln b{font-family:var(--mono); font-size:14px; color:var(--ink); font-weight:600; margin-left:auto}
+.mx .ln b.zero{color:var(--ink3)}
+
+/* line health */
+.line-row{
+  display:flex; align-items:center; gap:11px; padding:11px 0;
+  border-bottom:1px dashed rgba(148,163,184,.12);
+}
+.line-row:last-child{border-bottom:0; padding-bottom:0}
+.line-row .lamp{
+  width:9px; height:9px; border-radius:50%; flex:none;
+  background:var(--ok); box-shadow:0 0 10px var(--ok);
+}
+.line-row .lamp.bad{background:var(--bad); box-shadow:0 0 10px var(--bad)}
+.line-row .lamp.idle{background:var(--ink3); box-shadow:none}
+.line-row .id{font-family:var(--mono); font-size:12px; color:var(--ink); font-weight:600; letter-spacing:.02em}
+.line-row .lb{font-size:10.5px; color:var(--ink3); display:block; margin-top:1px}
+.line-row .rt{margin-left:auto; text-align:right; font-family:var(--mono); font-size:10px; color:var(--ink3); white-space:nowrap}
+
+/* tiers */
+.tiers{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; margin-top:4px}
+.tier{
+  border:1px solid var(--line); border-radius:10px; padding:11px 12px; background:rgba(5,7,12,.45);
+  position:relative; overflow:hidden;
+}
+.tier .nm{font-size:10.5px; color:var(--ink2); display:block}
+.tier .pr{font-family:var(--mono); font-size:13px; color:var(--gold2); font-weight:600; margin-top:2px; display:block}
+.tier .ct{font-family:var(--mono); font-size:19px; font-weight:600; margin-top:7px; display:block; line-height:1}
+.tier .ct small{font-size:9.5px; color:var(--ink3); margin-left:3px; font-weight:400}
+.tier .rv{font-size:9.5px; color:var(--ink3); margin-top:4px; display:block}
+
+/* ceo */
+.ceo-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; margin-bottom:13px}
+.ceo-cell{border:1px solid var(--line); border-radius:10px; padding:10px 11px; background:rgba(5,7,12,.45)}
+.ceo-cell .k{font-family:var(--mono); font-size:9px; letter-spacing:.12em; color:var(--ink3); display:block}
+.ceo-cell .v{font-family:var(--mono); font-size:17px; font-weight:600; margin-top:4px; display:block; line-height:1.1}
+.ceo-cell .v small{font-size:9.5px; color:var(--ink3); margin-left:2px; font-weight:400}
+
+.dec{display:flex; gap:9px; padding:8px 0; border-bottom:1px dashed rgba(148,163,184,.1); align-items:flex-start}
+.dec:last-child{border-bottom:0}
+.dec .sev{width:3px; border-radius:2px; align-self:stretch; flex:none; background:var(--ink3)}
+.dec .sev.critical{background:var(--bad)}
+.dec .sev.high{background:var(--warn)}
+.dec .sev.medium{background:var(--blue)}
+.dec .tx{min-width:0}
+.dec .tt{font-size:11.5px; color:var(--ink); display:block; line-height:1.45}
+.dec .cd{font-family:var(--mono); font-size:9px; color:var(--ink3); letter-spacing:.06em; display:block; margin-top:2px}
+
+.foot{
+  margin-top:34px; padding-top:16px; border-top:1px solid var(--line);
+  display:flex; gap:16px; flex-wrap:wrap; align-items:center;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; color:var(--ink3);
+}
+.foot .spacer{flex:1}
+.foot a{color:var(--ink3); text-decoration:none}
+.foot a:hover{color:var(--gold2)}
+
+.skel{background:linear-gradient(90deg,rgba(148,163,184,.07),rgba(148,163,184,.14),rgba(148,163,184,.07)); background-size:200% 100%; animation:sh 1.4s ease-in-out infinite; border-radius:5px; color:transparent!important}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ───────── fleet broadcast ───────── */
+.bc-targets{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; margin-bottom:13px}
+.bc-t{
+  display:flex; align-items:center; gap:8px; padding:9px 11px; cursor:pointer;
+  border:1px solid var(--line); border-radius:9px; background:rgba(5,7,12,.45);
+  transition:.16s; user-select:none;
+}
+.bc-t:hover{border-color:var(--line2); background:rgba(20,26,38,.6)}
+.bc-t.on{border-color:rgba(212,175,55,.55); background:rgba(212,175,55,.09)}
+.bc-t .box{
+  width:13px; height:13px; border-radius:3px; border:1px solid var(--line2); flex:none;
+  display:grid; place-items:center; font-size:9px; color:#0A0A0A; line-height:1;
+}
+.bc-t.on .box{background:var(--gold); border-color:var(--gold)}
+.bc-t .nm{font-family:var(--mono); font-size:10px; letter-spacing:.06em; color:var(--ink2); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.bc-t.on .nm{color:var(--ink)}
+
+.bc-row{display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-bottom:11px}
+.bc-select{
+  flex:1; min-width:220px; padding:9px 11px; border-radius:9px; cursor:pointer;
+  background:rgba(5,7,12,.85); color:var(--ink); border:1px solid var(--line2);
+  font-family:var(--sans); font-size:12px; outline:none;
+}
+.bc-select:focus{border-color:rgba(212,175,55,.6)}
+.bc-btn{
+  border:0; border-radius:9px; padding:9px 17px; cursor:pointer;
+  font-family:var(--sans); font-size:12px; font-weight:700; letter-spacing:.03em;
+  color:#0A0A0A; background:linear-gradient(135deg,var(--gold2),var(--gold));
+  transition:.16s; white-space:nowrap;
+}
+.bc-btn:hover{transform:translateY(-1px); box-shadow:0 10px 24px -12px rgba(212,175,55,.8)}
+.bc-btn[disabled]{filter:grayscale(.55) brightness(.75); cursor:progress; transform:none; box-shadow:none}
+.bc-btn.ghost{
+  background:transparent; color:var(--ink2); border:1px solid var(--line2); font-weight:500;
+}
+.bc-btn.ghost:hover{color:var(--gold2); border-color:rgba(212,175,55,.5); background:rgba(212,175,55,.08); box-shadow:none}
+
+.bc-input{
+  display:flex; gap:9px; align-items:flex-start; padding:10px 12px;
+  border:1px solid var(--line2); border-radius:10px; background:rgba(5,7,12,.7);
+}
+.bc-input .prompt{font-family:var(--mono); font-size:14px; color:var(--gold); line-height:1.6; flex:none}
+.bc-input textarea{
+  flex:1; resize:vertical; border:0; outline:none; background:transparent; color:var(--ink);
+  font-family:var(--sans); font-size:12.5px; line-height:1.65; min-height:44px; max-height:160px;
+}
+.bc-input textarea::placeholder{color:#3C4759}
+
+.bc-quick{display:flex; gap:7px; flex-wrap:wrap; margin-top:9px}
+.bc-quick .chip{font-size:10.5px; padding:4px 10px}
+
+.bc-result{margin-top:13px}
+.bc-result:empty{display:none}
+.bc-sum{
+  display:flex; gap:16px; flex-wrap:wrap; padding:10px 12px; border-radius:9px;
+  background:rgba(5,7,12,.5); border:1px solid var(--line); margin-bottom:10px;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; color:var(--ink3);
+}
+.bc-sum b{color:var(--ink); font-weight:600}
+.bc-sum .ok b{color:var(--ok)}
+.bc-sum .dup b{color:var(--warn)}
+.bc-sum .bad b{color:var(--bad)}
+.bc-note{font-size:11px; color:var(--ink3); margin-top:8px; line-height:1.6}
+@media (max-width:1280px){ .bc-targets{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:760px){
+  .bc-targets{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bc-select{min-width:0; flex:1 1 100%}
+  .bc-btn{flex:1}
+}
+
+/* ───────── command chat terminal ───────── */
+.term{
+  background:linear-gradient(180deg,rgba(10,14,22,.94),rgba(6,9,15,.97));
+  border:1px solid var(--line2); border-radius:var(--r); overflow:hidden;
+  box-shadow:0 30px 70px -40px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.04);
+  position:relative;
+}
+.term::before{
+  content:""; position:absolute; left:0; right:0; top:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,211,238,.55),rgba(212,175,55,.55),transparent);
+}
+.term-bar{
+  display:flex; align-items:center; gap:9px; padding:10px 14px;
+  border-bottom:1px solid var(--line); background:rgba(5,7,12,.6);
+  font-family:var(--mono); font-size:10px; letter-spacing:.12em; color:var(--ink3);
+}
+.term-bar .lamp{width:7px; height:7px; border-radius:50%; background:var(--ok); box-shadow:0 0 9px var(--ok); flex:none}
+.term-bar .lamp.busy{background:var(--warn); box-shadow:0 0 9px var(--warn); animation:pulse 1.1s ease-in-out infinite}
+.term-bar .lamp.bad{background:var(--bad); box-shadow:0 0 9px var(--bad)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.term-bar .ttl{color:var(--ink2); letter-spacing:.14em}
+.term-bar .sep{color:var(--line2)}
+.term-bar .st{color:var(--ink3)}
+.term-bar .spacer{flex:1}
+.term-btn{
+  border:1px solid var(--line2); background:transparent; color:var(--ink3);
+  font-family:var(--mono); font-size:9px; letter-spacing:.14em; padding:3px 9px;
+  border-radius:5px; cursor:pointer; transition:.16s;
+}
+.term-btn:hover{color:var(--gold2); border-color:rgba(212,175,55,.5); background:rgba(212,175,55,.08)}
+
+.term-body{
+  height:min(46vh,420px); min-height:240px; overflow-y:auto; padding:16px 16px 6px;
+  display:flex; flex-direction:column; gap:14px; scroll-behavior:smooth;
+}
+.term-body::-webkit-scrollbar{width:8px}
+.term-body::-webkit-scrollbar-thumb{background:rgba(148,163,184,.22); border-radius:4px}
+.term-body::-webkit-scrollbar-track{background:transparent}
+
+.msg{display:flex; gap:10px; align-items:flex-start; animation:rise .28s cubic-bezier(.16,1,.3,1)}
+@keyframes rise{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+.msg .av{
+  width:24px; height:24px; flex:none; border-radius:6px; display:grid; place-items:center;
+  font-family:var(--mono); font-size:9px; font-weight:700; letter-spacing:.02em;
+}
+.msg.ai .av{background:linear-gradient(150deg,var(--gold2),var(--gold)); color:#0A0A0A}
+.msg.me .av{background:rgba(79,140,255,.18); color:#8FB6FF; border:1px solid rgba(79,140,255,.35)}
+.msg .bd{min-width:0; flex:1}
+.msg .who{
+  font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:var(--ink3);
+  display:block; margin-bottom:4px;
+}
+.msg .tx{
+  font-size:13px; line-height:1.75; color:var(--ink); white-space:pre-wrap; word-break:break-word;
+}
+.msg.me .tx{color:#C9D8F5}
+.msg.ai .tx{color:#DCE5F2}
+.msg .tx .cursor{
+  display:inline-block; width:7px; height:14px; background:var(--cyan);
+  vertical-align:-2px; margin-left:2px; animation:blink .9s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.msg .meta{
+  font-family:var(--mono); font-size:9px; letter-spacing:.08em; color:var(--ink3);
+  margin-top:6px; display:flex; gap:10px; flex-wrap:wrap;
+}
+.msg .meta .warn{color:var(--warn)}
+.msg .meta .bad{color:var(--bad)}
+
+.term-chips{display:flex; gap:7px; flex-wrap:wrap; padding:0 16px 10px}
+.chip{
+  border:1px solid var(--line2); background:rgba(15,20,30,.6); color:var(--ink2);
+  font-size:11px; padding:5px 11px; border-radius:99px; cursor:pointer; transition:.16s;
+  font-family:var(--sans);
+}
+.chip:hover{color:var(--gold2); border-color:rgba(212,175,55,.5); background:rgba(212,175,55,.08); transform:translateY(-1px)}
+
+.term-input{
+  display:flex; align-items:flex-end; gap:10px; padding:11px 14px;
+  border-top:1px solid var(--line); background:rgba(5,7,12,.55);
+}
+.term-input .prompt{
+  font-family:var(--mono); font-size:15px; color:var(--gold); line-height:1.5; flex:none;
+  padding-bottom:6px;
+}
+.term-input textarea{
+  flex:1; resize:none; border:0; outline:none; background:transparent; color:var(--ink);
+  font-family:var(--sans); font-size:13px; line-height:1.6; padding:6px 0; max-height:120px;
+  min-height:26px;
+}
+.term-input textarea::placeholder{color:#3C4759}
+.term-input button{
+  flex:none; border:0; border-radius:8px; padding:8px 16px; cursor:pointer;
+  font-family:var(--sans); font-size:12px; font-weight:700; letter-spacing:.04em;
+  color:#0A0A0A; background:linear-gradient(135deg,var(--gold2),var(--gold));
+  transition:.16s;
+}
+.term-input button:hover{transform:translateY(-1px); box-shadow:0 10px 24px -12px rgba(212,175,55,.8)}
+.term-input button[disabled]{filter:grayscale(.55) brightness(.75); cursor:progress; transform:none; box-shadow:none}
+.term-foot{
+  display:flex; gap:12px; align-items:center; padding:7px 14px 9px;
+  font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:var(--ink3);
+  background:rgba(5,7,12,.55);
+}
+.term-foot .spacer{flex:1}
+@media (max-width:760px){
+  .term-body{height:min(52vh,360px); padding:13px 12px 4px}
+  .term-chips{padding:0 12px 9px}
+  .term-input{padding:9px 12px}
+  .term-foot{font-size:8.5px}
+  .term-foot span:first-child{display:none}
+}
+
+/* ───────── responsive ───────── */
+@media (max-width:1280px){
+  .grid5{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .matrix{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:980px){
+  .panels{grid-template-columns:1fr}
+  .ceo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  .wrap{width:calc(100% - 28px)}
+  .grid5{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .matrix{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tiers{grid-template-columns:1fr}
+  .topbar-in{gap:10px}
+  .brand b{font-size:12px}
+  .pill{font-size:9.5px; padding:5px 9px}
+  .sec{margin-top:26px}
+}
+@media (max-width:520px){
+  .grid5{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .matrix{grid-template-columns:1fr 1fr}
+  .gate-card{padding:30px 22px 24px}
+  .metric .v{font-size:20px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important; transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ 門禁 ══════════ -->
+<div id="gate">
+  <div class="gate-card" id="gateCard">
+    <div class="gate-mark">
+      <div class="hex">SNT</div>
+      <div>
+        <b>光曜星樞 · 中央營運監控室</b>
+        <span>COMMAND CENTER · v6.0</span>
+      </div>
+    </div>
+    <h1 class="gate-title">解鎖監控室</h1>
+    <p class="gate-sub">此區域彙整五大站點商策流量、AI CEO 執行概況與 Omni-Ad Bot 配額。請輸入存取密碼。</p>
+    <form id="gateForm" autocomplete="off" novalidate>
+      <div class="field">
+        <label for="pw">ACCESS PASSWORD</label>
+        <input id="pw" type="password" inputmode="text" autocomplete="current-password"
+               placeholder="••••••••" aria-describedby="gateMsg" spellcheck="false">
+        <button type="button" class="eye" id="eye" aria-label="顯示密碼">◉</button>
+      </div>
+      <button type="submit" class="btn-unlock" id="unlock">解鎖監控室</button>
+      <div class="gate-msg" id="gateMsg" role="status" aria-live="polite"></div>
+    </form>
+    <div class="gate-foot">
+      <span>SINGULARITY NEXUS TECHNOLOGY</span>
+      <span id="gateClock">--:--:--</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 儀表板 ══════════ -->
+<div id="app" hidden>
+  <div class="topbar">
+    <div class="wrap topbar-in">
+      <div class="brand">
+        <div class="hex">SNT</div>
+        <div>
+          <b>中央營運監控室</b>
+          <span>COMMAND CENTER · v6.0</span>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <span class="pill idle" id="pillDb"><i class="dot"></i><span>DB 連線中</span></span>
+      <span class="pill idle" id="pillSites"><i class="dot"></i><span>站點檢查中</span></span>
+      <span class="pill idle" id="pillSync"><i class="dot"></i><span>—</span></span>
+      <button class="icon-btn" id="btnRefresh" title="立即重新整理" aria-label="重新整理">⟳</button>
+      <button class="icon-btn" id="btnLock" title="鎖定並登出" aria-label="鎖定">⏻</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="banner hide" id="banner"></div>
+
+    <!-- KPI -->
+    <div class="kpis" id="kpis"></div>
+
+    <!-- 1. 五站流量 -->
+    <section class="sec">
+      <div class="sec-head">
+        <h2>商策流量即時看板</h2>
+        <span class="hint">TRAFFIC &amp; CRO GRID · 5 SITES</span>
+        <div class="spacer"></div>
+        <span class="hint" id="trafficNote"></span>
+      </div>
+      <div class="grid5" id="siteGrid"></div>
+    </section>
+
+    <!-- 2. AI CEO / Ad Bot -->
+    <section class="sec">
+      <div class="sec-head">
+        <h2>AI CEO 與 Omni-Ad Bot 執行概況</h2>
+        <span class="hint">QUOTA RADAR · ASSET PIPELINE · IDEMPOTENCY</span>
+      </div>
+      <div class="panels">
+        <div class="panel">
+          <h3>YouTube API 配額 <span class="tag">DAILY</span></h3>
+          <p class="desc">今日已消耗 / 每日上限，達 70% 轉黃、90% 轉紅。</p>
+          <div class="gauge" id="quota"></div>
+        </div>
+        <div class="panel">
+          <h3>自動化素材產出 <span class="tag">TODAY</span></h3>
+          <p class="desc">五站今日自動產出的 4:5 圖卡與 30 秒 Shorts 分鏡腳本。</p>
+          <div class="matrix" id="assets"></div>
+        </div>
+      </div>
+      <div class="panels" style="margin-top:13px">
+        <div class="panel">
+          <h3>冪等性防呆日誌 <span class="tag">ad_bot_tasks</span></h3>
+          <p class="desc">最近派發任務與重試次數（idem_key 防重複執行）。</p>
+          <div id="tasks"></div>
+        </div>
+        <div class="panel">
+          <h3>派發佇列 <span class="tag">ad_bot_dispatch</span></h3>
+          <p class="desc">各站素材派送至 Meta／佇列的狀態與錯誤攔截。</p>
+          <div id="dispatch"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SaaS + LINE -->
+    <section class="sec">
+      <div class="sec-head">
+        <h2>SaaS 訂閱與雙 LINE 路由健康</h2>
+        <span class="hint">SUBSCRIPTION · WEBHOOK HEALTH</span>
+      </div>
+      <div class="panels">
+        <div class="panel">
+          <h3>14 天免費試用 <span class="tag">TENANTS</span></h3>
+          <p class="desc">以 subscription_events 的 trial_started 推算，未付款者計為試用中。</p>
+          <div class="ceo-grid" id="trials" style="grid-template-columns:repeat(3,minmax(0,1fr))"></div>
+          <h3 style="margin-top:16px">三階定價轉換 <span class="tag">NT$</span></h3>
+          <p class="desc">依 payment_received 的 amount_twd 對應方案。</p>
+          <div class="tiers" id="tiers"></div>
+        </div>
+        <div class="panel">
+          <h3>雙 LINE 官方帳號 <span class="tag">WEBHOOK</span></h3>
+          <p class="desc">即時呼叫 LINE Bot Info API 驗證 Token 與通道可用性。</p>
+          <div id="lineHealth"></div>
+          <h3 style="margin-top:16px">AI CEO 心跳 <span class="tag">ceo_daemon_run</span></h3>
+          <p class="desc">每日巡站排程的最後執行結果。</p>
+          <div class="ceo-grid" id="ceoHeart" style="grid-template-columns:repeat(2,minmax(0,1fr))"></div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:13px">
+        <h3>AI CEO 今日決策 <span class="tag">ceo_decision_log</span></h3>
+        <p class="desc">依嚴重度排序的待處理訊號。</p>
+        <div id="decisions"></div>
+      </div>
+    </section>
+
+    <!-- 4. 全站指令廣播 -->
+    <section class="sec">
+      <div class="sec-head">
+        <h2>全站指令廣播</h2>
+        <span class="hint">FLEET BROADCAST · 5 SITES × ALL AI &amp; BOTS</span>
+        <div class="spacer"></div>
+        <span class="hint" id="bcHint">冪等鍵 10 分鐘窗口</span>
+      </div>
+      <div class="panel">
+        <h3>對五站所有 AI 與機器人同時下達指令 <span class="tag">ad_bot_tasks</span></h3>
+        <p class="desc">指令將逐站寫入 Omni-Ad Bot 工作佇列；同一指令在 10 分鐘內重送不會重複建立任務。</p>
+
+        <div class="bc-targets" id="bcTargets"></div>
+
+        <div class="bc-row">
+          <select id="bcKind" class="bc-select" aria-label="指令類型">
+            <option value="full">full · 全流程（圖卡＋分鏡＋文案）</option>
+            <option value="card">card · 4:5 圖卡</option>
+            <option value="script">script · 30 秒 Shorts 分鏡</option>
+            <option value="copy">copy · 社群文案</option>
+            <option value="audit">audit · 站點健檢</option>
+            <option value="pause">pause · 暫停產出</option>
+            <option value="resume">resume · 恢復產出</option>
+          </select>
+          <button class="bc-btn ghost" id="bcDry" type="button">預演（不寫入）</button>
+          <button class="bc-btn" id="bcSend" type="button">廣播至選定站點</button>
+        </div>
+
+        <div class="bc-input">
+          <span class="prompt">›</span>
+          <textarea id="bcCommand" rows="2" maxlength="500"
+            placeholder="輸入要對五站 AI 與機器人下達的指令，例如：本週主推中部 30 坪新成屋精裝修，產出一組 4:5 圖卡與 30 秒分鏡。"></textarea>
+        </div>
+
+        <div class="bc-quick" id="bcQuick"></div>
+        <div class="bc-result" id="bcResult"></div>
+      </div>
+    </section>
+
+    <!-- 5. AI CEO 互動對話終端 -->
+    <section class="sec">
+      <div class="sec-head">
+        <h2>AI CEO 互動對話終端</h2>
+        <span class="hint">COMMAND CHAT TERMINAL · CONTEXT-AWARE</span>
+        <div class="spacer"></div>
+        <span class="hint" id="chatProvider">—</span>
+      </div>
+      <div class="term" id="term">
+        <div class="term-bar">
+          <span class="lamp"></span>
+          <span class="ttl">A.C LEE · AI CEO</span>
+          <span class="sep">│</span>
+          <span class="st" id="termState">待命中</span>
+          <div class="spacer"></div>
+          <button class="term-btn" id="chatClear" title="清除對話">CLEAR</button>
+        </div>
+        <div class="term-body" id="chatLog" aria-live="polite"></div>
+        <div class="term-chips" id="chatChips"></div>
+        <form class="term-input" id="chatForm" autocomplete="off">
+          <span class="prompt">›</span>
+          <textarea id="chatInput" rows="1" placeholder="對 AI CEO 下達指令，例如：目前各站流量如何？" maxlength="2000"></textarea>
+          <button type="submit" id="chatSend" aria-label="送出">送出</button>
+        </form>
+        <div class="term-foot">
+          <span>ENTER 送出 · SHIFT+ENTER 換行</span>
+          <div class="spacer"></div>
+          <span id="chatMeta">即時讀取 Neon 營運數據作為上下文</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">
+      <span id="footGen">—</span>
+      <span id="footMs"></span>
+      <div class="spacer"></div>
+      <a href="https://tower.xingdeng.tw/" target="_blank" rel="noopener">tower.xingdeng.tw</a>
+      <span>·</span>
+      <a href="https://xingdeng.tw/" target="_blank" rel="noopener">xingdeng.tw</a>
+      <span>·</span>
+      <span>SNT v6.0</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── 常數 ───────────────────────────────────────────── */
+  var KEY_STORE = 'snt.cc.v1';
+  var KEY_HASH  = 'c0430001866f79d9fcdfdbbd8b75bed967ffe86007b78603648db586cf0d4866';
+  var API = '/api/health?mode=cc';
+  var REFRESH_MS = 60000;
+
+  var state = { data: null, timer: null, countdown: REFRESH_MS / 1000, busy: false };
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+
+  function el(tag, cls, txt) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (txt !== undefined && txt !== null) n.textContent = String(txt);
+    return n;
+  }
+
+  function fmt(v) {
+    if (v === null || v === undefined || v === '' || (typeof v === 'number' && !isFinite(v))) return '—';
+    var n = Number(v);
+    if (!isFinite(n)) return '—';
+    return n.toLocaleString('en-US');
+  }
+
+  function fmtPct(v) {
+    if (v === null || v === undefined || !isFinite(Number(v))) return '—';
+    var n = Number(v);
+    return (Math.round(n * 10) / 10).toLocaleString('en-US') + '%';
+  }
+
+  function hhmmss(d) {
+    var p = function (x) { return String(x).padStart(2, '0'); };
+    return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+  }
+
+  function rel(iso) {
+    if (!iso) return '—';
+    var t = new Date(iso).getTime();
+    if (!isFinite(t)) return '—';
+    var s = Math.max(0, Math.round((Date.now() - t) / 1000));
+    if (s < 60) return s + ' 秒前';
+    if (s < 3600) return Math.round(s / 60) + ' 分前';
+    if (s < 86400) return Math.round(s / 3600) + ' 小時前';
+    return Math.round(s / 86400) + ' 天前';
+  }
+
+  function shortTime(iso) {
+    if (!iso) return '—';
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '—';
+    var p = function (x) { return String(x).padStart(2, '0'); };
+    return p(d.getMonth() + 1) + '/' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+
+  /* ── SHA-256（瀏覽器原生 WebCrypto；密碼本身不落任何儲存） ── */
+  function sha256(text) {
+    if (!(window.crypto && window.crypto.subtle)) {
+      return Promise.reject(new Error('此瀏覽器不支援 WebCrypto，請改用新版瀏覽器或確認以 HTTPS 開啟。'));
+    }
+    var bytes = new TextEncoder().encode(text);
+    return window.crypto.subtle.digest('SHA-256', bytes).then(function (buf) {
+      var arr = new Uint8Array(buf), out = '';
+      for (var i = 0; i < arr.length; i++) out += (arr[i] < 16 ? '0' : '') + arr[i].toString(16);
+      return out;
+    });
+  }
+
+  /* ── 門禁 ───────────────────────────────────────────── */
+  var gate = $('#gate'), app = $('#app'), gateCard = $('#gateCard');
+  var pw = $('#pw'), gateMsg = $('#gateMsg'), unlockBtn = $('#unlock');
+
+  function msg(text, kind) {
+    gateMsg.textContent = text || '';
+    gateMsg.className = 'gate-msg' + (text ? ' on' : '') + (kind === 'info' ? ' info' : '');
+  }
+
+  function fail(text) {
+    msg(text);
+    gateCard.classList.remove('shake');
+    void gateCard.offsetWidth;
+    gateCard.classList.add('shake');
+    pw.value = '';
+    pw.focus();
+  }
+
+  function showGate() {
+    app.hidden = true;
+    gate.hidden = false;
+    document.body.style.overflow = '';
+    if (state.timer) { clearInterval(state.timer); state.timer = null; }
+    setTimeout(function () { pw.focus(); }, 60);
+  }
+
+  function showApp() {
+    gate.hidden = true;
+    app.hidden = false;
+    if (!state.timer) {
+      state.timer = setInterval(function () {
+        state.countdown -= 1;
+        if (state.countdown <= 0) { state.countdown = REFRESH_MS / 1000; load(true); }
+        paintSync();
+      }, 1000);
+    }
+    // 對話終端僅在通過密碼後初始化（sessionStorage 已驗證）
+    setTimeout(function () { try { greet(); } catch (e) {} }, 120);
+  }
+
+  function paintSync() {
+    var p = $('#pillSync');
+    if (!p) return;
+    var t = p.querySelector('span');
+    if (state.busy) { t.textContent = '同步中…'; p.className = 'pill'; return; }
+    t.textContent = state.countdown + 's 後更新';
+    p.className = 'pill idle';
+  }
+
+  $('#eye').addEventListener('click', function () {
+    var on = pw.type === 'password';
+    pw.type = on ? 'text' : 'password';
+    this.textContent = on ? '◍' : '◉';
+    this.setAttribute('aria-label', on ? '隱藏密碼' : '顯示密碼');
+    pw.focus();
+  });
+
+  $('#gateForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = pw.value;
+    if (!v) { fail('請先輸入存取密碼。'); return; }
+    unlockBtn.disabled = true;
+    unlockBtn.textContent = '驗證中…';
+    msg('正在驗證通行權限…', 'info');
+
+    sha256(v).then(function (h) {
+      if (h !== KEY_HASH) {
+        return new Promise(function (res) {
+          setTimeout(function () {
+            unlockBtn.disabled = false;
+            unlockBtn.textContent = '解鎖監控室';
+            fail('密碼不正確，請確認後再試一次。');
+            res(false);
+          }, 260);
+        });
+      }
+      try { sessionStorage.setItem(KEY_STORE, h); } catch (err) {}
+      msg('驗證通過，正在載入營運數據…', 'info');
+      return load(false).then(function (ok) {
+        unlockBtn.disabled = false;
+        unlockBtn.textContent = '解鎖監控室';
+        if (ok) { msg(''); pw.value = ''; showApp(); }
+        else { fail('已通過驗證，但數據載入失敗，請稍後重試。'); }
+        return ok;
+      });
+    }).catch(function (err) {
+      unlockBtn.disabled = false;
+      unlockBtn.textContent = '解鎖監控室';
+      fail('驗證元件無法啟動：' + String(err.message || err));
+    });
+  });
+
+  $('#btnLock').addEventListener('click', function () {
+    try { sessionStorage.removeItem(KEY_STORE); } catch (e) {}
+    state.data = null;
+    showGate();
+    msg('已鎖定監控室。', 'info');
+  });
+
+  $('#btnRefresh').addEventListener('click', function () {
+    if (state.busy) return;
+    state.countdown = REFRESH_MS / 1000;
+    load(true);
+  });
+
+  /* ── 取數 ───────────────────────────────────────────── */
+  function load(silent) {
+    if (state.busy) return Promise.resolve(false);
+    state.busy = true;
+    paintSync();
+    var btn = $('#btnRefresh');
+    if (btn) btn.classList.add('spin');
+
+    return fetch(API, {
+      method: 'GET',
+      headers: { 'x-cc-key': KEY_HASH, 'accept': 'application/json' },
+      cache: 'no-store',
+      credentials: 'same-origin'
+    }).then(function (r) {
+      if (r.status === 401) {
+        try { sessionStorage.removeItem(KEY_STORE); } catch (e) {}
+        showGate();
+        msg('通行權限已失效，請重新輸入密碼。', 'info');
+        return null;
+      }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function (json) {
+      if (!json) return false;
+      state.data = json;
+      render(json);
+      return true;
+    }).catch(function (err) {
+      if (!silent) return false;
+      var b = $('#banner');
+      if (b) {
+        b.className = 'banner';
+        b.textContent = '本次自動更新失敗（' + String(err.message || err) + '），畫面上為上一次成功取得的數據。';
+      }
+      return false;
+    }).then(function (ok) {
+      state.busy = false;
+      if (btn) btn.classList.remove('spin');
+      paintSync();
+      return ok;
+    });
+  }
+
+  /* ── 繪製 ───────────────────────────────────────────── */
+  function render(d) {
+    paintBanner(d);
+    paintKpis(d);
+    paintSites(d);
+    paintQuota(d);
+    paintAssets(d);
+    paintTasks(d);
+    paintDispatch(d);
+    paintTrials(d);
+    paintTiers(d);
+    paintLine(d);
+    paintCeo(d);
+
+    $('#footGen').textContent = 'GENERATED ' + shortTime(d.generated_at) + ' · ' + (d.tz || 'Asia/Taipei');
+    $('#footMs').textContent = 'API ' + (d.ms || 0) + 'ms · DB ' + ((d.db && d.db.ms) || 0) + 'ms';
+  }
+
+  function paintBanner(d) {
+    var b = $('#banner');
+    var deg = d.degraded || [];
+    if (!deg.length) { b.className = 'banner hide'; b.textContent = ''; return; }
+    b.className = 'banner';
+    b.textContent = '';
+    b.appendChild(el('b', null, '降級提示'));
+    b.appendChild(el('span', null, '以下資料源暫時無法取得，其餘模組照常運作：' + deg.join('；')));
+  }
+
+  function paintKpis(d) {
+    var k = d.kpi || {};
+    var box = $('#kpis');
+    box.textContent = '';
+    var items = [
+      { k: '五站總瀏覽', v: fmt(k.pv_total), u: '次', s: '今日 ' + fmt(k.pv_today) + ' 次' },
+      { k: '名單累計', v: fmt(k.leads_total), u: '筆', s: '今日估價單 ' + fmt(k.leads_today) + ' 筆' },
+      { k: '估價單總量', v: fmt(k.quote_total), u: '筆', s: 'decoration LIFF + 站內' },
+      { k: '試用中租戶', v: fmt(k.trials_active), u: '家', s: '14 天免費試用' },
+      { k: '站點在線', v: fmt(k.sites_up) + '/' + fmt(k.sites_total), u: '', s: '前台可達性檢查' },
+      { k: '資料庫', v: (d.db && d.db.ok) ? 'OK' : 'ERR', u: '', s: 'Neon · ' + ((d.db && d.db.ms) || 0) + 'ms' }
+    ];
+    items.forEach(function (it) {
+      var c = el('div', 'kpi');
+      c.appendChild(el('span', 'k', it.k));
+      var v = el('span', 'v', it.v);
+      if (it.u) v.appendChild(el('small', null, it.u));
+      c.appendChild(v);
+      c.appendChild(el('span', 's', it.s));
+      box.appendChild(c);
+    });
+
+    var dbPill = $('#pillDb');
+    var dbOk = d.db && d.db.ok;
+    dbPill.className = 'pill ' + (dbOk ? '' : 'bad');
+    dbPill.querySelector('span').textContent = dbOk ? 'DB 正常 ' + ((d.db.ms) || 0) + 'ms' : 'DB 異常';
+
+    var probe = d.probe || [];
+    var up = probe.filter(function (p) { return p.ok; }).length;
+    var sp = $('#pillSites');
+    sp.className = 'pill ' + (up === probe.length && probe.length ? '' : up ? 'warn' : 'bad');
+    sp.querySelector('span').textContent = '站點 ' + up + '/' + (probe.length || 5) + ' 在線';
+  }
+
+  function paintSites(d) {
+    var grid = $('#siteGrid');
+    grid.textContent = '';
+    var probe = {};
+    (d.probe || []).forEach(function (p) { probe[p.id] = p; });
+
+    (d.sites || []).forEach(function (s) {
+      var card = el('article', 'site');
+      card.style.setProperty('--accent', s.accent || '#D4AF37');
+      card.appendChild(el('div', 'bar'));
+
+      var head = el('header');
+      var p = probe[s.id] || {};
+      head.appendChild(el('span', 'dot' + (p.ok ? '' : ' off')));
+      var hd = el('div');
+      hd.appendChild(el('h3', null, s.name));
+      hd.appendChild(el('p', 'host', s.host));
+      head.appendChild(hd);
+      head.appendChild(el('span', 'role', s.role));
+      card.appendChild(head);
+
+      var mbox = el('div', 'metrics');
+      (s.metrics || []).forEach(function (m) {
+        var row = el('div', 'metric');
+        row.appendChild(el('span', 'l', m.label));
+        var v = el('span', 'v' + (m.value === null || m.value === undefined ? ' na' : ''));
+        v.textContent = (m.value === null || m.value === undefined) ? '—' : fmt(m.value);
+        if (m.unit && m.value !== null && m.value !== undefined) v.appendChild(el('small', null, m.unit));
+        row.appendChild(v);
+        row.appendChild(el('span', 's', m.sub || ''));
+        mbox.appendChild(row);
+      });
+      card.appendChild(mbox);
+
+      var foot = el('footer');
+      foot.appendChild(el('span', 'st' + (p.ok ? '' : ' bad')));
+      foot.appendChild(el('span', null, p.ok ? 'HTTP ' + p.status : (p.status ? 'HTTP ' + p.status : '無法連線')));
+      foot.appendChild(el('span', 'ms', (p.ms || 0) + 'ms'));
+      card.appendChild(foot);
+
+      grid.appendChild(card);
+    });
+
+    var note = $('#trafficNote');
+    if (note) note.textContent = '來源 growth_event · hits · leads · growth_lead';
+  }
+
+  function paintQuota(d) {
+    var box = $('#quota');
+    box.textContent = '';
+    var ab = d.adbot;
+    if (!ab || !ab.quota) {
+      box.appendChild(el('p', 'desc', 'ad_bot_quota 尚無今日紀錄，配額雷達待首次排程寫入。'));
+      return;
+    }
+    var q = ab.quota;
+    var pctv = Math.min(100, Number(q.pct) || 0);
+
+    var row = el('div', 'row');
+    row.appendChild(el('span', 'big', fmt(q.used)));
+    row.appendChild(el('span', 'of', '/ ' + fmt(q.limit) + ' units'));
+    var pv = el('span', 'pctv', fmtPct(q.pct));
+    pv.style.color = q.state === 'critical' ? 'var(--bad)' : q.state === 'warn' ? 'var(--warn)' : 'var(--ok)';
+    row.appendChild(pv);
+    box.appendChild(row);
+
+    var track = el('div', 'track');
+    var fill = el('div', 'fill ' + (q.state || 'ok'));
+    track.appendChild(fill);
+    box.appendChild(track);
+    setTimeout(function () { fill.style.width = pctv + '%'; }, 40);
+
+    var ticks = el('div', 'ticks');
+    ticks.appendChild(el('span', null, '0'));
+    ticks.appendChild(el('span', null, '70% 警戒'));
+    ticks.appendChild(el('span', null, '90% 上限'));
+    ticks.appendChild(el('span', null, fmt(q.limit)));
+    box.appendChild(ticks);
+
+    var meta = el('div', 'qmeta');
+    var m1 = el('div', null, '狀態');
+    m1.appendChild(el('b', null, q.state === 'critical' ? '接近上限' : q.state === 'warn' ? '需注意' : '正常'));
+    meta.appendChild(m1);
+    var m2 = el('div', null, 'LINE 推播');
+    m2.appendChild(el('b', null, fmt(q.line_pushes) + ' 則'));
+    meta.appendChild(m2);
+    var m3 = el('div', null, '最後更新');
+    m3.appendChild(el('b', null, rel(q.updated_at)));
+    meta.appendChild(m3);
+    var m4 = el('div', null, '任務 完成/失敗');
+    m4.appendChild(el('b', null, fmt((ab.counts || {}).done) + ' / ' + fmt((ab.counts || {}).failed)));
+    meta.appendChild(m4);
+    box.appendChild(meta);
+  }
+
+  function paintAssets(d) {
+    var box = $('#assets');
+    box.textContent = '';
+    var ab = d.adbot;
+    var sites = ['decoration', 'xingdeng', 'tower', 'orbit', 'vip'];
+    var labels = { decoration: 'DECORATION', xingdeng: 'XINGDENG', tower: 'TOWER', orbit: 'ORBIT', vip: 'VIP' };
+    var agg = {};
+    ((ab && ab.assets) || []).forEach(function (a) {
+      agg[a.site] = agg[a.site] || { card: 0, script: 0, copy: 0 };
+      agg[a.site][a.kind] = Number(a.n) || 0;
+    });
+    sites.forEach(function (s) {
+      var a = agg[s] || { card: 0, script: 0, copy: 0 };
+      var cell = el('div', 'mx');
+      cell.appendChild(el('span', 'nm', labels[s]));
+      [['4:5 圖卡', a.card], ['30s 分鏡', a.script], ['文案', a.copy]].forEach(function (pair) {
+        var ln = el('div', 'ln');
+        ln.appendChild(el('span', null, pair[0]));
+        var b = el('b', pair[1] ? '' : 'zero', fmt(pair[1]));
+        ln.appendChild(b);
+        cell.appendChild(ln);
+      });
+      box.appendChild(cell);
+    });
+  }
+
+  function table(headers, rows, emptyText) {
+    var t = el('table', 'tbl');
+    var thead = el('thead');
+    var tr = el('tr');
+    headers.forEach(function (h) { tr.appendChild(el('th', null, h)); });
+    thead.appendChild(tr);
+    t.appendChild(thead);
+    var tb = el('tbody');
+    if (!rows.length) {
+      var r = el('tr');
+      var td = el('td', 'empty', emptyText || '尚無紀錄');
+      td.colSpan = headers.length;
+      r.appendChild(td);
+      tb.appendChild(r);
+    } else {
+      rows.forEach(function (cells) {
+        var r = el('tr');
+        cells.forEach(function (c) {
+          if (c && c.nodeType) { var td = el('td'); td.appendChild(c); r.appendChild(td); }
+          else { r.appendChild(el('td', null, c === null || c === undefined ? '—' : String(c))); }
+        });
+        tb.appendChild(r);
+      });
+    }
+    t.appendChild(tb);
+    return t;
+  }
+
+  function badge(text, kind) { return el('span', 'badge ' + (kind || 'idle'), text); }
+
+  function paintTasks(d) {
+    var box = $('#tasks');
+    box.textContent = '';
+    var ab = d.adbot;
+    var rows = ((ab && ab.tasks) || []).map(function (t) {
+      var st = t.status === 'done' ? 'ok' : t.status === 'failed' ? 'bad' : 'warn';
+      var retry = Number(t.attempts) > 1 ? badge('重試 ' + t.attempts, 'warn') : badge('首次', 'idle');
+      return [
+        t.site || '—',
+        t.kind || '—',
+        badge(t.status || '—', st),
+        retry,
+        shortTime(t.created_at)
+      ];
+    });
+    box.appendChild(table(['站點', '類型', '狀態', '嘗試', '建立時間'], rows, 'ad_bot_tasks 尚無紀錄'));
+  }
+
+  function paintDispatch(d) {
+    var box = $('#dispatch');
+    box.textContent = '';
+    var ab = d.adbot;
+    var rows = ((ab && ab.dispatch) || []).map(function (x) {
+      var st = x.status === 'sent' ? 'ok' : x.status === 'failed' ? 'bad' : 'warn';
+      var err = x.err ? el('span', 'badge bad', String(x.err).slice(0, 22)) : badge('無錯誤', 'ok');
+      return [
+        x.site || '—',
+        x.channel || '—',
+        badge(x.status || '—', st),
+        err,
+        shortTime(x.scheduled_at || x.created_at)
+      ];
+    });
+    box.appendChild(table(['站點', '通道', '狀態', '錯誤攔截', '排程'], rows, 'ad_bot_dispatch 尚無紀錄'));
+  }
+
+  function paintTrials(d) {
+    var box = $('#trials');
+    box.textContent = '';
+    var t = (d.saas && d.saas.trials) || {};
+    var cells = [
+      { k: '試用中', v: fmt(t.active_trial), u: '家' },
+      { k: '14 天內啟動', v: fmt(t.within_14d), u: '家' },
+      { k: '累計試用', v: fmt(t.started_total), u: '家' }
+    ];
+    cells.forEach(function (c) {
+      var cell = el('div', 'ceo-cell');
+      cell.appendChild(el('span', 'k', c.k));
+      var v = el('span', 'v', c.v);
+      v.appendChild(el('small', null, c.u));
+      cell.appendChild(v);
+      box.appendChild(cell);
+    });
+  }
+
+  function paintTiers(d) {
+    var box = $('#tiers');
+    box.textContent = '';
+    var tiers = (d.saas && d.saas.tiers) || [];
+    if (!tiers.length) { box.appendChild(el('p', 'desc', '尚無訂閱方案資料。')); return; }
+    tiers.forEach(function (t) {
+      var c = el('div', 'tier');
+      c.appendChild(el('span', 'nm', t.name + ' 方案'));
+      c.appendChild(el('span', 'pr', 'NT$' + fmt(t.price)));
+      var ct = el('span', 'ct', fmt(t.orders));
+      ct.appendChild(el('small', null, '筆成交'));
+      c.appendChild(ct);
+      c.appendChild(el('span', 'rv', '累計 NT$' + fmt(t.revenue)));
+      box.appendChild(c);
+    });
+  }
+
+  function paintLine(d) {
+    var box = $('#lineHealth');
+    box.textContent = '';
+    var list = d.line || [];
+    if (!list.length) { box.appendChild(el('p', 'desc', 'LINE 健康檢查無回應。')); return; }
+    list.forEach(function (l) {
+      var row = el('div', 'line-row');
+      var lamp = el('span', 'lamp' + (l.ok ? '' : (l.state === 'no_token' ? ' idle' : ' bad')));
+      row.appendChild(lamp);
+      var tx = el('div');
+      tx.appendChild(el('span', 'id', l.id));
+      tx.appendChild(el('span', 'lb', l.label + (l.display ? ' · ' + l.display : '')));
+      row.appendChild(tx);
+      var rt = el('div', 'rt');
+      rt.textContent = l.ok ? 'ONLINE · ' + l.ms + 'ms' : (l.state === 'no_token' ? 'NO TOKEN' : 'HTTP ' + (l.status || '—'));
+      row.appendChild(rt);
+      box.appendChild(row);
+    });
+  }
+
+  function paintCeo(d) {
+    var heart = $('#ceoHeart');
+    heart.textContent = '';
+    var c = d.ceo || {};
+    var dm = c.daemon;
+    var cells = dm ? [
+      { k: '最後巡站', v: rel(dm.at), u: '' },
+      { k: '掃描訪客', v: fmt(dm.scanned), u: '人' },
+      { k: '耗時', v: fmt(Math.round((dm.ms || 0) / 1000)), u: '秒' },
+      { k: 'AI 模型', v: dm.ai_ok ? 'OK' : '降級', u: '' }
+    ] : [{ k: '最後巡站', v: '—', u: '' }];
+    cells.forEach(function (x) {
+      var cell = el('div', 'ceo-cell');
+      cell.appendChild(el('span', 'k', x.k));
+      var v = el('span', 'v', x.v);
+      if (x.u) v.appendChild(el('small', null, x.u));
+      cell.appendChild(v);
+      heart.appendChild(cell);
+    });
+
+    var box = $('#decisions');
+    box.textContent = '';
+    var list = c.decisions || [];
+    if (!list.length) { box.appendChild(el('p', 'desc', '今日尚無決策訊號。')); return; }
+    list.forEach(function (x) {
+      var row = el('div', 'dec');
+      row.appendChild(el('span', 'sev ' + (x.severity || x.priority || '')));
+      var tx = el('div', 'tx');
+      tx.appendChild(el('span', 'tt', x.title || x.code));
+      tx.appendChild(el('span', 'cd', (x.code || '') + ' · ' + (x.priority || '') + ' · ' + (x.action ? String(x.action).slice(0, 60) : '')));
+      row.appendChild(tx);
+      box.appendChild(row);
+    });
+  }
+
+  /* ── 全站指令廣播 ───────────────────────────────────── */
+  var bc = { selected: {}, busy: false };
+
+  var BC_SITES = [
+    { id: 'decoration', label: 'DECORATION' },
+    { id: 'xingdeng', label: 'XINGDENG' },
+    { id: 'tower', label: 'TOWER' },
+    { id: 'orbit', label: 'ORBIT' },
+    { id: 'vip', label: 'VIP' }
+  ];
+
+  var BC_QUICK = [
+    '本週主推中部 30 坪新成屋精裝修，產出一組 4:5 圖卡與 30 秒分鏡。',
+    '針對統包商夥伴，產出 B2B 標準化評估白皮書的社群貼文。',
+    '檢查各站追蹤碼與 LINE 導流是否正常，回報異常。',
+    '暫停所有非必要素材產出，優先處理既有名單跟進。'
+  ];
+
+  function bcRenderTargets() {
+    var box = $('#bcTargets');
+    if (!box) return;
+    box.textContent = '';
+    BC_SITES.forEach(function (s) {
+      var on = bc.selected[s.id] !== false;
+      var t = el('div', 'bc-t' + (on ? ' on' : ''));
+      t.setAttribute('role', 'checkbox');
+      t.setAttribute('aria-checked', on ? 'true' : 'false');
+      t.tabIndex = 0;
+      t.appendChild(el('span', 'box', on ? '✓' : ''));
+      t.appendChild(el('span', 'nm', s.label));
+      function toggle() {
+        bc.selected[s.id] = !(bc.selected[s.id] !== false);
+        bcRenderTargets();
+      }
+      t.addEventListener('click', toggle);
+      t.addEventListener('keydown', function (e) {
+        if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
+      });
+      box.appendChild(t);
+    });
+  }
+
+  function bcRenderQuick() {
+    var box = $('#bcQuick');
+    if (!box) return;
+    box.textContent = '';
+    BC_QUICK.forEach(function (q) {
+      var b = el('button', 'chip', q.length > 26 ? q.slice(0, 26) + '…' : q);
+      b.type = 'button';
+      b.title = q;
+      b.addEventListener('click', function () {
+        var ta = $('#bcCommand');
+        if (ta) { ta.value = q; ta.focus(); }
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function bcSelectedIds() {
+    return BC_SITES.filter(function (s) { return bc.selected[s.id] !== false; }).map(function (s) { return s.id; });
+  }
+
+  function bcSetBusy(on) {
+    bc.busy = on;
+    ['#bcSend', '#bcDry'].forEach(function (sel) {
+      var b = $(sel);
+      if (b) b.disabled = on;
+    });
+  }
+
+  function bcSend(dryRun) {
+    if (bc.busy) return;
+    var ta = $('#bcCommand');
+    var cmd = String((ta && ta.value) || '').trim();
+    var out = $('#bcResult');
+    if (!cmd) {
+      if (out) {
+        out.textContent = '';
+        out.appendChild(el('div', 'bc-note', '請先輸入要廣播的指令內容。'));
+      }
+      if (ta) ta.focus();
+      return;
+    }
+    var sites = bcSelectedIds();
+    if (!sites.length) {
+      if (out) { out.textContent = ''; out.appendChild(el('div', 'bc-note', '請至少選擇一個站點。')); }
+      return;
+    }
+
+    bcSetBusy(true);
+    if (out) {
+      out.textContent = '';
+      out.appendChild(el('div', 'bc-note', dryRun ? '預演中，不會寫入資料庫…' : '正在派發至 ' + sites.length + ' 個站點…'));
+    }
+
+    fetch('/api/health?mode=broadcast', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-cc-key': KEY_HASH },
+      body: JSON.stringify({
+        command: cmd,
+        sites: sites,
+        kind: ($('#bcKind') && $('#bcKind').value) || 'full',
+        dryRun: !!dryRun
+      }),
+      cache: 'no-store',
+      credentials: 'same-origin'
+    }).then(function (r) {
+      if (r.status === 401) {
+        try { sessionStorage.removeItem(KEY_STORE); } catch (e) {}
+        showGate();
+        msg('通行權限已失效，請重新輸入密碼。', 'info');
+        return null;
+      }
+      if (r.status === 429) throw new Error('廣播過於頻繁，請稍候一分鐘。');
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function (j) {
+      if (!j) return;
+      bcRenderResult(j, dryRun);
+      if (!dryRun && j.summary && j.summary.accepted > 0) {
+        // 廣播成功後刷新任務列表
+        setTimeout(function () { load(true); }, 900);
+      }
+    }).catch(function (err) {
+      if (out) {
+        out.textContent = '';
+        out.appendChild(el('div', 'bc-note', '廣播失敗：' + String(err.message || err) + '。請確認網路後重試。'));
+      }
+    }).then(function () { bcSetBusy(false); });
+  }
+
+  function bcRenderResult(j, dryRun) {
+    var out = $('#bcResult');
+    if (!out) return;
+    out.textContent = '';
+
+    var s = j.summary || { total: 0, accepted: 0, duplicated: 0, failed: 0 };
+    var sum = el('div', 'bc-sum');
+    sum.appendChild(el('span', null, (dryRun ? '預演' : '已派發') + ' ' + s.total + ' 站'));
+    var okS = el('span', 'ok'); okS.appendChild(el('b', null, String(s.accepted))); okS.appendChild(document.createTextNode(' 已接收')); sum.appendChild(okS);
+    var dupS = el('span', 'dup'); dupS.appendChild(el('b', null, String(s.duplicated))); dupS.appendChild(document.createTextNode(' 冪等略過')); sum.appendChild(dupS);
+    var badS = el('span', 'bad'); badS.appendChild(el('b', null, String(s.failed))); badS.appendChild(document.createTextNode(' 失敗')); sum.appendChild(badS);
+    if (j.kind) sum.appendChild(el('span', null, 'KIND ' + String(j.kind).toUpperCase()));
+    out.appendChild(sum);
+
+    var rows = (j.results || []).map(function (r) {
+      var st = r.state === 'accepted' ? 'ok' : r.state === 'duplicate' ? 'warn' : r.state === 'dry_run' ? 'idle' : 'bad';
+      var label = r.state === 'accepted' ? '已接收' : r.state === 'duplicate' ? '冪等略過' : r.state === 'dry_run' ? '預演' : '失敗';
+      return [
+        r.site || '—',
+        badge(label, st),
+        r.task_id ? String(r.task_id).slice(0, 8) : (r.error ? String(r.error).slice(0, 24) : '—'),
+        r.idem_key || '—',
+        (r.ms || 0) + 'ms'
+      ];
+    });
+    out.appendChild(table(['站點', '接收狀態', '任務 ID', '冪等鍵', '耗時'], rows, '無回應'));
+
+    if (j.message) out.appendChild(el('div', 'bc-note', j.message));
+    else if (!dryRun && s.accepted) out.appendChild(el('div', 'bc-note', '任務已進入 ad_bot_tasks 佇列，Omni-Ad Bot 將於下一輪排程接手執行。'));
+    else if (dryRun) out.appendChild(el('div', 'bc-note', '預演完成，未寫入任何資料。確認無誤後按「廣播至選定站點」。'));
+  }
+
+  (function initBroadcast() {
+    if (!$('#bcTargets')) return;
+    bcRenderTargets();
+    bcRenderQuick();
+    var send = $('#bcSend');
+    var dry = $('#bcDry');
+    if (send) send.addEventListener('click', function () { bcSend(false); });
+    if (dry) dry.addEventListener('click', function () { bcSend(true); });
+  })();
+
+  /* ── AI CEO 互動對話終端 ─────────────────────────────── */
+  var chat = { history: [], busy: false, started: false };
+
+  var CHIPS = [
+    '目前各站流量如何？',
+    '今天名單與估價單表現？',
+    'YouTube API 配額還夠嗎？',
+    '試用中的統包商有幾家？',
+    '最近派發有錯誤嗎？',
+    '給我今天的營運總結與建議'
+  ];
+
+  function chatEl(tag, cls, txt) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (txt !== undefined && txt !== null) n.textContent = String(txt);
+    return n;
+  }
+
+  function chatScroll() {
+    var log = $('#chatLog');
+    if (log) log.scrollTop = log.scrollHeight;
+  }
+
+  function chatState(text, kind) {
+    var s = $('#termState');
+    if (s) s.textContent = text;
+    var lamp = document.querySelector('.term-bar .lamp');
+    if (lamp) lamp.className = 'lamp' + (kind ? ' ' + kind : '');
+  }
+
+  function addMsg(role, text) {
+    var log = $('#chatLog');
+    if (!log) return null;
+    var wrap = chatEl('div', 'msg ' + (role === 'user' ? 'me' : 'ai'));
+    wrap.appendChild(chatEl('div', 'av', role === 'user' ? 'YOU' : 'CEO'));
+    var bd = chatEl('div', 'bd');
+    bd.appendChild(chatEl('span', 'who', role === 'user' ? 'COMMANDER' : 'A.C LEE · AI CEO'));
+    var tx = chatEl('div', 'tx', text || '');
+    bd.appendChild(tx);
+    wrap.appendChild(bd);
+    log.appendChild(wrap);
+    chatScroll();
+    return { wrap: wrap, bd: bd, tx: tx };
+  }
+
+  function addMeta(bd, meta) {
+    var m = chatEl('div', 'meta');
+    var prov = meta.provider || 'rule';
+    m.appendChild(chatEl('span', null, 'ENGINE ' + String(prov).toUpperCase()));
+    if (meta.ms) m.appendChild(chatEl('span', null, (meta.ms / 1000).toFixed(1) + 's'));
+    if (meta.ctx_ok === false) m.appendChild(chatEl('span', 'warn', 'CTX 降級'));
+    if (meta.degraded) m.appendChild(chatEl('span', 'warn', 'LLM 降級 · 規則引擎'));
+    bd.appendChild(m);
+    var p = $('#chatProvider');
+    if (p) p.textContent = 'ENGINE ' + String(prov).toUpperCase() + (meta.degraded ? ' (DEGRADED)' : '');
+  }
+
+  function renderChips() {
+    var box = $('#chatChips');
+    if (!box) return;
+    box.textContent = '';
+    CHIPS.forEach(function (c) {
+      var b = chatEl('button', 'chip', c);
+      b.type = 'button';
+      b.addEventListener('click', function () {
+        var inp = $('#chatInput');
+        if (inp) { inp.value = c; inp.focus(); }
+        sendChat();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function setBusy(on) {
+    chat.busy = on;
+    var btn = $('#chatSend');
+    if (btn) btn.disabled = on;
+    chatState(on ? '處理中…' : '待命中', on ? 'busy' : '');
+  }
+
+  function sendChat() {
+    if (chat.busy) return;
+    var inp = $('#chatInput');
+    if (!inp) return;
+    var text = String(inp.value || '').trim();
+    if (!text) return;
+    inp.value = '';
+    inp.style.height = 'auto';
+
+    addMsg('user', text);
+    chat.history.push({ role: 'user', content: text });
+    if (chat.history.length > 20) chat.history = chat.history.slice(-20);
+
+    setBusy(true);
+    var holder = addMsg('assistant', '');
+    var cursor = chatEl('span', 'cursor');
+    holder.tx.appendChild(cursor);
+
+    var acc = '';
+    var gotMeta = null;
+
+    function finish(meta, fallbackText) {
+      if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+      if (!acc && fallbackText) { acc = fallbackText; holder.tx.textContent = acc; }
+      if (!acc) { acc = '（AI CEO 暫時無法回應，請稍後再試。）'; holder.tx.textContent = acc; }
+      chat.history.push({ role: 'assistant', content: acc });
+      if (meta) addMeta(holder.bd, meta);
+      setBusy(false);
+      chatScroll();
+    }
+
+    fetch('/api/health?mode=chat', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-cc-key': KEY_HASH },
+      body: JSON.stringify({ messages: chat.history, stream: true }),
+      cache: 'no-store',
+      credentials: 'same-origin'
+    }).then(function (r) {
+      if (r.status === 401) {
+        try { sessionStorage.removeItem(KEY_STORE); } catch (e) {}
+        showGate();
+        msg('通行權限已失效，請重新輸入密碼。', 'info');
+        finish(null, '（通行權限已失效）');
+        return null;
+      }
+      if (r.status === 429) {
+        finish({ provider: 'rule', degraded: true }, '對話過於頻繁，請稍候一分鐘再試。');
+        return null;
+      }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+
+      var ct = r.headers.get('content-type') || '';
+      if (ct.indexOf('text/event-stream') === -1) {
+        return r.json().then(function (j) {
+          finish(j, j.reply || '');
+          return null;
+        });
+      }
+
+      var reader = r.body.getReader();
+      var dec = new TextDecoder();
+      var buf = '';
+
+      function pump() {
+        return reader.read().then(function (res) {
+          if (res.done) { finish(gotMeta, acc); return; }
+          buf += dec.decode(res.value, { stream: true });
+          var parts = buf.split('\n\n');
+          buf = parts.pop();
+          for (var i = 0; i < parts.length; i++) {
+            var line = parts[i].trim();
+            if (line.indexOf('data:') !== 0) continue;
+            var payload;
+            try { payload = JSON.parse(line.slice(5).trim()); } catch (e) { continue; }
+            if (payload.type === 'meta') { gotMeta = payload; }
+            else if (payload.type === 'delta') {
+              acc += payload.text || '';
+              holder.tx.textContent = acc;
+              holder.tx.appendChild(cursor);
+              chatScroll();
+            } else if (payload.type === 'done') { /* 由 res.done 收尾 */ }
+          }
+          return pump();
+        });
+      }
+      return pump();
+    }).catch(function (err) {
+      finish({ provider: 'rule', degraded: true }, '連線中斷（' + String(err.message || err) + '）。請確認網路後重試。');
+    });
+  }
+
+  (function initChat() {
+    var form = $('#chatForm');
+    var inp = $('#chatInput');
+    if (!form || !inp) return;
+
+    renderChips();
+
+    form.addEventListener('submit', function (e) { e.preventDefault(); sendChat(); });
+
+    inp.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+    });
+
+    inp.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(120, this.scrollHeight) + 'px';
+    });
+
+    var clr = $('#chatClear');
+    if (clr) clr.addEventListener('click', function () {
+      chat.history = [];
+      var log = $('#chatLog');
+      if (log) log.textContent = '';
+      chat.started = false;
+      greet();
+      chatState('待命中', '');
+    });
+  })();
+
+  function greet() {
+    if (chat.started) return;
+    chat.started = true;
+    var d = state.data || {};
+    var k = d.kpi || {};
+    var lines = [
+      '指揮官，監控室已就緒。',
+      '',
+      '即時快照：五站瀏覽 ' + fmt(k.pv_total) + ' 次（今日 ' + fmt(k.pv_today) + '）、名單 ' + fmt(k.leads_total) + ' 筆、試用中租戶 ' + fmt(k.trials_active) + ' 家、站點在線 ' + fmt(k.sites_up) + '/' + fmt(k.sites_total) + '。',
+      '',
+      '可直接下達指令，我會即時讀取 Neon 營運數據回報。'
+    ];
+    addMsg('assistant', lines.join('\n'));
+  }
+
+  /* ── 啟動 ───────────────────────────────────────────── */
+  function tickClock() {
+    if (c) c.textContent = hhmmss(new Date());
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  var saved = null;
+  try { saved = sessionStorage.getItem(KEY_STORE); } catch (e) { saved = null; }
+
+  if (saved === KEY_HASH) {
+    load(false).then(function (ok) {
+      if (ok) showApp();
+      else { showGate(); msg('請重新輸入存取密碼。', 'info'); }
+    });
+  } else {
+    showGate();
+  }
+})();
+</script>
+</body>
+</html>
