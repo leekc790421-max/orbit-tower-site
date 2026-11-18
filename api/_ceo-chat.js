@@ -384,7 +384,7 @@ module.exports = async function handler(req, res) {
   // 2) 呼叫 LLM
   let result;
   try {
-    result = await withTimeout(callLLM(messages, system, 20000), 24000, 'llm');
+    result = await withTimeout(callLLM(messages, system, 7000), 11000, 'llm');
   } catch (e) {
     result = { ok: false, provider: null, text: null, attempts: [{ p: 'llm', error: String(e.message).slice(0, 80) }] };
   }
