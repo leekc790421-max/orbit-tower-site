@@ -247,6 +247,72 @@ module.exports = async function handler(req, res) {
     }
   }
 
+  // ── 雙軌智能核心診斷（掛在既有函式內，不新增 Serverless Function）──────────
+  // ?mode=core  → 三層供應鏈狀態 + 全階定價矩陣（公開，不含成本）
+  // ?mode=core&audit=1 + X-CC-Key → 追加成本稽核視圖（僅總部內部）
+  if (req.query && req.query.mode === 'core') {
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    if (req.method === 'OPTIONS') return res.status(204).end();
+    try {
+      const CORE = require('./_snt-core.js');
+      const inf = CORE.clampInflation(req.query.inflation);
+      const CC_KEY = 'c0430001866f79d9fcdfdbbd8b75bed967ffe86007b78603648db586cf0d4866';
+      const given = String(req.headers['x-cc-key'] || '').trim().toLowerCase();
+      const isAdmin = !!given && given === CC_KEY;
+
+      const out = {
+        ok: true,
+        schema: 'snt-core-v1',
+        generated_at: new Date().toISOString(),
+        providers: CORE.providerStatus(),
+        inflation: inf,
+        vat_rate: CORE.VAT_RATE,
+        saas_tiers: CORE.SAAS_TIERS,
+        plans: Object.keys(CORE.PRICING_BASE).map(k => CORE.publicQuote(k, inf)),
+        line_modules: Object.keys(CORE.LINE_MODULES).map(code => ({
+          code, name: CORE.LINE_MODULES[code].name, desc: CORE.LINE_MODULES[code].desc
+        })),
+        addons: Object.keys(CORE.ADDON_FEATURES).map(code => ({
+          code, name: CORE.ADDON_FEATURES[code].name
+        }))
+      };
+      if (isAdmin && req.query.audit === '1') {
+        out.audit = Object.keys(CORE.PRICING_BASE).map(k => CORE.auditQuote(k, inf));
+      }
+      return res.status(200).json(out);
+    } catch (e) {
+      return res.status(200).json({
+        ok: false, schema: 'snt-core-v1',
+        error: String((e && e.message) || e).slice(0, 200)
+      });
+    }
+  }
+
+  // ── YouTube Shorts 自動化管線（掛在既有函式內，不新增 Serverless Function）──
+  // ?mode=shorts            → 金鑰/頻道/最近上傳/Shorts 佔比 + 4 週排程
+  // ?mode=shorts&plan=1     → 只回排程（不打 YouTube API，零配額）
+  if (req.query && req.query.mode === 'shorts') {
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    try {
+      const SH = require('./_shorts.js');
+      if (req.query.plan === '1') {
+        return res.status(200).json(SH.schedulePlan({
+          perWeek: Number(req.query.per_week) || 3,
+          weeks: Number(req.query.weeks) || 4
+        }));
+      }
+      const out = await SH.diagnose();
+      return res.status(200).json(out);
+    } catch (e) {
+      return res.status(200).json({
+        ok: false, schema: 'snt-shorts-v1', verdict: 'module_error',
+        error: String((e && e.message) || e).slice(0, 200)
+      });
+    }
+  }
+
   // CEO 巡站模式
   if (req.query && req.query.mode === 'ceo-check') {
     const result = await ceoCheck();
