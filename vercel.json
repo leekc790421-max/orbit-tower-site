@@ -51,6 +51,10 @@
     { "source": "/pool", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] },
     { "source": "/pool/", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] }
   ],
+  "rewrites": [
+    { "source": "/", "has": [{ "type": "host", "value": "admin.xingdeng.tw" }], "destination": "/admin" },
+    { "source": "/index.html", "has": [{ "type": "host", "value": "admin.xingdeng.tw" }], "destination": "/admin" }
+  ],
   "redirects": [
     { "source": "/products", "destination": "/builder/packages", "permanent": false },
     { "source": "/products/:path*", "destination": "/builder/packages/:path*", "permanent": false },
