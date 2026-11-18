@@ -1,1739 +1,1287 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow, noarchive">
-<meta name="referrer" content="no-referrer">
-<title>SNT v6.0｜中央營運監控室 Command Center</title>
-<meta name="theme-color" content="#05070C">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#EEF2F7">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://xingdeng.tw https://tower.xingdeng.tw https://orbit.xingdeng.tw https://vip.xingdeng.tw https://decoration.xingdeng.tw; media-src 'none'; worker-src 'none'; upgrade-insecure-requests">
+<title>SNT v7.3 戰情室 · 淺色科技版</title>
 <style>
 :root{
-  --bg:#05070C; --bg2:#080B12; --panel:rgba(15,20,30,.72); --panel2:rgba(20,26,38,.6);
-  --line:rgba(148,163,184,.14); --line2:rgba(148,163,184,.26);
-  --ink:#E8EDF6; --ink2:#9AA8BE; --ink3:#5F6E85;
-  --gold:#D4AF37; --gold2:#EDCF70; --cyan:#22D3EE; --blue:#4F8CFF;
-  --ok:#34D399; --warn:#FBBF24; --bad:#F87171;
-  --mono:ui-monospace,"SFMono-Regular","IBM Plex Mono",Menlo,Consolas,monospace;
-  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
-  --r:14px;
+  --bg:#EEF2F7; --panel:#FFFFFF; --panel2:#FBFDFF;
+  --line:#DCE5EF; --line2:#C6D5E6;
+  --ink:#0B1524; --ink2:#4A5B70; --ink3:#7C8CA1;
+  --cyan:#0891B2; --cyan2:#22D3EE; --blue:#2563EB; --teal:#0D9488;
+  --ok:#059669; --warn:#B45309; --bad:#DC2626;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --r:16px;
+  --shadow:0 1px 2px rgba(11,21,36,.05),0 14px 34px -22px rgba(11,21,36,.35);
 }
 *,*::before,*::after{box-sizing:border-box}
-html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
 body{
-  background:var(--bg); color:var(--ink); font-family:var(--sans);
-  font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased;
-  min-height:100vh; overflow-x:hidden;
+  margin:0;font-family:var(--sans);color:var(--ink);font-size:14px;line-height:1.6;
+  background:
+    radial-gradient(900px 520px at 6% -12%,rgba(34,211,238,.20),transparent 62%),
+    radial-gradient(820px 480px at 94% -4%,rgba(37,99,235,.14),transparent 64%),
+    radial-gradient(760px 620px at 50% 112%,rgba(13,148,136,.12),transparent 66%),
+    var(--bg);
+  min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;
 }
 body::before{
-  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
-  background:
-    radial-gradient(900px 520px at 12% -8%, rgba(212,175,55,.10), transparent 62%),
-    radial-gradient(820px 480px at 88% 4%, rgba(34,211,238,.09), transparent 60%),
-    radial-gradient(700px 700px at 50% 118%, rgba(79,140,255,.07), transparent 65%);
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(11,21,36,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(11,21,36,.045) 1px,transparent 1px);
+  background-size:52px 52px;
+  -webkit-mask-image:radial-gradient(circle at 50% 22%,#000 0%,transparent 82%);
+  mask-image:radial-gradient(circle at 50% 22%,#000 0%,transparent 82%);
 }
 body::after{
-  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
-  background-image:linear-gradient(rgba(148,163,184,.045) 1px,transparent 1px),
-                   linear-gradient(90deg,rgba(148,163,184,.045) 1px,transparent 1px);
-  background-size:64px 64px;
-  mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 78%);
-  -webkit-mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 78%);
+  content:"";position:fixed;left:0;right:0;top:0;height:2px;z-index:60;pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--cyan2),var(--blue),var(--teal),transparent);
+  background-size:200% 100%;animation:flow 7s linear infinite;opacity:.85;
 }
-.wrap{position:relative; z-index:1; width:min(1560px,calc(100% - 40px)); margin-inline:auto}
-.mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
+@keyframes flow{0%{background-position:0% 0}100%{background-position:200% 0}}
+.wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:14px 16px 40px}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
-/* ───────── gate ───────── */
-#gate{position:relative; z-index:1; min-height:100vh; display:grid; place-items:center; padding:32px 20px}
-.gate-card{
-  width:min(430px,100%); background:linear-gradient(180deg,rgba(18,24,36,.92),rgba(9,12,19,.96));
-  border:1px solid var(--line2); border-radius:20px; padding:38px 34px 30px;
-  box-shadow:0 40px 90px -40px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.05);
-  position:relative; overflow:hidden;
+/* ── top bar ── */
+.top{
+  position:sticky;top:0;z-index:30;display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,.86);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);
+  border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 10px 30px -18px rgba(11,21,36,.45);
 }
-.gate-card::before{
-  content:""; position:absolute; left:0; right:0; top:0; height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold),var(--cyan),transparent);
-  opacity:.85;
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{
+  width:38px;height:38px;border-radius:11px;flex-shrink:0;position:relative;
+  background:linear-gradient(145deg,#0B1524,#123049 60%,#0E7490);
+  box-shadow:0 0 0 1px rgba(8,145,178,.35),0 6px 18px -8px rgba(8,145,178,.8);
+  display:grid;place-items:center;color:#7DE3F4;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.5px;
 }
-.gate-card::after{
-  content:""; position:absolute; left:-40%; top:0; width:40%; height:100%;
-  background:linear-gradient(90deg,transparent,rgba(212,175,55,.07),transparent);
-  animation:sweep 5.5s ease-in-out infinite;
-}
-@keyframes sweep{0%{left:-45%}55%{left:105%}100%{left:105%}}
-.gate-mark{display:flex; align-items:center; gap:13px; margin-bottom:26px}
-.hex{
-  width:44px; height:44px; flex:none; display:grid; place-items:center;
-  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
-  background:linear-gradient(150deg,var(--gold2),var(--gold) 45%,#8a6d1c);
-  color:#0A0A0A; font-weight:800; font-size:15px; letter-spacing:.02em;
-}
-.gate-mark b{display:block; font-size:15px; letter-spacing:.06em}
-.gate-mark span{display:block; font-family:var(--mono); font-size:9.5px; letter-spacing:.22em; color:var(--ink3); margin-top:3px}
-.gate-title{font-size:21px; font-weight:700; margin:0 0 6px; letter-spacing:.02em}
-.gate-sub{color:var(--ink2); font-size:12.5px; margin:0 0 24px; line-height:1.7}
-.field{position:relative; margin-bottom:14px}
-.field label{display:block; font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--ink3); margin-bottom:8px}
-.field input{
-  width:100%; padding:14px 46px 14px 15px; border-radius:11px; font-size:15px;
-  background:rgba(5,7,12,.85); color:var(--ink); border:1px solid var(--line2);
-  font-family:var(--mono); letter-spacing:.16em; outline:none; transition:border-color .18s, box-shadow .18s;
-}
-.field input::placeholder{color:#3C4759; letter-spacing:.1em}
-.field input:focus{border-color:rgba(212,175,55,.6); box-shadow:0 0 0 3px rgba(212,175,55,.12)}
-.field .eye{
-  position:absolute; right:8px; bottom:7px; width:32px; height:32px; border:0; border-radius:8px;
-  background:transparent; color:var(--ink3); cursor:pointer; font-size:14px; line-height:1;
-}
-.field .eye:hover{color:var(--gold2); background:rgba(212,175,55,.08)}
-.btn-unlock{
-  width:100%; padding:14px; border:0; border-radius:11px; cursor:pointer;
-  font-family:var(--sans); font-size:14.5px; font-weight:700; letter-spacing:.06em;
-  color:#0A0A0A; background:linear-gradient(135deg,var(--gold2),var(--gold));
-  box-shadow:0 14px 34px -14px rgba(212,175,55,.75); transition:transform .16s, box-shadow .16s, filter .16s;
-}
-.btn-unlock:hover{transform:translateY(-1px); box-shadow:0 18px 40px -14px rgba(212,175,55,.9)}
-.btn-unlock:active{transform:translateY(0)}
-.btn-unlock[disabled]{filter:grayscale(.5) brightness(.8); cursor:progress}
-.gate-msg{
-  margin-top:14px; min-height:20px; font-size:12.5px; color:var(--bad);
-  display:flex; align-items:center; gap:7px; opacity:0; transition:opacity .2s;
-}
-.gate-msg.on{opacity:1}
-.gate-msg.info{color:var(--ink2)}
-.shake{animation:shake .38s cubic-bezier(.36,.07,.19,.97)}
-@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-6px)}40%,60%{transform:translateX(6px)}}
-.gate-foot{
-  margin-top:24px; padding-top:16px; border-top:1px solid var(--line);
-  display:flex; justify-content:space-between; gap:10px;
-  font-family:var(--mono); font-size:9.5px; letter-spacing:.14em; color:var(--ink3);
-}
+.logo::after{content:"";position:absolute;inset:-3px;border-radius:14px;border:1px solid rgba(34,211,238,.35);animation:ring 3.2s ease-out infinite}
+@keyframes ring{0%{transform:scale(.92);opacity:.9}70%{transform:scale(1.12);opacity:0}100%{opacity:0}}
+.brand b{font-size:17px;letter-spacing:-.01em;display:block;line-height:1.25}
+.brand small{color:var(--ink3);font-size:11.5px;display:block;font-weight:400}
+.clockbox{text-align:right;flex-shrink:0}
+.clock{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.sync{font-family:var(--mono);font-size:11.5px;color:var(--teal);font-weight:700;letter-spacing:.02em}
+.bar{height:5px;background:#E3EAF3;border-radius:99px;overflow:hidden;width:170px;margin-top:5px;margin-left:auto;box-shadow:inset 0 1px 2px rgba(11,21,36,.08)}
+.bar i{display:block;height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan2),var(--blue));transition:width .18s linear;box-shadow:0 0 10px rgba(34,211,238,.8)}
+.nodes{display:flex;gap:6px;flex-wrap:wrap;flex:1 1 240px;justify-content:center}
+.node{display:flex;align-items:center;gap:6px;background:linear-gradient(180deg,#fff,#F4F8FC);border:1px solid var(--line);border-radius:99px;padding:4px 10px;font-size:11.5px;color:var(--ink2);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);position:relative;flex-shrink:0;box-shadow:0 0 8px rgba(5,150,105,.7)}
+.dot::after{content:"";position:absolute;inset:-4px;border:1px solid var(--ok);border-radius:50%;animation:pulse 1.9s infinite}
+.dot.blue{background:var(--cyan);box-shadow:0 0 8px rgba(8,145,178,.7)}.dot.blue::after{border-color:var(--cyan)}
+.dot.warn{background:#D97706;box-shadow:0 0 8px rgba(217,119,6,.7)}.dot.warn::after{border-color:#D97706}
+.dot.bad{background:var(--bad);box-shadow:0 0 8px rgba(220,38,38,.7)}.dot.bad::after{border-color:var(--bad)}
+@keyframes pulse{0%{transform:scale(.55);opacity:.95}100%{transform:scale(1.5);opacity:0}}
+.badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap;border:1px solid transparent}
+.badge.demo{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.badge.live{background:#DCFCE7;color:#166534;border-color:#BBF7D0}
+.badge.partial{background:#E0F2FE;color:#075985;border-color:#BAE6FD}
+.badge.sandbox{background:#E0E7FF;color:#3730A3;border-color:#C7D2FE}
+.badge.off{background:#FEE2E2;color:#991B1B;border-color:#FECACA}
+.modebox{text-align:right;flex-shrink:0}
+.modebox .hint{font-size:10.5px;color:var(--ink3);margin-top:3px;max-width:210px}
 
-/* ───────── app shell ───────── */
-#app{padding:0 0 56px}
-.topbar{
-  position:sticky; top:0; z-index:40; backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
-  background:rgba(5,7,12,.82); border-bottom:1px solid var(--line);
+/* ── toolbar ── */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.btn{
+  border:1px solid var(--line2);background:linear-gradient(180deg,#fff,#F6FAFD);color:var(--ink);
+  border-radius:10px;padding:8px 13px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;
+  transition:transform .12s ease,box-shadow .18s ease,border-color .18s ease;min-height:38px;
+  box-shadow:0 1px 2px rgba(11,21,36,.05);
 }
-.topbar-in{display:flex; align-items:center; gap:16px; padding:13px 0; flex-wrap:wrap}
-.brand{display:flex; align-items:center; gap:11px; min-width:0}
-.brand .hex{width:34px; height:34px; font-size:12px}
-.brand b{display:block; font-size:13.5px; letter-spacing:.05em; white-space:nowrap}
-.brand span{display:block; font-family:var(--mono); font-size:9px; letter-spacing:.2em; color:var(--ink3); margin-top:2px}
-.topbar .spacer{flex:1}
-.pill{
-  display:inline-flex; align-items:center; gap:7px; padding:6px 12px; border-radius:99px;
-  border:1px solid var(--line2); background:rgba(15,20,30,.7);
-  font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; color:var(--ink2); white-space:nowrap;
+.btn:hover{border-color:var(--cyan);box-shadow:0 4px 14px -6px rgba(8,145,178,.55);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.btn.primary{background:linear-gradient(135deg,#0B1524,#123A5A 55%,#0E7490);color:#fff;border-color:#0B1524;box-shadow:0 6px 18px -10px rgba(8,145,178,.9)}
+.btn.blue{background:linear-gradient(135deg,#0369A1,#0891B2);color:#fff;border-color:#0369A1}
+.btn.ghost{background:transparent}
+.btn[disabled]{opacity:.55;cursor:not-allowed;transform:none}
+select,input{
+  border:1px solid var(--line2);border-radius:10px;padding:8px 10px;font-size:13px;background:#fff;color:var(--ink);
+  font-family:inherit;min-height:38px;max-width:100%;
 }
-.pill .dot{width:6px; height:6px; border-radius:50%; background:var(--ok); box-shadow:0 0 8px var(--ok)}
-.pill.warn .dot{background:var(--warn); box-shadow:0 0 8px var(--warn)}
-.pill.bad .dot{background:var(--bad); box-shadow:0 0 8px var(--bad)}
-.pill.idle .dot{background:var(--ink3); box-shadow:none}
-.icon-btn{
-  width:34px; height:34px; border-radius:9px; border:1px solid var(--line2);
-  background:rgba(15,20,30,.7); color:var(--ink2); cursor:pointer; font-size:14px;
-  display:grid; place-items:center; transition:.16s;
-}
-.icon-btn:hover{color:var(--gold2); border-color:rgba(212,175,55,.5); background:rgba(212,175,55,.08)}
-.icon-btn.spin{animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+select:focus,input:focus{outline:2px solid rgba(8,145,178,.35);outline-offset:1px;border-color:var(--cyan)}
+.meta{font-size:12px;color:var(--ink3)}
+.meta b{color:var(--ink2);font-family:var(--mono)}
 
-.banner{
-  margin-top:16px; padding:11px 15px; border-radius:11px; font-size:12.5px;
-  border:1px solid rgba(251,191,36,.32); background:rgba(251,191,36,.07); color:#FDE68A;
-  display:flex; gap:9px; align-items:flex-start;
-}
-.banner b{color:#FBBF24; font-weight:700}
-.banner.hide{display:none}
+/* ── update banner ── */
+#updateBanner{display:none;margin-top:12px;border:1px solid #BAE6FD;background:linear-gradient(90deg,#EFF9FF,#F5FBFF);border-radius:12px;padding:10px 14px;font-size:13px;color:#075985;align-items:center;gap:10px;flex-wrap:wrap}
+#updateBanner.on{display:flex}
+#updateBanner b{font-family:var(--mono)}
 
-/* ───────── kpi strip ───────── */
-.kpis{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:12px; margin-top:20px}
-.kpi{
-  background:var(--panel); border:1px solid var(--line); border-radius:var(--r);
-  padding:14px 15px; position:relative; overflow:hidden;
-}
-.kpi::after{content:""; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--gold); opacity:.55}
-.kpi .k{font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; color:var(--ink3); display:block; margin-bottom:7px}
-.kpi .v{font-family:var(--mono); font-size:23px; font-weight:600; letter-spacing:-.02em; line-height:1.1}
-.kpi .v small{font-size:11px; color:var(--ink3); margin-left:3px; font-weight:400}
-.kpi .s{font-size:11px; color:var(--ink3); margin-top:5px; display:block}
-
-/* ───────── sections ───────── */
-.sec{margin-top:34px}
-.sec-head{display:flex; align-items:baseline; gap:12px; margin-bottom:14px; flex-wrap:wrap}
-.sec-head h2{
-  font-size:15px; font-weight:700; margin:0; letter-spacing:.04em;
-  display:flex; align-items:center; gap:9px;
-}
-.sec-head h2::before{content:""; width:3px; height:15px; border-radius:2px; background:linear-gradient(180deg,var(--gold2),var(--cyan))}
-.sec-head .hint{font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--ink3)}
-.sec-head .spacer{flex:1}
-
-/* ───────── 5-col site grid ───────── */
-.grid5{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:13px}
-.site{
-  background:linear-gradient(180deg,rgba(18,24,36,.8),rgba(9,12,19,.86));
-  border:1px solid var(--line); border-radius:var(--r); padding:0; overflow:hidden;
-  display:flex; flex-direction:column; position:relative;
-  transition:transform .2s cubic-bezier(.16,1,.3,1), border-color .2s, box-shadow .2s;
-}
-.site:hover{transform:translateY(-3px); border-color:var(--line2); box-shadow:0 22px 44px -26px rgba(0,0,0,.9)}
-.site .bar{height:2px; background:var(--accent); opacity:.9}
-.site header{padding:14px 15px 11px; display:flex; gap:10px; align-items:flex-start}
-.site header .dot{
-  width:7px; height:7px; border-radius:50%; margin-top:6px; flex:none;
-  background:var(--accent); box-shadow:0 0 9px var(--accent);
-}
-.site header .dot.off{background:var(--bad); box-shadow:0 0 9px var(--bad)}
-.site h3{font-size:13px; font-weight:700; margin:0; line-height:1.35; letter-spacing:.01em}
-.site .host{font-family:var(--mono); font-size:9.5px; color:var(--ink3); margin:3px 0 0; letter-spacing:.04em; word-break:break-all}
-.site .role{
-  font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:var(--accent);
-  border:1px solid color-mix(in srgb,var(--accent) 34%,transparent);
-  background:color-mix(in srgb,var(--accent) 9%,transparent);
-  padding:2px 7px; border-radius:99px; margin-left:auto; white-space:nowrap; flex:none;
-}
-.site .metrics{padding:0 15px 12px; display:flex; flex-direction:column; gap:11px; flex:1}
-.metric{border-top:1px dashed rgba(148,163,184,.13); padding-top:10px}
-.metric:first-child{border-top:0; padding-top:0}
-.metric .l{font-size:10.5px; color:var(--ink2); display:block; letter-spacing:.02em}
-.metric .v{
-  font-family:var(--mono); font-size:22px; font-weight:600; letter-spacing:-.02em;
-  line-height:1.15; display:block; margin-top:2px; color:var(--ink);
-}
-.metric .v small{font-size:10.5px; color:var(--ink3); margin-left:3px; font-weight:400; letter-spacing:0}
-.metric .v.na{color:var(--ink3); font-size:17px}
-.metric .s{font-size:10px; color:var(--ink3); display:block; margin-top:2px; line-height:1.45}
-.site footer{
-  padding:9px 15px; border-top:1px solid var(--line); background:rgba(5,7,12,.5);
-  display:flex; align-items:center; gap:7px;
-  font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; color:var(--ink3);
-}
-.site footer .st{width:5px; height:5px; border-radius:50%; background:var(--ok)}
-.site footer .st.bad{background:var(--bad)}
-.site footer .ms{margin-left:auto}
-
-/* ───────── panels ───────── */
-.panels{display:grid; grid-template-columns:1.15fr 1fr; gap:13px}
+/* ── panels ── */
 .panel{
-  background:var(--panel); border:1px solid var(--line); border-radius:var(--r);
-  padding:16px 17px; min-width:0;
+  position:relative;background:linear-gradient(180deg,#fff 0%,var(--panel2) 100%);
+  border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:14px;
+  box-shadow:var(--shadow);overflow:hidden;
 }
-.panel h3{
-  font-size:12.5px; font-weight:700; margin:0 0 3px; letter-spacing:.04em;
-  display:flex; align-items:center; gap:8px;
+.panel::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(34,211,238,.85),rgba(37,99,235,.7),transparent);
+  opacity:.75;
 }
-.panel h3 .tag{
-  font-family:var(--mono); font-size:9px; letter-spacing:.12em; color:var(--ink3);
-  border:1px solid var(--line2); padding:1px 6px; border-radius:99px; font-weight:400;
+.panel::after{
+  content:"";position:absolute;right:-60px;top:-60px;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(34,211,238,.13),transparent 70%);pointer-events:none;
 }
-.panel .desc{font-size:11px; color:var(--ink3); margin:0 0 14px}
+.panel h2{margin:0 0 3px;font-size:15.5px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.panel h2 .tag{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--cyan);background:rgba(8,145,178,.08);border:1px solid rgba(8,145,178,.22);border-radius:6px;padding:1px 6px;letter-spacing:.04em}
+.panel p.desc{margin:0 0 12px;color:var(--ink3);font-size:12.5px}
 
-/* quota gauge */
-.gauge{margin:6px 0 4px}
-.gauge .row{display:flex; align-items:baseline; gap:8px; margin-bottom:9px}
-.gauge .big{font-family:var(--mono); font-size:30px; font-weight:600; letter-spacing:-.03em; line-height:1}
-.gauge .of{font-family:var(--mono); font-size:12px; color:var(--ink3)}
-.gauge .pctv{margin-left:auto; font-family:var(--mono); font-size:12px; font-weight:600}
-.track{height:9px; border-radius:99px; background:rgba(148,163,184,.13); overflow:hidden; position:relative}
-.fill{height:100%; border-radius:99px; transition:width .7s cubic-bezier(.16,1,.3,1); width:0}
-.fill.ok{background:linear-gradient(90deg,#34D399,#22D3EE)}
-.fill.warn{background:linear-gradient(90deg,#FBBF24,#F59E0B)}
-.fill.critical{background:linear-gradient(90deg,#F87171,#EF4444)}
-.ticks{display:flex; justify-content:space-between; font-family:var(--mono); font-size:9px; color:var(--ink3); margin-top:6px; letter-spacing:.08em}
-.qmeta{display:flex; gap:14px; flex-wrap:wrap; margin-top:12px; padding-top:11px; border-top:1px dashed rgba(148,163,184,.13)}
-.qmeta div{font-size:10.5px; color:var(--ink3)}
-.qmeta b{display:block; font-family:var(--mono); font-size:12.5px; color:var(--ink2); font-weight:600; margin-top:2px}
+/* ── KPI ── */
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
+@media(max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+.card{
+  position:relative;background:linear-gradient(180deg,#fff,#F8FBFE);border:1px solid var(--line);border-radius:14px;
+  padding:14px 14px 10px;box-shadow:var(--shadow);overflow:hidden;transition:transform .18s ease,box-shadow .18s ease;
+}
+.card:hover{transform:translateY(-2px);box-shadow:0 1px 2px rgba(11,21,36,.05),0 20px 40px -24px rgba(8,145,178,.6)}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--cyan2),var(--blue));opacity:.9}
+.card::after{
+  content:"";position:absolute;top:0;left:-40%;width:40%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(34,211,238,.10),transparent);
+  animation:sweep 6s ease-in-out infinite;pointer-events:none;
+}
+@keyframes sweep{0%{left:-45%}55%{left:110%}100%{left:110%}}
+.card h3{margin:0 0 6px;font-size:12px;color:var(--ink3);font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.num{font-family:var(--mono);font-size:29px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1.05}
+.num small{font-size:13px;font-weight:600;color:var(--ink3);margin-left:3px}
+.sub{font-size:11.5px;color:var(--ink3);margin-top:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.src{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.05em;padding:1px 5px;border-radius:4px;border:1px solid}
+.src.demo{color:#92400E;background:#FEF3C7;border-color:#FDE68A}
+.src.live{color:#166534;background:#DCFCE7;border-color:#BBF7D0}
+canvas{width:100%;display:block;touch-action:pan-y}
+.spark{height:42px;margin-top:6px}
 
-/* tables */
-.tbl{width:100%; border-collapse:collapse; font-size:11.5px}
-.tbl th{
-  text-align:left; font-family:var(--mono); font-size:9px; letter-spacing:.14em;
-  color:var(--ink3); font-weight:500; padding:0 8px 7px 0; border-bottom:1px solid var(--line);
-  white-space:nowrap;
-}
-.tbl td{padding:7px 8px 7px 0; border-bottom:1px dashed rgba(148,163,184,.1); vertical-align:top; color:var(--ink2)}
-.tbl tr:last-child td{border-bottom:0}
-.tbl td.n{font-family:var(--mono); font-variant-numeric:tabular-nums; color:var(--ink); white-space:nowrap}
-.tbl td.mono{font-family:var(--mono); font-size:10px; color:var(--ink3); white-space:nowrap}
-.tbl .empty{color:var(--ink3); font-size:11px; padding:14px 0; text-align:center}
-.badge{
-  display:inline-block; font-family:var(--mono); font-size:9px; letter-spacing:.08em;
-  padding:1px 6px; border-radius:4px; border:1px solid; white-space:nowrap;
-}
-.badge.ok{color:var(--ok); border-color:rgba(52,211,153,.4); background:rgba(52,211,153,.1)}
-.badge.warn{color:var(--warn); border-color:rgba(251,191,36,.4); background:rgba(251,191,36,.1)}
-.badge.bad{color:var(--bad); border-color:rgba(248,113,113,.4); background:rgba(248,113,113,.1)}
-.badge.idle{color:#A9B6C9; border-color:rgba(148,163,184,.34); background:rgba(148,163,184,.12)}
-
-/* asset matrix */
-.matrix{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:9px; margin-top:4px}
-.mx{
-  border:1px solid var(--line); border-radius:10px; padding:10px 11px;
-  background:rgba(5,7,12,.45);
-}
-.mx .nm{font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:var(--ink3); display:block; margin-bottom:7px; text-transform:uppercase}
-.mx .ln{display:flex; align-items:baseline; gap:5px; font-size:10.5px; color:var(--ink2); margin-top:4px}
-.mx .ln b{font-family:var(--mono); font-size:14px; color:var(--ink); font-weight:600; margin-left:auto}
-.mx .ln b.zero{color:var(--ink3)}
-
-/* line health */
-.line-row{
-  display:flex; align-items:center; gap:11px; padding:11px 0;
-  border-bottom:1px dashed rgba(148,163,184,.12);
-}
-.line-row:last-child{border-bottom:0; padding-bottom:0}
-.line-row .lamp{
-  width:9px; height:9px; border-radius:50%; flex:none;
-  background:var(--ok); box-shadow:0 0 10px var(--ok);
-}
-.line-row .lamp.bad{background:var(--bad); box-shadow:0 0 10px var(--bad)}
-.line-row .lamp.idle{background:var(--ink3); box-shadow:none}
-.line-row .id{font-family:var(--mono); font-size:12px; color:var(--ink); font-weight:600; letter-spacing:.02em}
-.line-row .lb{font-size:10.5px; color:var(--ink3); display:block; margin-top:1px}
-.line-row .rt{margin-left:auto; text-align:right; font-family:var(--mono); font-size:10px; color:var(--ink3); white-space:nowrap}
-
-/* tiers */
-.tiers{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; margin-top:4px}
-.tier{
-  border:1px solid var(--line); border-radius:10px; padding:11px 12px; background:rgba(5,7,12,.45);
-  position:relative; overflow:hidden;
-}
-.tier .nm{font-size:10.5px; color:var(--ink2); display:block}
-.tier .pr{font-family:var(--mono); font-size:13px; color:var(--gold2); font-weight:600; margin-top:2px; display:block}
-.tier .ct{font-family:var(--mono); font-size:19px; font-weight:600; margin-top:7px; display:block; line-height:1}
-.tier .ct small{font-size:9.5px; color:var(--ink3); margin-left:3px; font-weight:400}
-.tier .rv{font-size:9.5px; color:var(--ink3); margin-top:4px; display:block}
-
-/* ceo */
-.ceo-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; margin-bottom:13px}
-.ceo-cell{border:1px solid var(--line); border-radius:10px; padding:10px 11px; background:rgba(5,7,12,.45)}
-.ceo-cell .k{font-family:var(--mono); font-size:9px; letter-spacing:.12em; color:var(--ink3); display:block}
-.ceo-cell .v{font-family:var(--mono); font-size:17px; font-weight:600; margin-top:4px; display:block; line-height:1.1}
-.ceo-cell .v small{font-size:9.5px; color:var(--ink3); margin-left:2px; font-weight:400}
-
-.dec{display:flex; gap:10px; padding:11px 0; border-bottom:1px dashed rgba(148,163,184,.1); align-items:flex-start}
-.dec:last-child{border-bottom:0}
-.dec .sev{width:3px; border-radius:2px; align-self:stretch; flex:none; background:var(--ink3)}
-.dec .sev.critical{background:var(--bad)}
-.dec .sev.high{background:var(--warn)}
-.dec .sev.medium{background:var(--blue)}
-.dec .tx{min-width:0}
-.dec .tt{font-size:11.5px; color:var(--ink); display:block; line-height:1.6}
-.dec .cd{font-family:var(--mono); font-size:9px; color:var(--ink3); letter-spacing:.06em; display:block; margin-top:2px}
-
-.foot{
-  margin-top:34px; padding-top:16px; border-top:1px solid var(--line);
-  display:flex; gap:16px; flex-wrap:wrap; align-items:center;
-  font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; color:var(--ink3);
-}
-.foot .spacer{flex:1}
-.foot a{color:var(--ink3); text-decoration:none}
-.foot a:hover{color:var(--gold2)}
-
-.skel{background:linear-gradient(90deg,rgba(148,163,184,.07),rgba(148,163,184,.14),rgba(148,163,184,.07)); background-size:200% 100%; animation:sh 1.4s ease-in-out infinite; border-radius:5px; color:transparent!important}
-@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-/* ───────── fleet broadcast ───────── */
-.bc-targets{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; margin-bottom:13px}
-.bc-t{
-  display:flex; align-items:center; gap:8px; padding:9px 11px; cursor:pointer;
-  border:1px solid var(--line); border-radius:9px; background:rgba(5,7,12,.45);
-  transition:.16s; user-select:none;
-}
-.bc-t:hover{border-color:var(--line2); background:rgba(20,26,38,.6)}
-.bc-t.on{border-color:rgba(212,175,55,.55); background:rgba(212,175,55,.09)}
-.bc-t .box{
-  width:13px; height:13px; border-radius:3px; border:1px solid var(--line2); flex:none;
-  display:grid; place-items:center; font-size:9px; color:#0A0A0A; line-height:1;
-}
-.bc-t.on .box{background:var(--gold); border-color:var(--gold)}
-.bc-t .nm{font-family:var(--mono); font-size:10px; letter-spacing:.06em; color:var(--ink2); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.bc-t.on .nm{color:var(--ink)}
-
-.bc-row{display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-bottom:11px}
-.bc-select{
-  flex:1; min-width:220px; padding:9px 11px; border-radius:9px; cursor:pointer;
-  background:rgba(5,7,12,.85); color:var(--ink); border:1px solid var(--line2);
-  font-family:var(--sans); font-size:12px; outline:none;
-}
-.bc-select:focus{border-color:rgba(212,175,55,.6)}
-.bc-btn{
-  border:0; border-radius:9px; padding:9px 17px; cursor:pointer;
-  font-family:var(--sans); font-size:12px; font-weight:700; letter-spacing:.03em;
-  color:#0A0A0A; background:linear-gradient(135deg,var(--gold2),var(--gold));
-  transition:.16s; white-space:nowrap;
-}
-.bc-btn:hover{transform:translateY(-1px); box-shadow:0 10px 24px -12px rgba(212,175,55,.8)}
-.bc-btn[disabled]{filter:grayscale(.55) brightness(.75); cursor:progress; transform:none; box-shadow:none}
-.bc-btn.ghost{
-  background:transparent; color:var(--ink2); border:1px solid var(--line2); font-weight:500;
-}
-.bc-btn.ghost:hover{color:var(--gold2); border-color:rgba(212,175,55,.5); background:rgba(212,175,55,.08); box-shadow:none}
-
-.bc-input{
-  display:flex; gap:9px; align-items:flex-start; padding:10px 12px;
-  border:1px solid var(--line2); border-radius:10px; background:rgba(5,7,12,.7);
-}
-.bc-input .prompt{font-family:var(--mono); font-size:14px; color:var(--gold); line-height:1.6; flex:none}
-.bc-input textarea{
-  flex:1; resize:vertical; border:0; outline:none; background:transparent; color:var(--ink);
-  font-family:var(--sans); font-size:12.5px; line-height:1.65; min-height:44px; max-height:160px;
-}
-.bc-input textarea::placeholder{color:#3C4759}
-
-.bc-quick{display:flex; gap:7px; flex-wrap:wrap; margin-top:9px}
-.bc-quick .chip{font-size:10.5px; padding:4px 10px}
-
-.bc-result{margin-top:13px}
-.bc-result:empty{display:none}
-.bc-sum{
-  display:flex; gap:16px; flex-wrap:wrap; padding:10px 12px; border-radius:9px;
-  background:rgba(5,7,12,.5); border:1px solid var(--line); margin-bottom:10px;
-  font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; color:var(--ink3);
-}
-.bc-sum b{color:var(--ink); font-weight:600}
-.bc-sum .ok b{color:var(--ok)}
-.bc-sum .dup b{color:var(--warn)}
-.bc-sum .bad b{color:var(--bad)}
-.bc-note{font-size:11px; color:var(--ink3); margin-top:8px; line-height:1.6}
-@media (max-width:1280px){ .bc-targets{grid-template-columns:repeat(3,minmax(0,1fr))} }
-@media (max-width:760px){
-  .bc-targets{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .bc-select{min-width:0; flex:1 1 100%}
-  .bc-btn{flex:1}
+/* ── tables ── */
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:12.8px;min-width:560px}
+th{text-align:left;background:linear-gradient(180deg,#F7FAFD,#EFF5FA);color:#3E5064;font-size:11.5px;font-weight:700;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;z-index:1}
+td{padding:9px 10px;border-bottom:1px solid #EEF3F8;vertical-align:top;white-space:normal;word-break:break-word;overflow-wrap:anywhere}
+tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .15s ease}
+tbody tr:hover td{background:#F5FAFE}
+td.num-cell{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;border:1px solid;white-space:nowrap}
+.pill.ok{color:#166534;background:#DCFCE7;border-color:#BBF7D0}
+.pill.warn{color:#92400E;background:#FEF3C7;border-color:#FDE68A}
+.pill.bad{color:#991B1B;background:#FEE2E2;border-color:#FECACA}
+.pill.info{color:#075985;background:#E0F2FE;border-color:#BAE6FD}
+.pill.mute{color:#475569;background:#F1F5F9;border-color:#E2E8F0}
+@media(max-width:720px){
+  table.tbl-cards{min-width:0;display:block}
+  table.tbl-cards thead{display:none}
+  table.tbl-cards tbody,table.tbl-cards tr,table.tbl-cards td{display:block;width:100%}
+  table.tbl-cards tr{border:1px solid var(--line);border-radius:12px;margin-bottom:9px;background:#fff;padding:4px 2px;box-shadow:0 1px 2px rgba(11,21,36,.04)}
+  table.tbl-cards td{border:0;padding:6px 12px;display:flex;gap:10px;align-items:flex-start}
+  table.tbl-cards td::before{content:attr(data-l);flex:0 0 78px;color:var(--ink3);font-size:11px;font-weight:700;padding-top:2px}
+  table.tbl-cards td:empty{display:none}
+  .tscroll{border:0;overflow:visible}
 }
 
-/* ───────── command chat terminal ───────── */
-.term{
-  background:linear-gradient(180deg,rgba(10,14,22,.94),rgba(6,9,15,.97));
-  border:1px solid var(--line2); border-radius:var(--r); overflow:hidden;
-  box-shadow:0 30px 70px -40px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.04);
-  position:relative;
-}
-.term::before{
-  content:""; position:absolute; left:0; right:0; top:0; height:1px;
-  background:linear-gradient(90deg,transparent,rgba(34,211,238,.55),rgba(212,175,55,.55),transparent);
-}
-.term-bar{
-  display:flex; align-items:center; gap:9px; padding:10px 14px;
-  border-bottom:1px solid var(--line); background:rgba(5,7,12,.6);
-  font-family:var(--mono); font-size:10px; letter-spacing:.12em; color:var(--ink3);
-}
-.term-bar .lamp{width:7px; height:7px; border-radius:50%; background:var(--ok); box-shadow:0 0 9px var(--ok); flex:none}
-.term-bar .lamp.busy{background:var(--warn); box-shadow:0 0 9px var(--warn); animation:pulse 1.1s ease-in-out infinite}
-.term-bar .lamp.bad{background:var(--bad); box-shadow:0 0 9px var(--bad)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.term-bar .ttl{color:var(--ink2); letter-spacing:.14em}
-.term-bar .sep{color:var(--line2)}
-.term-bar .st{color:var(--ink3)}
-.term-bar .spacer{flex:1}
-.term-btn{
-  border:1px solid var(--line2); background:transparent; color:var(--ink3);
-  font-family:var(--mono); font-size:9px; letter-spacing:.14em; padding:3px 9px;
-  border-radius:5px; cursor:pointer; transition:.16s;
-}
-.term-btn:hover{color:var(--gold2); border-color:rgba(212,175,55,.5); background:rgba(212,175,55,.08)}
+/* ── two col ── */
+.two{display:grid;grid-template-columns:1.55fr 1fr;gap:12px;margin-top:14px}
+.two>.panel{margin-top:0}
+@media(max-width:980px){.two{grid-template-columns:1fr}}
 
-.term-body{
-  height:min(46vh,420px); min-height:240px; overflow-y:auto; padding:16px 16px 6px;
-  display:flex; flex-direction:column; gap:14px; scroll-behavior:smooth;
+/* ── domain cards ── */
+.dcards{display:grid;gap:9px}
+.dcard{
+  border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:linear-gradient(180deg,#fff,#F8FBFE);
+  display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  transition:border-color .18s ease,box-shadow .18s ease;
 }
-.term-body::-webkit-scrollbar{width:8px}
-.term-body::-webkit-scrollbar-thumb{background:rgba(148,163,184,.22); border-radius:4px}
-.term-body::-webkit-scrollbar-track{background:transparent}
+.dcard:hover{border-color:rgba(8,145,178,.5);box-shadow:0 6px 20px -14px rgba(8,145,178,.8)}
+.dcard .nm{font-weight:700;font-size:13px;display:flex;align-items:center;gap:7px;min-width:0}
+.dcard .nm span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dcard .vc{font-size:10.5px;color:var(--ink3);font-family:var(--mono);margin-top:1px}
+.dcard .rt{display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.lat{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--ink2);min-width:52px;text-align:right}
+.btn.mini{padding:5px 11px;font-size:11.5px;min-height:32px;border-radius:8px;color:#0B1524;border-color:#9FB4C9;font-weight:700;background:#fff}
+.btn.mini:hover{border-color:var(--cyan);color:#075985}
 
-.msg{display:flex; gap:10px; align-items:flex-start; animation:rise .28s cubic-bezier(.16,1,.3,1)}
-@keyframes rise{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
-.msg .av{
-  width:24px; height:24px; flex:none; border-radius:6px; display:grid; place-items:center;
-  font-family:var(--mono); font-size:9px; font-weight:700; letter-spacing:.02em;
-}
-.msg.ai .av{background:linear-gradient(150deg,var(--gold2),var(--gold)); color:#0A0A0A}
-.msg.me .av{background:rgba(79,140,255,.18); color:#8FB6FF; border:1px solid rgba(79,140,255,.35)}
-.msg .bd{min-width:0; flex:1}
-.msg .who{
-  font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:var(--ink3);
-  display:block; margin-bottom:4px;
-}
-.msg .tx{
-  font-size:13px; line-height:1.75; color:var(--ink); white-space:pre-wrap; word-break:break-word;
-}
-.msg.me .tx{color:#C9D8F5}
-.msg.ai .tx{color:#DCE5F2}
-.msg .tx .cursor{
-  display:inline-block; width:7px; height:14px; background:var(--cyan);
-  vertical-align:-2px; margin-left:2px; animation:blink .9s step-end infinite;
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.msg .meta{
-  font-family:var(--mono); font-size:9px; letter-spacing:.08em; color:var(--ink3);
-  margin-top:6px; display:flex; gap:10px; flex-wrap:wrap;
-}
-.msg .meta .warn{color:var(--warn)}
-.msg .meta .bad{color:var(--bad)}
+/* ── alerts ── */
+.alert{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-left:3px solid var(--ink3);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff;transition:opacity .2s}
+.alert.high{border-left-color:var(--bad);background:linear-gradient(90deg,#FFF5F5,#fff 40%)}
+.alert.mid{border-left-color:#D97706;background:linear-gradient(90deg,#FFFBEB,#fff 40%)}
+.alert.low{border-left-color:var(--cyan);background:linear-gradient(90deg,#F0FAFF,#fff 40%)}
+.alert.done{opacity:.55}
+.alert .lv{font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:5px;flex-shrink:0;margin-top:1px}
+.alert.high .lv{background:#FEE2E2;color:#991B1B}
+.alert.mid .lv{background:#FEF3C7;color:#92400E}
+.alert.low .lv{background:#E0F2FE;color:#075985}
+.alert .msg{flex:1;font-size:12.8px;min-width:0;word-break:break-word}
+.alert .tm{font-family:var(--mono);font-size:11px;color:var(--ink3);flex-shrink:0}
+.alert .act{background:none;border:1px solid var(--line2);border-radius:7px;font-size:11px;padding:3px 8px;cursor:pointer;color:var(--ink2);font-family:inherit;flex-shrink:0}
+.alert .act:hover{border-color:var(--cyan);color:var(--cyan)}
 
-.term-chips{display:flex; gap:7px; flex-wrap:wrap; padding:0 16px 10px}
-.chip{
-  border:1px solid var(--line2); background:rgba(15,20,30,.6); color:var(--ink2);
-  font-size:11px; padding:5px 11px; border-radius:99px; cursor:pointer; transition:.16s;
-  font-family:var(--sans);
+/* ── terminal ── */
+.terminal{
+  background:linear-gradient(180deg,#0A1220,#0D1A2B);color:#D7E3F0;border-radius:12px;padding:13px 14px;
+  font-family:var(--mono);font-size:12.2px;line-height:1.75;height:230px;overflow:auto;overflow-y:scroll;white-space:pre-wrap;word-break:break-word;padding-right:22px;
+  border:1px solid #1B2C42;box-shadow:inset 0 0 40px rgba(34,211,238,.06),0 10px 30px -20px rgba(11,21,36,.9);
+  scrollbar-width:thin;
 }
-.chip:hover{color:var(--gold2); border-color:rgba(212,175,55,.5); background:rgba(212,175,55,.08); transform:translateY(-1px)}
+.terminal::-webkit-scrollbar{width:8px}
+.terminal::-webkit-scrollbar-thumb{background:#24384F;border-radius:8px}
+.terminal .ok{color:#6EE7B7}.terminal .warn{color:#FCD34D}.terminal .err{color:#FCA5A5}.terminal .info{color:#93C5FD}
+.terminal .ts{color:#5B7A99}
+.cursor{display:inline-block;width:7px;height:13px;background:#7DE3F4;vertical-align:-2px;animation:blink 1.05s steps(1) infinite;box-shadow:0 0 8px rgba(125,227,244,.9)}
+@keyframes blink{50%{opacity:0}}
 
-.term-input{
-  display:flex; align-items:flex-end; gap:10px; padding:11px 14px;
-  border-top:1px solid var(--line); background:rgba(5,7,12,.55);
+/* ── misc ── */
+.note{font-size:12px;color:var(--ink2);background:linear-gradient(180deg,#F8FBFE,#F2F7FC);border:1px dashed var(--line2);border-radius:10px;padding:10px 12px;margin-top:10px}
+.note b{color:var(--ink)}
+code{background:#EFF4FA;padding:1.5px 6px;border-radius:5px;font-size:11.5px;font-family:var(--mono);border:1px solid #E1E9F2;word-break:break-all}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.foot{margin-top:16px;font-size:11.5px;color:var(--ink3);text-align:center;line-height:1.9}
+.foot .mono{color:var(--ink2)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink3);margin-top:8px}
+.legend i{display:inline-block;width:16px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.chartwrap{position:relative}
+#chartTip{
+  position:absolute;pointer-events:none;background:rgba(11,21,36,.94);color:#E8F1FA;border-radius:8px;padding:6px 9px;
+  font-family:var(--mono);font-size:11px;line-height:1.5;white-space:nowrap;opacity:0;transition:opacity .12s;z-index:5;
+  box-shadow:0 8px 24px -10px rgba(0,0,0,.7);border:1px solid rgba(34,211,238,.35);
 }
-.term-input .prompt{
-  font-family:var(--mono); font-size:15px; color:var(--gold); line-height:1.5; flex:none;
-  padding-bottom:6px;
+#chartTip.on{opacity:1}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(max-width:520px){
+  .wrap{padding:10px 10px 32px}
+  .top{padding:10px 12px;gap:10px}
+  .brand b{font-size:15px}
+  .clock{font-size:19px}
+  .bar{width:130px}
+  .nodes{order:3;flex-basis:100%;justify-content:flex-start}
+  .modebox{order:4;flex-basis:100%;text-align:left}
+  .modebox .hint{max-width:none}
+  .num{font-size:25px}
+  .panel{padding:13px}
+  .terminal{height:200px;font-size:11.5px}
 }
-.term-input textarea{
-  flex:1; resize:none; border:0; outline:none; background:transparent; color:var(--ink);
-  font-family:var(--sans); font-size:13px; line-height:1.6; padding:6px 0; max-height:120px;
-  min-height:26px;
-}
-.term-input textarea::placeholder{color:#3C4759}
-.term-input button{
-  flex:none; border:0; border-radius:8px; padding:8px 16px; cursor:pointer;
-  font-family:var(--sans); font-size:12px; font-weight:700; letter-spacing:.04em;
-  color:#0A0A0A; background:linear-gradient(135deg,var(--gold2),var(--gold));
-  transition:.16s;
-}
-.term-input button:hover{transform:translateY(-1px); box-shadow:0 10px 24px -12px rgba(212,175,55,.8)}
-.term-input button[disabled]{filter:grayscale(.55) brightness(.75); cursor:progress; transform:none; box-shadow:none}
-.term-foot{
-  display:flex; gap:12px; align-items:center; padding:7px 14px 9px;
-  font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:var(--ink3);
-  background:rgba(5,7,12,.55);
-}
-.term-foot .spacer{flex:1}
-@media (max-width:760px){
-  .term-body{height:min(52vh,360px); padding:13px 12px 4px}
-  .term-chips{padding:0 12px 9px}
-  .term-input{padding:9px 12px}
-  .term-foot{font-size:8.5px}
-  .term-foot span:first-child{display:none}
-}
-
-/* ───────── responsive ───────── */
-@media (max-width:1280px){
-  .grid5{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .matrix{grid-template-columns:repeat(3,minmax(0,1fr))}
-}
-@media (max-width:980px){
-  .panels{grid-template-columns:1fr}
-  .ceo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media (max-width:760px){
-  .wrap{width:calc(100% - 28px)}
-  .grid5{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .matrix{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .tiers{grid-template-columns:1fr}
-  .topbar-in{gap:10px}
-  .brand b{font-size:12px}
-  .pill{font-size:9.5px; padding:5px 9px}
-  .sec{margin-top:26px}
-}
-@media (max-width:520px){
-  .grid5{grid-template-columns:1fr}
-  .kpis{grid-template-columns:1fr 1fr}
-  .matrix{grid-template-columns:1fr 1fr}
-  .gate-card{padding:30px 22px 24px}
-  .metric .v{font-size:20px}
-}
-@media (prefers-reduced-motion:reduce){
-  *{animation-duration:.001ms!important; transition-duration:.001ms!important}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
 }
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<!-- ══════════ 門禁 ══════════ -->
-<div id="gate">
-  <div class="gate-card" id="gateCard">
-    <div class="gate-mark">
-      <div class="hex">SNT</div>
-      <div>
-        <b>光曜星樞 · 中央營運監控室</b>
-        <span>COMMAND CENTER · v6.0</span>
-      </div>
-    </div>
-    <h1 class="gate-title">解鎖監控室</h1>
-    <p class="gate-sub">此區域彙整五大站點商策流量、AI CEO 執行概況與 Omni-Ad Bot 配額。請輸入存取密碼。</p>
-    <form id="gateForm" autocomplete="off" novalidate>
-      <div class="field">
-        <label for="pw">ACCESS PASSWORD</label>
-        <input id="pw" type="password" inputmode="text" autocomplete="current-password"
-               placeholder="••••••••" aria-describedby="gateMsg" spellcheck="false">
-        <button type="button" class="eye" id="eye" aria-label="顯示密碼">◉</button>
-      </div>
-      <button type="submit" class="btn-unlock" id="unlock">解鎖監控室</button>
-      <div class="gate-msg" id="gateMsg" role="status" aria-live="polite"></div>
-    </form>
-    <div class="gate-foot">
-      <span>SINGULARITY NEXUS TECHNOLOGY</span>
-      <span id="gateClock">--:--:--</span>
+<header class="top">
+  <div class="brand">
+    <div class="logo" aria-hidden="true">SNT</div>
+    <div>
+      <b>SNT v7.3 戰情室</b>
+      <small>淺色科技版 · 純靜態 HTML · 不新增 /api/*.js</small>
     </div>
   </div>
+
+  <div class="nodes" id="nodes" aria-label="五域節點狀態"></div>
+
+  <div class="clockbox">
+    <div class="clock" id="clock">--:--:--</div>
+    <div class="sync" id="syncText">NEXT SYNC: --</div>
+    <div class="bar"><i id="syncBar"></i></div>
+  </div>
+
+  <div class="modebox">
+    <span class="badge demo" id="modeBadge">DEMO 模式 — 未連上真實 API</span>
+    <div class="hint" id="modeHint">按「測試 5 站真實 API」會嘗試連各站真實端點</div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <button class="btn primary" id="syncBtn" type="button">立即同步</button>
+  <button class="btn" id="pauseBtn" type="button" aria-pressed="false">暫停同步</button>
+  <label class="sr" for="interval">更新間隔</label>
+  <select id="interval" aria-label="更新間隔">
+    <option value="5000">每 5 秒</option>
+    <option value="15000" selected>每 15 秒</option>
+    <option value="30000">每 30 秒</option>
+    <option value="60000">每 60 秒</option>
+  </select>
+  <button class="btn blue" id="testAllBtn" type="button">測試 5 站真實 API</button>
+  <button class="btn" id="exportBtn" type="button">匯出名單 CSV</button>
+  <span class="meta" id="lastSync">上次同步：—</span>
 </div>
 
-<!-- ══════════ 儀表板 ══════════ -->
-<div id="app" hidden>
-  <div class="topbar">
-    <div class="wrap topbar-in">
-      <div class="brand">
-        <div class="hex">SNT</div>
-        <div>
-          <b>中央營運監控室</b>
-          <span>COMMAND CENTER · v6.0</span>
-        </div>
-      </div>
-      <div class="spacer"></div>
-      <span class="pill idle" id="pillDb"><i class="dot"></i><span>DB 連線中</span></span>
-      <span class="pill idle" id="pillSites"><i class="dot"></i><span>站點檢查中</span></span>
-      <span class="pill idle" id="pillSync"><i class="dot"></i><span>—</span></span>
-      <button class="icon-btn" id="btnRefresh" title="立即重新整理" aria-label="重新整理">⟳</button>
-      <button class="icon-btn" id="btnLock" title="鎖定並登出" aria-label="鎖定">⏻</button>
-    </div>
+<div id="updateBanner" role="status">
+  <span>偵測到新版頁面 <b id="newVer">—</b>（目前 <b id="curVer">—</b>），重新載入即可套用。</span>
+  <button class="btn mini" id="reloadBtn" type="button">重新載入</button>
+</div>
+
+<section class="panel" aria-labelledby="h-map">
+  <h2 id="h-map">5 站 × Vercel 專案對照 <span class="tag">DEPLOY MAP</span></h2>
+  <p class="desc">部署時請對照這張表，不要貼錯專案。</p>
+  <div class="tscroll">
+  <table class="tbl-cards">
+    <thead><tr><th>網站</th><th>Vercel 專案</th><th>這個腳本要放哪</th><th>健康檢查</th></tr></thead>
+    <tbody>
+      <tr>
+        <td data-l="網站"><a href="https://xingdeng.tw" target="_blank" rel="noopener noreferrer">xingdeng.tw</a><br><span style="color:#7C8CA1">主站</span></td>
+        <td data-l="Vercel"><a href="https://vercel.com/xfls/xingdeng-tw-static" target="_blank" rel="noopener noreferrer">xfls / xingdeng-tw-static</a></td>
+        <td data-l="放哪">此檔案放主站靜態路由，不新增 API</td>
+        <td data-l="健康檢查"><code>/api/health?mode=core</code></td>
+      </tr>
+      <tr>
+        <td data-l="網站"><a href="https://tower.xingdeng.tw" target="_blank" rel="noopener noreferrer">tower.xingdeng.tw</a><br><span style="color:#7C8CA1">商業站 · 戰情室本體在這</span></td>
+        <td data-l="Vercel"><a href="https://vercel.com/xfls/orbit-tower-site" target="_blank" rel="noopener noreferrer">xfls / orbit-tower-site</a></td>
+        <td data-l="放哪"><b>把這個 HTML 覆蓋到 <code>/admin</code></b></td>
+        <td data-l="健康檢查"><code>/api/health?mode=core</code> + <code>/api/pricing</code></td>
+      </tr>
+      <tr>
+        <td data-l="網站"><a href="https://orbit.xingdeng.tw" target="_blank" rel="noopener noreferrer">orbit.xingdeng.tw</a><br><span style="color:#7C8CA1">體驗站 · 3D</span></td>
+        <td data-l="Vercel"><a href="https://vercel.com/xfls/orbit-tower-3d" target="_blank" rel="noopener noreferrer">xfls / orbit-tower-3d</a></td>
+        <td data-l="放哪">3D 頁不動，只讀它的 health</td>
+        <td data-l="健康檢查"><code>/api/line</code> + health</td>
+      </tr>
+      <tr>
+        <td data-l="網站"><a href="https://vip.xingdeng.tw" target="_blank" rel="noopener noreferrer">vip.xingdeng.tw</a><br><span style="color:#7C8CA1">1.vip</span></td>
+        <td data-l="Vercel"><a href="https://vercel.com/xfls/cosmosphere-vip" target="_blank" rel="noopener noreferrer">xfls / cosmosphere-vip</a></td>
+        <td data-l="放哪">只讀 health / OTC 狀態，不動付款</td>
+        <td data-l="健康檢查"><code>/api/chat</code> 經由 Concierge</td>
+      </tr>
+      <tr>
+        <td data-l="網站"><a href="https://decoration.xingdeng.tw" target="_blank" rel="noopener noreferrer">decoration.xingdeng.tw</a><br><span style="color:#7C8CA1">裝修站 · 光曜星棧</span></td>
+        <td data-l="Vercel"><a href="https://vercel.com/xfls/decoration-muogong" target="_blank" rel="noopener noreferrer">xfls / decoration-muogong</a></td>
+        <td data-l="放哪">只讀 health / Ad Bot</td>
+        <td data-l="健康檢查"><code>/api/ad-bot/feed?site=decoration</code></td>
+      </tr>
+    </tbody>
+  </table>
   </div>
+  <div class="note">提醒：Vercel 12 個 Serverless Function 上限 — 這版是純靜態，<b>絕對不新增任何 <code>/api/*.js</code></b>。所有「測試」都是瀏覽器直接 fetch 既有端點，測完就顯示毫秒數。</div>
+</section>
 
-  <div class="wrap">
-    <div class="banner hide" id="banner"></div>
+<div class="grid" id="kpis"></div>
 
-    <!-- KPI -->
-    <div class="kpis" id="kpis"></div>
-
-    <!-- 1. 五站流量 -->
-    <section class="sec">
-      <div class="sec-head">
-        <h2>商策流量即時看板</h2>
-        <span class="hint">TRAFFIC &amp; CRO GRID · 5 SITES</span>
-        <div class="spacer"></div>
-        <span class="hint" id="trafficNote"></span>
-      </div>
-      <div class="grid5" id="siteGrid"></div>
-    </section>
-
-    <!-- 2. AI CEO / Ad Bot -->
-    <section class="sec">
-      <div class="sec-head">
-        <h2>AI CEO 與 Omni-Ad Bot 執行概況</h2>
-        <span class="hint">QUOTA RADAR · ASSET PIPELINE · IDEMPOTENCY</span>
-      </div>
-      <div class="panels">
-        <div class="panel">
-          <h3>YouTube API 配額 <span class="tag">DAILY</span></h3>
-          <p class="desc">今日已消耗 / 每日上限，達 70% 轉黃、90% 轉紅。</p>
-          <div class="gauge" id="quota"></div>
-        </div>
-        <div class="panel">
-          <h3>自動化素材產出 <span class="tag">TODAY</span></h3>
-          <p class="desc">五站今日自動產出的 4:5 圖卡與 30 秒 Shorts 分鏡腳本。</p>
-          <div class="matrix" id="assets"></div>
-        </div>
-      </div>
-      <div class="panels" style="margin-top:13px">
-        <div class="panel">
-          <h3>冪等性防呆日誌 <span class="tag">ad_bot_tasks</span></h3>
-          <p class="desc">最近派發任務與重試次數（idem_key 防重複執行）。</p>
-          <div id="tasks"></div>
-        </div>
-        <div class="panel">
-          <h3>派發佇列 <span class="tag">ad_bot_dispatch</span></h3>
-          <p class="desc">各站素材派送至 Meta／佇列的狀態與錯誤攔截。</p>
-          <div id="dispatch"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. SaaS + LINE -->
-    <section class="sec">
-      <div class="sec-head">
-        <h2>SaaS 訂閱與雙 LINE 路由健康</h2>
-        <span class="hint">SUBSCRIPTION · WEBHOOK HEALTH</span>
-      </div>
-      <div class="panels">
-        <div class="panel">
-          <h3>14 天免費試用 <span class="tag">TENANTS</span></h3>
-          <p class="desc">以 subscription_events 的 trial_started 推算，未付款者計為試用中。</p>
-          <div class="ceo-grid" id="trials" style="grid-template-columns:repeat(3,minmax(0,1fr))"></div>
-          <h3 style="margin-top:16px">三階定價轉換 <span class="tag">NT$</span></h3>
-          <p class="desc">依 payment_received 的 amount_twd 對應方案。</p>
-          <div class="tiers" id="tiers"></div>
-        </div>
-        <div class="panel">
-          <h3>雙 LINE 官方帳號 <span class="tag">WEBHOOK</span></h3>
-          <p class="desc">即時呼叫 LINE Bot Info API 驗證 Token 與通道可用性。</p>
-          <div id="lineHealth"></div>
-          <h3 style="margin-top:16px">AI CEO 心跳 <span class="tag">ceo_daemon_run</span></h3>
-          <p class="desc">每日巡站排程的最後執行結果。</p>
-          <div class="ceo-grid" id="ceoHeart" style="grid-template-columns:repeat(2,minmax(0,1fr))"></div>
-        </div>
-      </div>
-      <div class="panel" style="margin-top:13px">
-        <h3>AI CEO 今日決策 <span class="tag">ceo_decision_log</span></h3>
-        <p class="desc">依嚴重度排序的待處理訊號。</p>
-        <div id="decisions"></div>
-      </div>
-    </section>
-
-    <!-- 4. 全站指令廣播 -->
-    <section class="sec">
-      <div class="sec-head">
-        <h2>全站指令廣播</h2>
-        <span class="hint">FLEET BROADCAST · 5 SITES × ALL AI &amp; BOTS</span>
-        <div class="spacer"></div>
-        <span class="hint" id="bcHint">冪等鍵 10 分鐘窗口</span>
-      </div>
-      <div class="panel">
-        <h3>對五站所有 AI 與機器人同時下達指令 <span class="tag">ad_bot_tasks</span></h3>
-        <p class="desc">指令將逐站寫入 Omni-Ad Bot 工作佇列；同一指令在 10 分鐘內重送不會重複建立任務。</p>
-
-        <div class="bc-targets" id="bcTargets"></div>
-
-        <div class="bc-row">
-          <select id="bcKind" class="bc-select" aria-label="指令類型">
-            <option value="full">full · 全流程（圖卡＋分鏡＋文案）</option>
-            <option value="card">card · 4:5 圖卡</option>
-            <option value="script">script · 30 秒 Shorts 分鏡</option>
-            <option value="copy">copy · 社群文案</option>
-            <option value="audit">audit · 站點健檢</option>
-            <option value="pause">pause · 暫停產出</option>
-            <option value="resume">resume · 恢復產出</option>
-          </select>
-          <button class="bc-btn ghost" id="bcDry" type="button">預演（不寫入）</button>
-          <button class="bc-btn" id="bcSend" type="button">廣播至選定站點</button>
-        </div>
-
-        <div class="bc-input">
-          <span class="prompt">›</span>
-          <textarea id="bcCommand" rows="2" maxlength="500"
-            placeholder="輸入要對五站 AI 與機器人下達的指令，例如：本週主推中部 30 坪新成屋精裝修，產出一組 4:5 圖卡與 30 秒分鏡。"></textarea>
-        </div>
-
-        <div class="bc-quick" id="bcQuick"></div>
-        <div class="bc-result" id="bcResult"></div>
-      </div>
-    </section>
-
-    <!-- 5. AI CEO 互動對話終端 -->
-    <section class="sec">
-      <div class="sec-head">
-        <h2>AI CEO 互動對話終端</h2>
-        <span class="hint">COMMAND CHAT TERMINAL · CONTEXT-AWARE</span>
-        <div class="spacer"></div>
-        <span class="hint" id="chatProvider">—</span>
-      </div>
-      <div class="term" id="term">
-        <div class="term-bar">
-          <span class="lamp"></span>
-          <span class="ttl">A.C LEE · AI CEO</span>
-          <span class="sep">│</span>
-          <span class="st" id="termState">待命中</span>
-          <div class="spacer"></div>
-          <button class="term-btn" id="chatClear" title="清除對話">CLEAR</button>
-        </div>
-        <div class="term-body" id="chatLog" aria-live="polite"></div>
-        <div class="term-chips" id="chatChips"></div>
-        <form class="term-input" id="chatForm" autocomplete="off">
-          <span class="prompt">›</span>
-          <textarea id="chatInput" rows="1" placeholder="對 AI CEO 下達指令，例如：目前各站流量如何？" maxlength="2000"></textarea>
-          <button type="submit" id="chatSend" aria-label="送出">送出</button>
-        </form>
-        <div class="term-foot">
-          <span>ENTER 送出 · SHIFT+ENTER 換行</span>
-          <div class="spacer"></div>
-          <span id="chatMeta">即時讀取 Neon 營運數據作為上下文</span>
-        </div>
-      </div>
-    </section>
-
-    <div class="foot">
-      <span id="footGen">—</span>
-      <span id="footMs"></span>
-      <div class="spacer"></div>
-      <a href="https://tower.xingdeng.tw/" target="_blank" rel="noopener">tower.xingdeng.tw</a>
-      <span>·</span>
-      <a href="https://xingdeng.tw/" target="_blank" rel="noopener">xingdeng.tw</a>
-      <span>·</span>
-      <span>SNT v6.0</span>
-    </div>
+<section class="panel" aria-labelledby="h-chart">
+  <h2 id="h-chart">主戰情波動圖 — 五域流量脈衝 + AI 回應延遲 <span class="tag">LIVE PULSE</span></h2>
+  <p class="desc">藍線：流量脈衝 · 綠線：AI 延遲 (ms) · 每 2–3 秒推進一個點。DEMO 時為模擬波動，連上真實 API 後改用真實延遲。</p>
+  <div class="chartwrap">
+    <canvas id="mainChart" height="220" aria-label="五域流量脈衝與 AI 延遲趨勢圖"></canvas>
+    <div id="chartTip"></div>
   </div>
+  <div class="legend">
+    <span><i style="background:#2563EB"></i>流量脈衝</span>
+    <span><i style="background:#0D9488"></i>AI 延遲 (ms)</span>
+    <span id="chartSrc" class="mono" style="color:#7C8CA1">—</span>
+  </div>
+  <div class="note" id="chartNote">目前：DEMO 模擬波動 · 真實 API 尚未連上。</div>
+</section>
+
+<div class="two">
+  <section class="panel" aria-labelledby="h-ai">
+    <h2 id="h-ai">AI 監控 — N-01 ~ N-07 <span class="tag">AGENTS</span></h2>
+    <p class="desc">不數「幾位員工」，只數「幾種工作、幾個入口」。N-01 一個後端換 5 張臉。</p>
+    <div class="tscroll">
+      <table class="tbl-cards">
+        <thead><tr><th>編號</th><th>工作</th><th>狀態</th><th>延遲</th><th>轉真人率</th><th>會做 / 不會做</th></tr></thead>
+        <tbody id="aiRows"></tbody>
+      </table>
+    </div>
+    <div class="row" style="margin-top:10px" id="aiFilters">
+      <button class="btn mini" type="button" data-f="all">全部</button>
+      <button class="btn mini" type="button" data-f="接待">接待</button>
+      <button class="btn mini" type="button" data-f="推薦">推薦</button>
+      <button class="btn mini" type="button" data-f="規則計算">規則計算</button>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-dom">
+    <h2 id="h-dom">五大網域節點 · 即時狀態 <span class="tag">NODES</span></h2>
+    <p class="desc">點「測試」會對該站做一次真實 fetch，顯示毫秒 + 狀態碼。</p>
+    <div class="dcards" id="domainCards"></div>
+    <div class="note"><b>金流模式：</b> <span class="badge sandbox">沙箱 SANDBOX</span> 正式付款開關未開啟時，請勿向客人收真錢。OTC 的 <b>pending_ai</b> 是「等真人核對」，不是 AI 在幫你核銷。</div>
+  </section>
+</div>
+
+<section class="panel" aria-labelledby="h-fn">
+  <h2 id="h-fn">後台監控基本功能 — 這版已經包含的 <span class="tag">CAPABILITY</span></h2>
+  <div class="tscroll">
+  <table class="tbl-cards">
+    <thead><tr><th>功能</th><th>在這版怎麼做</th><th>你之後要補什麼</th></tr></thead>
+    <tbody>
+      <tr><td data-l="功能"><b>健康檢查</b></td><td data-l="怎麼做">每站一鍵測試 health / pricing / track，顯示 ms + HTTP 碼</td><td data-l="要補">把各站真實 health 回傳格式貼給我，我幫你把欄位對齊</td></tr>
+      <tr><td data-l="功能"><b>名單</b></td><td data-l="怎麼做">搜尋 + 篩選 + 匯出 CSV（本機下載，不上傳）</td><td data-l="要補">接你現有的 /api/leads（不新增 API）</td></tr>
+      <tr><td data-l="功能"><b>AI 轉真人率</b></td><td data-l="怎麼做">N-01~N-07 每個都有轉真人率、延遲</td><td data-l="要補">補後台實際轉接 log</td></tr>
+      <tr><td data-l="功能"><b>報價 / 金流</b></td><td data-l="怎麼做">沙箱 / 正式標示清楚，OTC pending 數量</td><td data-l="要補">正式開關打開前，先在沙箱走一遍</td></tr>
+      <tr><td data-l="功能"><b>警示</b></td><td data-l="怎麼做">高 / 中 / 低警示，可標示已處理</td><td data-l="要補">設定你的 LINE / Email 通知門檻</td></tr>
+      <tr><td data-l="功能"><b>日誌</b></td><td data-l="怎麼做">終端機即時流 + 打字機 + 閃爍游標</td><td data-l="要補">保留 30 天 log，不要只留畫面</td></tr>
+      <tr><td data-l="功能"><b>稽核</b></td><td data-l="怎麼做">每次同步、測試、匯出都寫進終端機</td><td data-l="要補">加上操作人 + IP（後台才記）</td></tr>
+      <tr><td data-l="功能"><b>自動更新</b></td><td data-l="怎麼做">定時重抓 + 版本檢查 + 最後更新時間；失敗明確標示</td><td data-l="要補">把 VERSION 檔同步到頁面常數</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="h-leads">
+  <h2 id="h-leads">名單 — 最近進來的客人 <span class="tag">LEADS</span></h2>
+  <p class="desc">姓名已遮罩，點匯出 CSV 會下載本機檔案，不會上傳。</p>
+  <div class="row" style="margin-bottom:10px">
+    <label class="sr" for="leadSearch">搜尋名單</label>
+    <input id="leadSearch" placeholder="搜尋來源 / 意圖…" maxlength="40" autocomplete="off" style="flex:1 1 200px">
+    <label class="sr" for="leadFilter">狀態篩選</label>
+    <select id="leadFilter">
+      <option value="all">全部狀態</option>
+      <option>新進</option>
+      <option>已聯繫</option>
+      <option>已轉真人</option>
+      <option>已結案</option>
+    </select>
+    <span class="meta" id="leadCount"></span>
+  </div>
+  <div class="tscroll">
+    <table class="tbl-cards">
+      <thead><tr><th>時間</th><th>來源</th><th>客人</th><th>想問什麼</th><th>狀態</th><th>下一步</th></tr></thead>
+      <tbody id="leadRows"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="h-alert">
+  <h2 id="h-alert">警示 &amp; 事件 <span class="tag">ALERTS</span></h2>
+  <div id="alerts"></div>
+</section>
+
+<section class="panel" aria-labelledby="h-term">
+  <h2 id="h-term">即時終端機日誌 — Live Stream <span class="tag">STDOUT</span></h2>
+  <p class="desc">新事件會用打字機方式跑出來。按「清除」只清畫面，不刪後台紀錄。</p>
+  <div class="terminal" id="term" role="log" aria-live="polite"></div>
+  <div class="row" style="margin-top:10px">
+    <button class="btn" id="clearTermBtn" type="button">清除畫面</button>
+    <button class="btn" id="simLineBtn" type="button">模擬 LINE Webhook</button>
+    <button class="btn" id="simPriceBtn" type="button">模擬定價查詢</button>
+  </div>
+</section>
+
+<div class="note">部署：把這個檔案放到 <b>tower.xingdeng.tw</b> 對應的 Vercel 專案 <b>xfls / orbit-tower-site</b> 的 <b>/admin</b> 靜態路由覆蓋舊版即可。其他 4 站不用動這個檔案，只需要讓它們的既有 health 端點能被瀏覽器讀到（CORS）。若連不上，會自動顯示 DEMO 並標示清楚，不會把假數字當真的。</div>
+
+<div class="foot">
+  <span class="mono" id="footVer">v7.3.0</span> · 建置 <span class="mono" id="footBuild">—</span> · 最後更新 <span class="mono" id="footSync">—</span> · 下次檢查 <span class="mono" id="footNext">—</span><br>
+  純靜態單檔 · 無金鑰 · 無 Cookie · 所有資料僅在本頁記憶體中處理
+</div>
+
 </div>
 
 <script>
-(function () {
-  'use strict';
+'use strict';
+/* ============================================================
+   SNT v7.3 戰情室 — 淺色科技版
+   單一靜態檔，不新增任何 /api/*.js
+   ============================================================ */
+var APP_VERSION = '7.3.0';
+var BUILD_AT = '2026-11-19T00:05:00+08:00';
+var VERSION_CHECK_MS = 300000;   /* 5 分鐘檢查一次頁面版本 */
+var FETCH_TIMEOUT_MS = 6000;
 
-  /* ── 常數 ───────────────────────────────────────────── */
-  var KEY_STORE = 'snt.cc.v1';
-  var KEY_HASH  = 'c0430001866f79d9fcdfdbbd8b75bed967ffe86007b78603648db586cf0d4866';
-  var API = '/api/health?mode=cc';
-  var REFRESH_MS = 60000;
-
-  var state = { data: null, timer: null, countdown: REFRESH_MS / 1000, busy: false };
-
-  var $ = function (s, r) { return (r || document).querySelector(s); };
-
-  function el(tag, cls, txt) {
-    var n = document.createElement(tag);
-    if (cls) n.className = cls;
-    if (txt !== undefined && txt !== null) n.textContent = String(txt);
-    return n;
-  }
-
-  function fmt(v) {
-    if (v === null || v === undefined || v === '' || (typeof v === 'number' && !isFinite(v))) return '—';
-    var n = Number(v);
-    if (!isFinite(n)) return '—';
-    return n.toLocaleString('en-US');
-  }
-
-  function fmtPct(v) {
-    if (v === null || v === undefined || !isFinite(Number(v))) return '—';
-    var n = Number(v);
-    return (Math.round(n * 10) / 10).toLocaleString('en-US') + '%';
-  }
-
-  function hhmmss(d) {
-    var p = function (x) { return String(x).padStart(2, '0'); };
-    return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
-  }
-
-  function rel(iso) {
-    if (!iso) return '—';
-    var t = new Date(iso).getTime();
-    if (!isFinite(t)) return '—';
-    var s = Math.max(0, Math.round((Date.now() - t) / 1000));
-    if (s < 60) return s + ' 秒前';
-    if (s < 3600) return Math.round(s / 60) + ' 分前';
-    if (s < 86400) return Math.round(s / 3600) + ' 小時前';
-    return Math.round(s / 86400) + ' 天前';
-  }
-
-  function shortTime(iso) {
-    if (!iso) return '—';
-    var d = new Date(iso);
-    if (isNaN(d.getTime())) return '—';
-    var p = function (x) { return String(x).padStart(2, '0'); };
-    return p(d.getMonth() + 1) + '/' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
-  }
-
-  /* ── SHA-256（瀏覽器原生 WebCrypto；密碼本身不落任何儲存） ── */
-  function sha256(text) {
-    if (!(window.crypto && window.crypto.subtle)) {
-      return Promise.reject(new Error('此瀏覽器不支援 WebCrypto，請改用新版瀏覽器或確認以 HTTPS 開啟。'));
-    }
-    var bytes = new TextEncoder().encode(text);
-    return window.crypto.subtle.digest('SHA-256', bytes).then(function (buf) {
-      var arr = new Uint8Array(buf), out = '';
-      for (var i = 0; i < arr.length; i++) out += (arr[i] < 16 ? '0' : '') + arr[i].toString(16);
-      return out;
-    });
-  }
-
-  /* ── 門禁 ───────────────────────────────────────────── */
-  var gate = $('#gate'), app = $('#app'), gateCard = $('#gateCard');
-  var pw = $('#pw'), gateMsg = $('#gateMsg'), unlockBtn = $('#unlock');
-
-  function msg(text, kind) {
-    gateMsg.textContent = text || '';
-    gateMsg.className = 'gate-msg' + (text ? ' on' : '') + (kind === 'info' ? ' info' : '');
-  }
-
-  function fail(text) {
-    msg(text);
-    gateCard.classList.remove('shake');
-    void gateCard.offsetWidth;
-    gateCard.classList.add('shake');
-    pw.value = '';
-    pw.focus();
-  }
-
-  function showGate() {
-    app.hidden = true;
-    gate.hidden = false;
-    document.body.style.overflow = '';
-    if (state.timer) { clearInterval(state.timer); state.timer = null; }
-    setTimeout(function () { pw.focus(); }, 60);
-  }
-
-  function showApp() {
-    gate.hidden = true;
-    app.hidden = false;
-    if (!state.timer) {
-      state.timer = setInterval(function () {
-        state.countdown -= 1;
-        if (state.countdown <= 0) { state.countdown = REFRESH_MS / 1000; load(true); }
-        paintSync();
-      }, 1000);
-    }
-    // 對話終端僅在通過密碼後初始化（sessionStorage 已驗證）
-    setTimeout(function () { try { greet(); } catch (e) {} }, 120);
-  }
-
-  function paintSync() {
-    var p = $('#pillSync');
-    if (!p) return;
-    var t = p.querySelector('span');
-    if (state.busy) { t.textContent = '同步中…'; p.className = 'pill'; return; }
-    t.textContent = state.countdown + 's 後更新';
-    p.className = 'pill idle';
-  }
-
-  $('#eye').addEventListener('click', function () {
-    var on = pw.type === 'password';
-    pw.type = on ? 'text' : 'password';
-    this.textContent = on ? '◍' : '◉';
-    this.setAttribute('aria-label', on ? '隱藏密碼' : '顯示密碼');
-    pw.focus();
+/* ---------- 安全工具 ---------- */
+function esc(v){
+  return String(v == null ? '' : v).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
   });
+}
+function safeUrl(u){
+  var s = String(u == null ? '' : u).trim();
+  if(/^https:\/\/[a-z0-9.-]+(\/|$)/i.test(s)) return s;
+  if(/^\/[^\/\\]/.test(s)) return s;
+  return '#';
+}
+function clampStr(s, n){
+  return String(s == null ? '' : s).replace(/[\u0000-\u001F\u007F]/g, ' ').slice(0, n);
+}
+function $(id){ return document.getElementById(id); }
+function pad2(n){ return n < 10 ? '0' + n : '' + n; }
+function hhmmss(d){ return pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ':' + pad2(d.getSeconds()); }
+function hhmm(d){ return pad2(d.getHours()) + ':' + pad2(d.getMinutes()); }
+function fmtInt(n){ return Number(n).toLocaleString('en-US'); }
 
-  $('#gateForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var v = pw.value;
-    if (!v) { fail('請先輸入存取密碼。'); return; }
-    unlockBtn.disabled = true;
-    unlockBtn.textContent = '驗證中…';
-    msg('正在驗證通行權限…', 'info');
+/* ---------- 狀態 ---------- */
+var state = {
+  paused: false,
+  intervalMs: 15000,
+  syncLeft: 15,
+  lastSync: null,
+  lastOk: null,
+  mode: 'demo',            /* demo | partial | live | offline */
+  events: 0,
+  realLatency: null,
+  health: null,
+  pricing: null,
+  updateAvailable: null,
+  busy: false
+};
 
-    sha256(v).then(function (h) {
-      if (h !== KEY_HASH) {
-        return new Promise(function (res) {
-          setTimeout(function () {
-            unlockBtn.disabled = false;
-            unlockBtn.textContent = '解鎖監控室';
-            fail('密碼不正確，請確認後再試一次。');
-            res(false);
-          }, 260);
-        });
-      }
-      try { sessionStorage.setItem(KEY_STORE, h); } catch (err) {}
-      msg('驗證通過，正在載入營運數據…', 'info');
-      return load(false).then(function (ok) {
-        unlockBtn.disabled = false;
-        unlockBtn.textContent = '解鎖監控室';
-        if (ok) { msg(''); pw.value = ''; showApp(); }
-        else { fail('已通過驗證，但數據載入失敗，請稍後重試。'); }
-        return ok;
-      });
-    }).catch(function (err) {
-      unlockBtn.disabled = false;
-      unlockBtn.textContent = '解鎖監控室';
-      fail('驗證元件無法啟動：' + String(err.message || err));
+/* ---------- 資料（原始結構保留） ---------- */
+var aiData = [
+  {id:'N-01',name:'接待總機',job:'接待',status:'正常',lat:168,hand:32,do:'先回你，問不清楚轉真人',dont:'不會直接報價、收款、做決定'},
+  {id:'N-02',name:'戰略問答',job:'接待',status:'正常',lat:212,hand:58,do:'幫你把需求想清楚',dont:'不會自動寫 CRM、自動跟進 21 天'},
+  {id:'N-03',name:'規則試玩',job:'規則計算',status:'正常',lat:42,hand:8,do:'照規則算，答案可預期',dont:'不是 AI 模型，不會亂回答'},
+  {id:'N-04',name:'LINE 接待',job:'接待',status:'正常',lat:195,hand:41,do:'用 LINE 方式問問題',dont:'不會跟 N-01 共用記憶'},
+  {id:'N-05',name:'規則分析 CNIC',job:'規則計算',status:'正常',lat:88,hand:12,do:'把東西方看法放在一起比',dont:'不是 AI 模型，不是科學驗證引擎'},
+  {id:'N-06',name:'廣告推薦',job:'推薦',status:'留意',lat:310,hand:18,do:'推薦你可能想看的案例',dont:'推薦不是保證'},
+  {id:'N-07',name:'診斷試算',job:'規則計算',status:'正常',lat:96,hand:9,do:'先看看網站哪裡可改',dont:'示意評分不是正式爬取'}
+];
+
+var leads = [
+  {t:'11:42',src:'decoration',name:'陳*明',intent:'裝修行情 + 丈量',status:'新進',next:'真人回電確認現場'},
+  {t:'11:18',src:'tower',name:'林*慧',intent:'建站 T2 報價',status:'已轉真人',next:'等真人書面報價'},
+  {t:'10:57',src:'vip',name:'張*豪',intent:'1.vip 席位諮詢',status:'已聯繫',next:'約深度盤時間'},
+  {t:'10:31',src:'orbit',name:'王*婷',intent:'企業展示 + 租賃',status:'新進',next:'先回租賃方案'},
+  {t:'09:48',src:'xingdeng',name:'劉*安',intent:'AI 接待 R1',status:'已結案',next:'已轉方案頁'}
+];
+
+var domains = [
+  {n:'xingdeng.tw',url:'https://xingdeng.tw',vercel:'xfls / xingdeng-tw-static',probe:'https://xingdeng.tw/api/health?mode=core',lat:null,st:'待測',code:null},
+  {n:'tower',url:'https://tower.xingdeng.tw',vercel:'xfls / orbit-tower-site',probe:'https://tower.xingdeng.tw/api/health?mode=core',lat:null,st:'待測',code:null},
+  {n:'orbit',url:'https://orbit.xingdeng.tw',vercel:'xfls / orbit-tower-3d',probe:'https://orbit.xingdeng.tw/api/line',lat:null,st:'待測',code:null},
+  {n:'vip',url:'https://vip.xingdeng.tw',vercel:'xfls / cosmosphere-vip',probe:'https://vip.xingdeng.tw/api/chat',lat:null,st:'待測',code:null},
+  {n:'decoration',url:'https://decoration.xingdeng.tw',vercel:'xfls / decoration-muogong',probe:'https://decoration.xingdeng.tw/api/ad-bot/feed?site=decoration',lat:null,st:'待測',code:null}
+];
+
+var alerts = [
+  {lv:'中',msg:'N-06 廣告推薦延遲 310ms，高於平常，建議檢查 /api/ad-bot/feed',time:'11:44',done:false},
+  {lv:'低',msg:'VIP 網域延遲略高，但仍在可接受範圍',time:'11:30',done:false},
+  {lv:'高',msg:'示範：若 /api/health 回 500，這裡會跳高警示並寫入日誌',time:'11:12',done:true}
+];
+
+var aiFilter = 'all';
+
+/* KPI 序列（sparkline） */
+var kpiSeries = {
+  leads:  [96,102,99,110,118,115,121,124,120,128],
+  rev:    [402,418,431,425,447,452,461,470,478,486],
+  lat:    [176,182,190,178,186,195,188,182,179,182],
+  events: [280,292,301,315,308,322,330,336,340,342]
+};
+
+/* 主圖資料 */
+var chartData = [];
+(function seedChart(){
+  for(var i=0;i<40;i++){
+    chartData.push({
+      f: 40 + Math.sin(i/3)*12 + Math.random()*8,
+      l: 150 + Math.sin(i/4)*40 + Math.random()*30
     });
-  });
-
-  $('#btnLock').addEventListener('click', function () {
-    try { sessionStorage.removeItem(KEY_STORE); } catch (e) {}
-    state.data = null;
-    showGate();
-    msg('已鎖定監控室。', 'info');
-  });
-
-  $('#btnRefresh').addEventListener('click', function () {
-    if (state.busy) return;
-    state.countdown = REFRESH_MS / 1000;
-    load(true);
-  });
-
-  /* ── 取數 ───────────────────────────────────────────── */
-  function load(silent) {
-    if (state.busy) return Promise.resolve(false);
-    state.busy = true;
-    paintSync();
-    var btn = $('#btnRefresh');
-    if (btn) btn.classList.add('spin');
-
-    return fetch(API, {
-      method: 'GET',
-      headers: { 'x-cc-key': KEY_HASH, 'accept': 'application/json' },
-      cache: 'no-store',
-      credentials: 'same-origin'
-    }).then(function (r) {
-      if (r.status === 401) {
-        try { sessionStorage.removeItem(KEY_STORE); } catch (e) {}
-        showGate();
-        msg('通行權限已失效，請重新輸入密碼。', 'info');
-        return null;
-      }
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    }).then(function (json) {
-      if (!json) return false;
-      state.data = json;
-      render(json);
-      return true;
-    }).catch(function (err) {
-      if (!silent) return false;
-      var b = $('#banner');
-      if (b) {
-        b.className = 'banner';
-        b.textContent = '本次自動更新失敗（' + String(err.message || err) + '），畫面上為上一次成功取得的數據。';
-      }
-      return false;
-    }).then(function (ok) {
-      state.busy = false;
-      if (btn) btn.classList.remove('spin');
-      paintSync();
-      return ok;
-    });
-  }
-
-  /* ── 繪製 ───────────────────────────────────────────── */
-  function render(d) {
-    paintBanner(d);
-    paintKpis(d);
-    paintSites(d);
-    paintQuota(d);
-    paintAssets(d);
-    paintTasks(d);
-    paintDispatch(d);
-    paintTrials(d);
-    paintTiers(d);
-    paintLine(d);
-    paintCeo(d);
-
-    $('#footGen').textContent = 'GENERATED ' + shortTime(d.generated_at) + ' · ' + (d.tz || 'Asia/Taipei');
-    $('#footMs').textContent = 'API ' + (d.ms || 0) + 'ms · DB ' + ((d.db && d.db.ms) || 0) + 'ms';
-  }
-
-  function paintBanner(d) {
-    var b = $('#banner');
-    var deg = d.degraded || [];
-    if (!deg.length) { b.className = 'banner hide'; b.textContent = ''; return; }
-    b.className = 'banner';
-    b.textContent = '';
-    b.appendChild(el('b', null, '降級提示'));
-    b.appendChild(el('span', null, '以下資料源暫時無法取得，其餘模組照常運作：' + deg.join('；')));
-  }
-
-  function paintKpis(d) {
-    var k = d.kpi || {};
-    var box = $('#kpis');
-    box.textContent = '';
-    var items = [
-      { k: '五站總瀏覽', v: fmt(k.pv_total), u: '次', s: '今日 ' + fmt(k.pv_today) + ' 次' },
-      { k: '名單累計', v: fmt(k.leads_total), u: '筆', s: '今日估價單 ' + fmt(k.leads_today) + ' 筆' },
-      { k: '估價單總量', v: fmt(k.quote_total), u: '筆', s: 'decoration LIFF + 站內' },
-      { k: '試用中租戶', v: fmt(k.trials_active), u: '家', s: '14 天免費試用' },
-      { k: '站點在線', v: fmt(k.sites_up) + '/' + fmt(k.sites_total), u: '', s: '前台可達性檢查' },
-      { k: '資料庫', v: (d.db && d.db.ok) ? 'OK' : 'ERR', u: '', s: 'Neon · ' + ((d.db && d.db.ms) || 0) + 'ms' }
-    ];
-    items.forEach(function (it) {
-      var c = el('div', 'kpi');
-      c.appendChild(el('span', 'k', it.k));
-      var v = el('span', 'v', it.v);
-      if (it.u) v.appendChild(el('small', null, it.u));
-      c.appendChild(v);
-      c.appendChild(el('span', 's', it.s));
-      box.appendChild(c);
-    });
-
-    var dbPill = $('#pillDb');
-    var dbOk = d.db && d.db.ok;
-    dbPill.className = 'pill ' + (dbOk ? '' : 'bad');
-    dbPill.querySelector('span').textContent = dbOk ? 'DB 正常 ' + ((d.db.ms) || 0) + 'ms' : 'DB 異常';
-
-    var probe = d.probe || [];
-    var up = probe.filter(function (p) { return p.ok; }).length;
-    var sp = $('#pillSites');
-    sp.className = 'pill ' + (up === probe.length && probe.length ? '' : up ? 'warn' : 'bad');
-    sp.querySelector('span').textContent = '站點 ' + up + '/' + (probe.length || 5) + ' 在線';
-  }
-
-  function paintSites(d) {
-    var grid = $('#siteGrid');
-    grid.textContent = '';
-    var probe = {};
-    (d.probe || []).forEach(function (p) { probe[p.id] = p; });
-
-    (d.sites || []).forEach(function (s) {
-      var card = el('article', 'site');
-      card.style.setProperty('--accent', s.accent || '#D4AF37');
-      card.appendChild(el('div', 'bar'));
-
-      var head = el('header');
-      var p = probe[s.id] || {};
-      head.appendChild(el('span', 'dot' + (p.ok ? '' : ' off')));
-      var hd = el('div');
-      hd.appendChild(el('h3', null, s.name));
-      hd.appendChild(el('p', 'host', s.host));
-      head.appendChild(hd);
-      head.appendChild(el('span', 'role', s.role));
-      card.appendChild(head);
-
-      var mbox = el('div', 'metrics');
-      (s.metrics || []).forEach(function (m) {
-        var row = el('div', 'metric');
-        row.appendChild(el('span', 'l', m.label));
-        var v = el('span', 'v' + (m.value === null || m.value === undefined ? ' na' : ''));
-        v.textContent = (m.value === null || m.value === undefined) ? '—' : fmt(m.value);
-        if (m.unit && m.value !== null && m.value !== undefined) v.appendChild(el('small', null, m.unit));
-        row.appendChild(v);
-        row.appendChild(el('span', 's', m.sub || ''));
-        mbox.appendChild(row);
-      });
-      card.appendChild(mbox);
-
-      var foot = el('footer');
-      foot.appendChild(el('span', 'st' + (p.ok ? '' : ' bad')));
-      foot.appendChild(el('span', null, p.ok ? 'HTTP ' + p.status : (p.status ? 'HTTP ' + p.status : '無法連線')));
-      foot.appendChild(el('span', 'ms', (p.ms || 0) + 'ms'));
-      card.appendChild(foot);
-
-      grid.appendChild(card);
-    });
-
-    var note = $('#trafficNote');
-    if (note) note.textContent = '來源 growth_event · hits · leads · growth_lead';
-  }
-
-  function paintQuota(d) {
-    var box = $('#quota');
-    box.textContent = '';
-    var ab = d.adbot;
-    if (!ab || !ab.quota) {
-      box.appendChild(el('p', 'desc', 'ad_bot_quota 尚無今日紀錄，配額雷達待首次排程寫入。'));
-      return;
-    }
-    var q = ab.quota;
-    var pctv = Math.min(100, Number(q.pct) || 0);
-
-    var row = el('div', 'row');
-    row.appendChild(el('span', 'big', fmt(q.used)));
-    row.appendChild(el('span', 'of', '/ ' + fmt(q.limit) + ' units'));
-    var pv = el('span', 'pctv', fmtPct(q.pct));
-    pv.style.color = q.state === 'critical' ? 'var(--bad)' : q.state === 'warn' ? 'var(--warn)' : 'var(--ok)';
-    row.appendChild(pv);
-    box.appendChild(row);
-
-    var track = el('div', 'track');
-    var fill = el('div', 'fill ' + (q.state || 'ok'));
-    track.appendChild(fill);
-    box.appendChild(track);
-    setTimeout(function () { fill.style.width = pctv + '%'; }, 40);
-
-    var ticks = el('div', 'ticks');
-    ticks.appendChild(el('span', null, '0'));
-    ticks.appendChild(el('span', null, '70% 警戒'));
-    ticks.appendChild(el('span', null, '90% 上限'));
-    ticks.appendChild(el('span', null, fmt(q.limit)));
-    box.appendChild(ticks);
-
-    var meta = el('div', 'qmeta');
-    var m1 = el('div', null, '狀態');
-    m1.appendChild(el('b', null, q.state === 'critical' ? '接近上限' : q.state === 'warn' ? '需注意' : '正常'));
-    meta.appendChild(m1);
-    var m2 = el('div', null, 'LINE 推播');
-    m2.appendChild(el('b', null, fmt(q.line_pushes) + ' 則'));
-    meta.appendChild(m2);
-    var m3 = el('div', null, '最後更新');
-    m3.appendChild(el('b', null, rel(q.updated_at)));
-    meta.appendChild(m3);
-    var m4 = el('div', null, '任務 完成/失敗');
-    m4.appendChild(el('b', null, fmt((ab.counts || {}).done) + ' / ' + fmt((ab.counts || {}).failed)));
-    meta.appendChild(m4);
-    box.appendChild(meta);
-  }
-
-  function paintAssets(d) {
-    var box = $('#assets');
-    box.textContent = '';
-    var ab = d.adbot;
-    var sites = ['decoration', 'xingdeng', 'tower', 'orbit', 'vip'];
-    var labels = { decoration: 'DECORATION', xingdeng: 'XINGDENG', tower: 'TOWER', orbit: 'ORBIT', vip: 'VIP' };
-    var agg = {};
-    ((ab && ab.assets) || []).forEach(function (a) {
-      agg[a.site] = agg[a.site] || { card: 0, script: 0, copy: 0 };
-      agg[a.site][a.kind] = Number(a.n) || 0;
-    });
-    sites.forEach(function (s) {
-      var a = agg[s] || { card: 0, script: 0, copy: 0 };
-      var cell = el('div', 'mx');
-      cell.appendChild(el('span', 'nm', labels[s]));
-      [['4:5 圖卡', a.card], ['30s 分鏡', a.script], ['文案', a.copy]].forEach(function (pair) {
-        var ln = el('div', 'ln');
-        ln.appendChild(el('span', null, pair[0]));
-        var b = el('b', pair[1] ? '' : 'zero', fmt(pair[1]));
-        ln.appendChild(b);
-        cell.appendChild(ln);
-      });
-      box.appendChild(cell);
-    });
-  }
-
-  function table(headers, rows, emptyText) {
-    var t = el('table', 'tbl');
-    var thead = el('thead');
-    var tr = el('tr');
-    headers.forEach(function (h) { tr.appendChild(el('th', null, h)); });
-    thead.appendChild(tr);
-    t.appendChild(thead);
-    var tb = el('tbody');
-    if (!rows.length) {
-      var r = el('tr');
-      var td = el('td', 'empty', emptyText || '尚無紀錄');
-      td.colSpan = headers.length;
-      r.appendChild(td);
-      tb.appendChild(r);
-    } else {
-      rows.forEach(function (cells) {
-        var r = el('tr');
-        cells.forEach(function (c) {
-          if (c && c.nodeType) { var td = el('td'); td.appendChild(c); r.appendChild(td); }
-          else { r.appendChild(el('td', null, c === null || c === undefined ? '—' : String(c))); }
-        });
-        tb.appendChild(r);
-      });
-    }
-    t.appendChild(tb);
-    return t;
-  }
-
-  function badge(text, kind) { return el('span', 'badge ' + (kind || 'idle'), text); }
-
-  function paintTasks(d) {
-    var box = $('#tasks');
-    box.textContent = '';
-    var ab = d.adbot;
-    var rows = ((ab && ab.tasks) || []).map(function (t) {
-      var st = t.status === 'done' ? 'ok' : t.status === 'failed' ? 'bad' : 'warn';
-      var retry = Number(t.attempts) > 1 ? badge('重試 ' + t.attempts, 'warn') : badge('首次', 'idle');
-      return [
-        t.site || '—',
-        t.kind || '—',
-        badge(t.status || '—', st),
-        retry,
-        shortTime(t.created_at)
-      ];
-    });
-    box.appendChild(table(['站點', '類型', '狀態', '嘗試', '建立時間'], rows, 'ad_bot_tasks 尚無紀錄'));
-  }
-
-  function paintDispatch(d) {
-    var box = $('#dispatch');
-    box.textContent = '';
-    var ab = d.adbot;
-    var rows = ((ab && ab.dispatch) || []).map(function (x) {
-      var st = x.status === 'sent' ? 'ok' : x.status === 'failed' ? 'bad' : 'warn';
-      var err = x.err ? el('span', 'badge bad', String(x.err).slice(0, 22)) : badge('無錯誤', 'ok');
-      return [
-        x.site || '—',
-        x.channel || '—',
-        badge(x.status || '—', st),
-        err,
-        shortTime(x.scheduled_at || x.created_at)
-      ];
-    });
-    box.appendChild(table(['站點', '通道', '狀態', '錯誤攔截', '排程'], rows, 'ad_bot_dispatch 尚無紀錄'));
-  }
-
-  function paintTrials(d) {
-    var box = $('#trials');
-    box.textContent = '';
-    var t = (d.saas && d.saas.trials) || {};
-    var cells = [
-      { k: '試用中', v: fmt(t.active_trial), u: '家' },
-      { k: '14 天內啟動', v: fmt(t.within_14d), u: '家' },
-      { k: '累計試用', v: fmt(t.started_total), u: '家' }
-    ];
-    cells.forEach(function (c) {
-      var cell = el('div', 'ceo-cell');
-      cell.appendChild(el('span', 'k', c.k));
-      var v = el('span', 'v', c.v);
-      v.appendChild(el('small', null, c.u));
-      cell.appendChild(v);
-      box.appendChild(cell);
-    });
-  }
-
-  function paintTiers(d) {
-    var box = $('#tiers');
-    box.textContent = '';
-    var tiers = (d.saas && d.saas.tiers) || [];
-    if (!tiers.length) { box.appendChild(el('p', 'desc', '尚無訂閱方案資料。')); return; }
-    tiers.forEach(function (t) {
-      var c = el('div', 'tier');
-      c.appendChild(el('span', 'nm', t.name + ' 方案'));
-      c.appendChild(el('span', 'pr', 'NT$' + fmt(t.price)));
-      var ct = el('span', 'ct', fmt(t.orders));
-      ct.appendChild(el('small', null, '筆成交'));
-      c.appendChild(ct);
-      c.appendChild(el('span', 'rv', '累計 NT$' + fmt(t.revenue)));
-      box.appendChild(c);
-    });
-  }
-
-  function paintLine(d) {
-    var box = $('#lineHealth');
-    box.textContent = '';
-    var list = d.line || [];
-    if (!list.length) { box.appendChild(el('p', 'desc', 'LINE 健康檢查無回應。')); return; }
-    list.forEach(function (l) {
-      var row = el('div', 'line-row');
-      var lamp = el('span', 'lamp' + (l.ok ? '' : (l.state === 'no_token' ? ' idle' : ' bad')));
-      row.appendChild(lamp);
-      var tx = el('div');
-      tx.appendChild(el('span', 'id', l.id));
-      tx.appendChild(el('span', 'lb', l.label + (l.display ? ' · ' + l.display : '')));
-      row.appendChild(tx);
-      var rt = el('div', 'rt');
-      rt.textContent = l.ok ? 'ONLINE · ' + l.ms + 'ms' : (l.state === 'no_token' ? 'NO TOKEN' : 'HTTP ' + (l.status || '—'));
-      row.appendChild(rt);
-      box.appendChild(row);
-    });
-  }
-
-  function paintCeo(d) {
-    var heart = $('#ceoHeart');
-    heart.textContent = '';
-    var c = d.ceo || {};
-    var dm = c.daemon;
-    var cells = dm ? [
-      { k: '最後巡站', v: rel(dm.at), u: '' },
-      { k: '掃描訪客', v: fmt(dm.scanned), u: '人' },
-      { k: '耗時', v: fmt(Math.round((dm.ms || 0) / 1000)), u: '秒' },
-      { k: 'AI 模型', v: dm.ai_ok ? 'OK' : '降級', u: '' }
-    ] : [{ k: '最後巡站', v: '—', u: '' }];
-    cells.forEach(function (x) {
-      var cell = el('div', 'ceo-cell');
-      cell.appendChild(el('span', 'k', x.k));
-      var v = el('span', 'v', x.v);
-      if (x.u) v.appendChild(el('small', null, x.u));
-      cell.appendChild(v);
-      heart.appendChild(cell);
-    });
-
-    var box = $('#decisions');
-    box.textContent = '';
-    var list = c.decisions || [];
-    if (!list.length) { box.appendChild(el('p', 'desc', '今日尚無決策訊號。')); return; }
-    list.forEach(function (x) {
-      var row = el('div', 'dec');
-      row.appendChild(el('span', 'sev ' + (x.severity || x.priority || '')));
-      var tx = el('div', 'tx');
-      tx.appendChild(el('span', 'tt', x.title || x.code));
-      tx.appendChild(el('span', 'cd', (x.code || '') + ' · ' + (x.priority || '') + ' · ' + (x.action ? String(x.action).slice(0, 60) : '')));
-      row.appendChild(tx);
-      box.appendChild(row);
-    });
-  }
-
-  /* ── 全站指令廣播 ───────────────────────────────────── */
-  var bc = { selected: {}, busy: false };
-
-  var BC_SITES = [
-    { id: 'decoration', label: 'DECORATION' },
-    { id: 'xingdeng', label: 'XINGDENG' },
-    { id: 'tower', label: 'TOWER' },
-    { id: 'orbit', label: 'ORBIT' },
-    { id: 'vip', label: 'VIP' }
-  ];
-
-  var BC_QUICK = [
-    '本週主推中部 30 坪新成屋精裝修，產出一組 4:5 圖卡與 30 秒分鏡。',
-    '針對統包商夥伴，產出 B2B 標準化評估白皮書的社群貼文。',
-    '檢查各站追蹤碼與 LINE 導流是否正常，回報異常。',
-    '暫停所有非必要素材產出，優先處理既有名單跟進。'
-  ];
-
-  function bcRenderTargets() {
-    var box = $('#bcTargets');
-    if (!box) return;
-    box.textContent = '';
-    BC_SITES.forEach(function (s) {
-      var on = bc.selected[s.id] !== false;
-      var t = el('div', 'bc-t' + (on ? ' on' : ''));
-      t.setAttribute('role', 'checkbox');
-      t.setAttribute('aria-checked', on ? 'true' : 'false');
-      t.tabIndex = 0;
-      t.appendChild(el('span', 'box', on ? '✓' : ''));
-      t.appendChild(el('span', 'nm', s.label));
-      function toggle() {
-        bc.selected[s.id] = !(bc.selected[s.id] !== false);
-        bcRenderTargets();
-      }
-      t.addEventListener('click', toggle);
-      t.addEventListener('keydown', function (e) {
-        if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
-      });
-      box.appendChild(t);
-    });
-  }
-
-  function bcRenderQuick() {
-    var box = $('#bcQuick');
-    if (!box) return;
-    box.textContent = '';
-    BC_QUICK.forEach(function (q) {
-      var b = el('button', 'chip', q.length > 26 ? q.slice(0, 26) + '…' : q);
-      b.type = 'button';
-      b.title = q;
-      b.addEventListener('click', function () {
-        var ta = $('#bcCommand');
-        if (ta) { ta.value = q; ta.focus(); }
-      });
-      box.appendChild(b);
-    });
-  }
-
-  function bcSelectedIds() {
-    return BC_SITES.filter(function (s) { return bc.selected[s.id] !== false; }).map(function (s) { return s.id; });
-  }
-
-  function bcSetBusy(on) {
-    bc.busy = on;
-    ['#bcSend', '#bcDry'].forEach(function (sel) {
-      var b = $(sel);
-      if (b) b.disabled = on;
-    });
-  }
-
-  function bcSend(dryRun) {
-    if (bc.busy) return;
-    var ta = $('#bcCommand');
-    var cmd = String((ta && ta.value) || '').trim();
-    var out = $('#bcResult');
-    if (!cmd) {
-      if (out) {
-        out.textContent = '';
-        out.appendChild(el('div', 'bc-note', '請先輸入要廣播的指令內容。'));
-      }
-      if (ta) ta.focus();
-      return;
-    }
-    var sites = bcSelectedIds();
-    if (!sites.length) {
-      if (out) { out.textContent = ''; out.appendChild(el('div', 'bc-note', '請至少選擇一個站點。')); }
-      return;
-    }
-
-    bcSetBusy(true);
-    if (out) {
-      out.textContent = '';
-      out.appendChild(el('div', 'bc-note', dryRun ? '預演中，不會寫入資料庫…' : '正在派發至 ' + sites.length + ' 個站點…'));
-    }
-
-    fetch('/api/health?mode=broadcast', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-cc-key': KEY_HASH },
-      body: JSON.stringify({
-        command: cmd,
-        sites: sites,
-        kind: ($('#bcKind') && $('#bcKind').value) || 'full',
-        dryRun: !!dryRun
-      }),
-      cache: 'no-store',
-      credentials: 'same-origin'
-    }).then(function (r) {
-      if (r.status === 401) {
-        try { sessionStorage.removeItem(KEY_STORE); } catch (e) {}
-        showGate();
-        msg('通行權限已失效，請重新輸入密碼。', 'info');
-        return null;
-      }
-      if (r.status === 429) throw new Error('廣播過於頻繁，請稍候一分鐘。');
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    }).then(function (j) {
-      if (!j) return;
-      bcRenderResult(j, dryRun);
-      if (!dryRun && j.summary && j.summary.accepted > 0) {
-        // 廣播成功後刷新任務列表
-        setTimeout(function () { load(true); }, 900);
-      }
-    }).catch(function (err) {
-      if (out) {
-        out.textContent = '';
-        out.appendChild(el('div', 'bc-note', '廣播失敗：' + String(err.message || err) + '。請確認網路後重試。'));
-      }
-    }).then(function () { bcSetBusy(false); });
-  }
-
-  function bcRenderResult(j, dryRun) {
-    var out = $('#bcResult');
-    if (!out) return;
-    out.textContent = '';
-
-    var s = j.summary || { total: 0, accepted: 0, duplicated: 0, failed: 0 };
-    var sum = el('div', 'bc-sum');
-    sum.appendChild(el('span', null, (dryRun ? '預演' : '已派發') + ' ' + s.total + ' 站'));
-    var okS = el('span', 'ok'); okS.appendChild(el('b', null, String(s.accepted))); okS.appendChild(document.createTextNode(' 已接收')); sum.appendChild(okS);
-    var dupS = el('span', 'dup'); dupS.appendChild(el('b', null, String(s.duplicated))); dupS.appendChild(document.createTextNode(' 冪等略過')); sum.appendChild(dupS);
-    var badS = el('span', 'bad'); badS.appendChild(el('b', null, String(s.failed))); badS.appendChild(document.createTextNode(' 失敗')); sum.appendChild(badS);
-    if (j.kind) sum.appendChild(el('span', null, 'KIND ' + String(j.kind).toUpperCase()));
-    out.appendChild(sum);
-
-    var rows = (j.results || []).map(function (r) {
-      var st = r.state === 'accepted' ? 'ok' : r.state === 'duplicate' ? 'warn' : r.state === 'dry_run' ? 'idle' : 'bad';
-      var label = r.state === 'accepted' ? '已接收' : r.state === 'duplicate' ? '冪等略過' : r.state === 'dry_run' ? '預演' : '失敗';
-      return [
-        r.site || '—',
-        badge(label, st),
-        r.task_id ? String(r.task_id).slice(0, 8) : (r.error ? String(r.error).slice(0, 24) : '—'),
-        r.idem_key || '—',
-        (r.ms || 0) + 'ms'
-      ];
-    });
-    out.appendChild(table(['站點', '接收狀態', '任務 ID', '冪等鍵', '耗時'], rows, '無回應'));
-
-    if (j.message) out.appendChild(el('div', 'bc-note', j.message));
-    else if (!dryRun && s.accepted) out.appendChild(el('div', 'bc-note', '任務已進入 ad_bot_tasks 佇列，Omni-Ad Bot 將於下一輪排程接手執行。'));
-    else if (dryRun) out.appendChild(el('div', 'bc-note', '預演完成，未寫入任何資料。確認無誤後按「廣播至選定站點」。'));
-  }
-
-  (function initBroadcast() {
-    if (!$('#bcTargets')) return;
-    bcRenderTargets();
-    bcRenderQuick();
-    var send = $('#bcSend');
-    var dry = $('#bcDry');
-    if (send) send.addEventListener('click', function () { bcSend(false); });
-    if (dry) dry.addEventListener('click', function () { bcSend(true); });
-  })();
-
-  /* ── AI CEO 互動對話終端 ─────────────────────────────── */
-  var chat = { history: [], busy: false, started: false };
-
-  var CHIPS = [
-    '目前各站流量如何？',
-    '今天名單與估價單表現？',
-    'YouTube API 配額還夠嗎？',
-    '試用中的統包商有幾家？',
-    '最近派發有錯誤嗎？',
-    '給我今天的營運總結與建議'
-  ];
-
-  function chatEl(tag, cls, txt) {
-    var n = document.createElement(tag);
-    if (cls) n.className = cls;
-    if (txt !== undefined && txt !== null) n.textContent = String(txt);
-    return n;
-  }
-
-  function chatScroll() {
-    var log = $('#chatLog');
-    if (log) log.scrollTop = log.scrollHeight;
-  }
-
-  function chatState(text, kind) {
-    var s = $('#termState');
-    if (s) s.textContent = text;
-    var lamp = document.querySelector('.term-bar .lamp');
-    if (lamp) lamp.className = 'lamp' + (kind ? ' ' + kind : '');
-  }
-
-  function addMsg(role, text) {
-    var log = $('#chatLog');
-    if (!log) return null;
-    var wrap = chatEl('div', 'msg ' + (role === 'user' ? 'me' : 'ai'));
-    wrap.appendChild(chatEl('div', 'av', role === 'user' ? 'YOU' : 'CEO'));
-    var bd = chatEl('div', 'bd');
-    bd.appendChild(chatEl('span', 'who', role === 'user' ? 'COMMANDER' : 'A.C LEE · AI CEO'));
-    var tx = chatEl('div', 'tx', text || '');
-    bd.appendChild(tx);
-    wrap.appendChild(bd);
-    log.appendChild(wrap);
-    chatScroll();
-    return { wrap: wrap, bd: bd, tx: tx };
-  }
-
-  function addMeta(bd, meta) {
-    var m = chatEl('div', 'meta');
-    var prov = meta.provider || 'rule';
-    m.appendChild(chatEl('span', null, 'ENGINE ' + String(prov).toUpperCase()));
-    if (meta.ms) m.appendChild(chatEl('span', null, (meta.ms / 1000).toFixed(1) + 's'));
-    if (meta.ctx_ok === false) m.appendChild(chatEl('span', 'warn', 'CTX 降級'));
-    if (meta.degraded) m.appendChild(chatEl('span', 'warn', 'LLM 降級 · 規則引擎'));
-    bd.appendChild(m);
-    var p = $('#chatProvider');
-    if (p) p.textContent = 'ENGINE ' + String(prov).toUpperCase() + (meta.degraded ? ' (DEGRADED)' : '');
-  }
-
-  function renderChips() {
-    var box = $('#chatChips');
-    if (!box) return;
-    box.textContent = '';
-    CHIPS.forEach(function (c) {
-      var b = chatEl('button', 'chip', c);
-      b.type = 'button';
-      b.addEventListener('click', function () {
-        var inp = $('#chatInput');
-        if (inp) { inp.value = c; inp.focus(); }
-        sendChat();
-      });
-      box.appendChild(b);
-    });
-  }
-
-  function setBusy(on) {
-    chat.busy = on;
-    var btn = $('#chatSend');
-    if (btn) btn.disabled = on;
-    chatState(on ? '處理中…' : '待命中', on ? 'busy' : '');
-  }
-
-  function sendChat() {
-    if (chat.busy) return;
-    var inp = $('#chatInput');
-    if (!inp) return;
-    var text = String(inp.value || '').trim();
-    if (!text) return;
-    inp.value = '';
-    inp.style.height = 'auto';
-
-    addMsg('user', text);
-    chat.history.push({ role: 'user', content: text });
-    if (chat.history.length > 20) chat.history = chat.history.slice(-20);
-
-    setBusy(true);
-    var holder = addMsg('assistant', '');
-    var cursor = chatEl('span', 'cursor');
-    holder.tx.appendChild(cursor);
-
-    var acc = '';
-    var gotMeta = null;
-
-    function finish(meta, fallbackText) {
-      if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
-      if (!acc && fallbackText) { acc = fallbackText; holder.tx.textContent = acc; }
-      if (!acc) { acc = '（AI CEO 暫時無法回應，請稍後再試。）'; holder.tx.textContent = acc; }
-      chat.history.push({ role: 'assistant', content: acc });
-      if (meta) addMeta(holder.bd, meta);
-      setBusy(false);
-      chatScroll();
-    }
-
-    fetch('/api/health?mode=chat', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-cc-key': KEY_HASH },
-      body: JSON.stringify({ messages: chat.history, stream: true }),
-      cache: 'no-store',
-      credentials: 'same-origin'
-    }).then(function (r) {
-      if (r.status === 401) {
-        try { sessionStorage.removeItem(KEY_STORE); } catch (e) {}
-        showGate();
-        msg('通行權限已失效，請重新輸入密碼。', 'info');
-        finish(null, '（通行權限已失效）');
-        return null;
-      }
-      if (r.status === 429) {
-        finish({ provider: 'rule', degraded: true }, '對話過於頻繁，請稍候一分鐘再試。');
-        return null;
-      }
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-
-      var ct = r.headers.get('content-type') || '';
-      if (ct.indexOf('text/event-stream') === -1) {
-        return r.json().then(function (j) {
-          finish(j, j.reply || '');
-          return null;
-        });
-      }
-
-      var reader = r.body.getReader();
-      var dec = new TextDecoder();
-      var buf = '';
-
-      function pump() {
-        return reader.read().then(function (res) {
-          if (res.done) { finish(gotMeta, acc); return; }
-          buf += dec.decode(res.value, { stream: true });
-          var parts = buf.split('\n\n');
-          buf = parts.pop();
-          for (var i = 0; i < parts.length; i++) {
-            var line = parts[i].trim();
-            if (line.indexOf('data:') !== 0) continue;
-            var payload;
-            try { payload = JSON.parse(line.slice(5).trim()); } catch (e) { continue; }
-            if (payload.type === 'meta') { gotMeta = payload; }
-            else if (payload.type === 'delta') {
-              acc += payload.text || '';
-              holder.tx.textContent = acc;
-              holder.tx.appendChild(cursor);
-              chatScroll();
-            } else if (payload.type === 'done') { /* 由 res.done 收尾 */ }
-          }
-          return pump();
-        });
-      }
-      return pump();
-    }).catch(function (err) {
-      finish({ provider: 'rule', degraded: true }, '連線中斷（' + String(err.message || err) + '）。請確認網路後重試。');
-    });
-  }
-
-  (function initChat() {
-    var form = $('#chatForm');
-    var inp = $('#chatInput');
-    if (!form || !inp) return;
-
-    renderChips();
-
-    form.addEventListener('submit', function (e) { e.preventDefault(); sendChat(); });
-
-    inp.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
-    });
-
-    inp.addEventListener('input', function () {
-      this.style.height = 'auto';
-      this.style.height = Math.min(120, this.scrollHeight) + 'px';
-    });
-
-    var clr = $('#chatClear');
-    if (clr) clr.addEventListener('click', function () {
-      chat.history = [];
-      var log = $('#chatLog');
-      if (log) log.textContent = '';
-      chat.started = false;
-      greet();
-      chatState('待命中', '');
-    });
-  })();
-
-  function greet() {
-    if (chat.started) return;
-    chat.started = true;
-    var d = state.data || {};
-    var k = d.kpi || {};
-    var lines = [
-      '指揮官，監控室已就緒。',
-      '',
-      '即時快照：五站瀏覽 ' + fmt(k.pv_total) + ' 次（今日 ' + fmt(k.pv_today) + '）、名單 ' + fmt(k.leads_total) + ' 筆、試用中租戶 ' + fmt(k.trials_active) + ' 家、站點在線 ' + fmt(k.sites_up) + '/' + fmt(k.sites_total) + '。',
-      '',
-      '可直接下達指令，我會即時讀取 Neon 營運數據回報。'
-    ];
-    addMsg('assistant', lines.join('\n'));
-  }
-
-  /* ── 啟動 ───────────────────────────────────────────── */
-  function tickClock() {
-    if (c) c.textContent = hhmmss(new Date());
-  }
-  tickClock();
-  setInterval(tickClock, 1000);
-
-  var saved = null;
-  try { saved = sessionStorage.getItem(KEY_STORE); } catch (e) { saved = null; }
-
-  if (saved === KEY_HASH) {
-    load(false).then(function (ok) {
-      if (ok) showApp();
-      else { showGate(); msg('請重新輸入存取密碼。', 'info'); }
-    });
-  } else {
-    showGate();
   }
 })();
+
+/* ---------- 終端機 ---------- */
+var termEl = $('term');
+var termQueue = [];
+var termTyping = false;
+var termLines = 0;
+
+function logLine(type, msg){
+  termQueue.push({type: type || 'info', msg: clampStr(msg, 400), at: new Date()});
+  if(!termTyping) pumpTerm();
+}
+function pumpTerm(){
+  if(!termQueue.length){ termTyping = false; return; }
+  termTyping = true;
+  var item = termQueue.shift();
+  var line = document.createElement('div');
+  var ts = document.createElement('span');
+  ts.className = 'ts';
+  ts.textContent = '[' + hhmmss(item.at) + '] ';
+  var body = document.createElement('span');
+  body.className = item.type;
+  line.appendChild(ts);
+  line.appendChild(body);
+  var cur = document.createElement('span');
+  cur.className = 'cursor';
+  line.appendChild(cur);
+  termEl.appendChild(line);
+  termLines++;
+  if(termLines > 220){ while(termEl.firstChild && termLines > 220){ termEl.removeChild(termEl.firstChild); termLines--; } }
+  termEl.scrollTop = termEl.scrollHeight;
+
+  var text = item.msg, i = 0;
+  var speed = 9;
+  (function step(){
+    if(i >= text.length){
+      cur.remove();
+      setTimeout(pumpTerm, 40);
+      return;
+    }
+    var chunk = text.slice(i, i + 2);
+    body.textContent += chunk;
+    i += 2;
+    termEl.scrollTop = termEl.scrollHeight;
+    setTimeout(step, speed);
+  })();
+}
+function clearTerm(){
+  termEl.textContent = '';
+  termLines = 0;
+  termQueue.length = 0;
+  termTyping = false;
+  logLine('info', '畫面已清除（後台紀錄未刪除）');
+}
+
+/* ---------- 時鐘 / 倒數 ---------- */
+function tick(){
+  var now = new Date();
+  $('clock').textContent = hhmmss(now);
+  if(!state.paused){
+    state.syncLeft -= 0.1;
+    if(state.syncLeft <= 0){
+      state.syncLeft = state.intervalMs / 1000;
+      doSync('auto');
+    }
+  }
+  var pct = state.paused ? 0 : Math.max(0, Math.min(100, (state.syncLeft / (state.intervalMs/1000)) * 100));
+  $('syncBar').style.width = pct.toFixed(1) + '%';
+  $('syncText').textContent = state.paused
+    ? 'SYNC PAUSED'
+    : 'NEXT SYNC: ' + state.syncLeft.toFixed(1) + 's';
+  $('footNext').textContent = state.paused ? '已暫停' : state.syncLeft.toFixed(0) + 's 後';
+}
+
+/* ---------- fetch 工具（逾時 + 錯誤處理） ---------- */
+function fetchJSON(url, timeoutMs){
+  var ctl = new AbortController();
+  var timer = setTimeout(function(){ ctl.abort(); }, timeoutMs || FETCH_TIMEOUT_MS);
+  var t0 = (window.performance && performance.now) ? performance.now() : Date.now();
+  return fetch(url, {
+    method: 'GET',
+    mode: 'cors',
+    cache: 'no-store',
+    credentials: 'omit',
+    redirect: 'follow',
+    referrerPolicy: 'strict-origin-when-cross-origin',
+    headers: { 'Accept': 'application/json' },
+    signal: ctl.signal
+  }).then(function(r){
+    var ms = Math.round(((window.performance && performance.now) ? performance.now() : Date.now()) - t0);
+    return r.text().then(function(txt){
+      var body = null;
+      try { body = JSON.parse(txt); } catch(e){ body = null; }
+      return { ok: r.ok, code: r.status, ms: ms, body: body, raw: txt.slice(0, 200) };
+    });
+  }).catch(function(e){
+    var ms = Math.round(((window.performance && performance.now) ? performance.now() : Date.now()) - t0);
+    return { ok: false, code: 0, ms: ms, body: null, err: (e && e.name === 'AbortError') ? 'timeout' : 'network' };
+  }).then(function(res){
+    clearTimeout(timer);
+    return res;
+  });
+}
+
+/* ---------- 狀態判讀（誠實，不美化） ---------- */
+function statusOf(res){
+  if(res.code === 0) return {st:'無法連線', cls:'bad', dot:'bad'};
+  if(res.code >= 200 && res.code < 300) return {st:'正常', cls:'ok', dot:''};
+  if(res.code === 401 || res.code === 403) return {st:'需授權', cls:'warn', dot:'warn'};
+  if(res.code === 404) return {st:'端點未提供', cls:'mute', dot:'warn'};
+  if(res.code === 405) return {st:'需 POST', cls:'info', dot:'warn'};
+  if(res.code >= 500) return {st:'異常 ' + res.code, cls:'bad', dot:'bad'};
+  return {st:'HTTP ' + res.code, cls:'warn', dot:'warn'};
+}
+
+/* ---------- 同步 ---------- */
+function doSync(reason){
+  if(state.busy) return;
+  state.busy = true;
+  var btn = $('syncBtn');
+  btn.disabled = true;
+
+  var jobs = domains.map(function(d){
+    return fetchJSON(d.probe).then(function(res){
+      var s = statusOf(res);
+      d.lat = res.ms;
+      d.code = res.code;
+      d.st = s.st;
+      d.cls = s.cls;
+      d.dot = s.dot;
+      d.err = res.err || null;
+      if(res.ok && res.body && res.body.providers){
+        state.health = res.body;
+      }
+      return res;
+    });
+  });
+
+  Promise.all(jobs).then(function(results){
+    var okCount = results.filter(function(r){ return r.ok; }).length;
+    var reachable = results.filter(function(r){ return r.code > 0; }).length;
+    var latSum = 0, latN = 0;
+    results.forEach(function(r){ if(r.code > 0){ latSum += r.ms; latN++; } });
+    var avg = latN ? Math.round(latSum / latN) : null;
+
+    state.lastSync = new Date();
+    if(okCount > 0){
+      state.lastOk = state.lastSync;
+      state.realLatency = avg;
+      state.mode = (okCount === domains.length) ? 'live' : 'partial';
+    } else if(reachable > 0){
+      state.mode = 'partial';
+      state.realLatency = avg;
+    } else {
+      state.mode = 'offline';
+    }
+
+    state.events++;
+    pushChartPoint(avg);
+    renderAll();
+
+    var msg = 'sync(' + reason + ') ' + okCount + '/' + domains.length + ' 站 200 OK'
+      + (avg != null ? ' · 平均 ' + avg + 'ms' : '')
+      + (state.mode === 'offline' ? ' · 全部無法連線，維持 DEMO 標示' : '');
+    logLine(okCount > 0 ? 'ok' : 'warn', msg);
+
+    if(state.mode === 'offline'){
+      addAlert('高', '同步失敗：5 站皆無法連線，畫面數字維持 DEMO，不代表真實狀態', false);
+    }
+  }).catch(function(e){
+    state.mode = 'offline';
+    logLine('err', '同步例外：' + (e && e.message ? e.message : 'unknown'));
+    renderAll();
+  }).then(function(){
+    state.busy = false;
+    btn.disabled = false;
+  });
+}
+
+function pushChartPoint(realLat){
+  var last = chartData[chartData.length - 1] || {f:50,l:180};
+  var f = last.f + (Math.random() - 0.5) * 9;
+  f = Math.max(18, Math.min(92, f));
+  var l;
+  if(realLat != null){
+    l = realLat + (Math.random() - 0.5) * 12;
+  } else {
+    l = last.l + (Math.random() - 0.5) * 26;
+  }
+  l = Math.max(20, Math.min(420, l));
+  chartData.push({f: f, l: l});
+  if(chartData.length > 40) chartData.shift();
+}
+
+/* ---------- 單站 / 全站測試 ---------- */
+function testOne(idx){
+  var d = domains[idx];
+  if(!d) return;
+  logLine('info', '測試 ' + d.n + ' → ' + d.probe);
+  fetchJSON(d.probe).then(function(res){
+    var s = statusOf(res);
+    d.lat = res.ms; d.code = res.code; d.st = s.st; d.cls = s.cls; d.dot = s.dot; d.err = res.err || null;
+    if(res.ok && res.body && res.body.providers) state.health = res.body;
+    state.events++;
+    renderDomains(); renderNodes(); renderKPIs();
+    var line = d.n + ' → HTTP ' + (res.code || 'ERR') + ' · ' + res.ms + 'ms · ' + s.st;
+    logLine(res.ok ? 'ok' : (res.code === 0 ? 'err' : 'warn'), line);
+    if(res.code === 0){
+      addAlert('中', d.n + ' 無法連線（' + (res.err === 'timeout' ? '逾時' : '網路/CORS') + '），該站數字不可信', false);
+    }
+  });
+}
+
+function testAll(){
+  logLine('info', '開始測試 5 站真實 API（瀏覽器直連，不經後端）');
+  domains.forEach(function(d, i){
+    setTimeout(function(){ testOne(i); }, i * 180);
+  });
+}
+
+/* ---------- 警示 ---------- */
+function addAlert(lv, msg, done){
+  var now = new Date();
+  alerts.unshift({lv: lv, msg: clampStr(msg, 200), time: hhmm(now), done: !!done});
+  if(alerts.length > 30) alerts.pop();
+  renderAlerts();
+}
+function toggleAlert(i){
+  if(alerts[i]) alerts[i].done = !alerts[i].done;
+  renderAlerts();
+}
+
+/* ---------- 渲染：節點 ---------- */
+function renderNodes(){
+  var html = domains.map(function(d){
+    var cls = d.dot || '';
+    return '<span class="node"><i class="dot ' + cls + '"></i>' + esc(d.n) + '</span>';
+  }).join('');
+  $('nodes').innerHTML = html;
+}
+
+/* ---------- 渲染：KPI ---------- */
+function renderKPIs(){
+  var live = state.mode === 'live' || state.mode === 'partial';
+  var latVal = state.realLatency != null ? state.realLatency : 182;
+  var latSrc = state.realLatency != null ? 'live' : 'demo';
+  var prov = state.health && state.health.providers ? state.health.providers : null;
+  var chain = prov ? (prov.l1_gateway ? 'L1 直連' : (prov.l2_zai ? 'L2 備援' : 'L3 本地')) : '—';
+
+  var cards = [
+    {k:'leads', title:'今日名單', val:128, unit:'筆', sub:'來源：5 站表單 / LINE', src:'demo', color:'#2563EB'},
+    {k:'rev', title:'成交金額', val:486000, unit:'TWD', sub:'沙箱估算 · 非正式帳', src:'demo', color:'#0D9488'},
+    {k:'lat', title:'AI 平均延遲', val:latVal, unit:'ms', sub: live ? ('供應鏈：' + chain) : 'DEMO 模擬值', src:latSrc, color:'#0891B2'},
+    {k:'events', title:'本頁事件數', val:state.events, unit:'筆', sub:'同步 / 測試 / 匯出', src:'live', color:'#7C3AED'}
+  ];
+
+  $('kpis').innerHTML = cards.map(function(c){
+    var shown = c.k === 'rev' ? fmtInt(c.val) : fmtInt(c.val);
+    return '<div class="card">'
+      + '<h3>' + esc(c.title) + '<span class="src ' + c.src + '">' + (c.src === 'live' ? 'LIVE' : 'DEMO') + '</span></h3>'
+      + '<div class="num" data-k="' + c.k + '">' + shown + '<small>' + esc(c.unit) + '</small></div>'
+      + '<div class="sub">' + esc(c.sub) + '</div>'
+      + '<canvas class="spark" data-spark="' + c.k + '" height="42" aria-hidden="true"></canvas>'
+      + '</div>';
+  }).join('');
+
+  cards.forEach(function(c){
+    var cv = document.querySelector('canvas[data-spark="' + c.k + '"]');
+    if(cv) drawSpark(cv, kpiSeries[c.k], c.color);
+  });
+}
+
+/* ---------- 渲染：AI 表 ---------- */
+function renderAI(){
+  var rows = aiData.filter(function(a){ return aiFilter === 'all' || a.job === aiFilter; });
+  $('aiRows').innerHTML = rows.map(function(a){
+    var cls = a.status === '正常' ? 'ok' : (a.status === '留意' ? 'warn' : 'bad');
+    return '<tr>'
+      + '<td data-l="編號" class="num-cell"><b>' + esc(a.id) + '</b></td>'
+      + '<td data-l="工作">' + esc(a.name) + '</td>'
+      + '<td data-l="狀態"><span class="pill ' + cls + '">' + esc(a.status) + '</span></td>'
+      + '<td data-l="延遲" class="num-cell">' + esc(a.lat) + ' ms</td>'
+      + '<td data-l="轉真人率" class="num-cell">' + esc(a.hand) + '%</td>'
+      + '<td data-l="會做 / 不會做"><span style="color:#166534">✔ ' + esc(a.do) + '</span><br><span style="color:#991B1B">✘ ' + esc(a.dont) + '</span></td>'
+      + '</tr>';
+  }).join('') || '<tr><td colspan="6" style="color:#7C8CA1">此分類目前沒有項目</td></tr>';
+
+  Array.prototype.forEach.call(document.querySelectorAll('#aiFilters .btn'), function(b){
+    var on = b.getAttribute('data-f') === aiFilter;
+    b.classList.toggle('primary', on);
+  });
+}
+function filterAI(f){
+  aiFilter = f;
+  renderAI();
+  logLine('info', 'AI 篩選：' + f);
+}
+
+/* ---------- 渲染：網域卡 ---------- */
+function renderDomains(){
+  $('domainCards').innerHTML = domains.map(function(d, i){
+    var cls = d.cls || 'mute';
+    var lat = d.lat == null ? '—' : d.lat + ' ms';
+    var code = d.code == null ? '—' : ('HTTP ' + d.code);
+    return '<div class="dcard">'
+      + '<div style="min-width:0">'
+      +   '<div class="nm"><i class="dot ' + (d.dot || '') + '"></i><span>' + esc(d.n) + '</span></div>'
+      +   '<div class="vc">' + esc(d.vercel) + '</div>'
+      + '</div>'
+      + '<div class="rt">'
+      +   '<span class="pill ' + cls + '">' + esc(d.st) + '</span>'
+      +   '<span class="lat">' + esc(lat) + '</span>'
+      +   '<button class="btn mini" type="button" data-test="' + i + '">測試</button>'
+      + '</div>'
+      + '<div style="flex-basis:100%;font-size:10.5px;color:#7C8CA1;font-family:var(--mono)">' + esc(code) + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+/* ---------- 渲染：名單 ---------- */
+function renderLeads(){
+  var q = clampStr($('leadSearch').value, 40).trim().toLowerCase();
+  var f = $('leadFilter').value;
+  var rows = leads.filter(function(l){
+    var hitQ = !q || (l.src + ' ' + l.intent + ' ' + l.name + ' ' + l.next).toLowerCase().indexOf(q) >= 0;
+    var hitF = f === 'all' || l.status === f;
+    return hitQ && hitF;
+  });
+  $('leadRows').innerHTML = rows.map(function(l){
+    var cls = l.status === '新進' ? 'info' : (l.status === '已轉真人' ? 'ok' : (l.status === '已結案' ? 'mute' : 'warn'));
+    return '<tr>'
+      + '<td data-l="時間" class="num-cell">' + esc(l.t) + '</td>'
+      + '<td data-l="來源">' + esc(l.src) + '</td>'
+      + '<td data-l="客人">' + esc(l.name) + '</td>'
+      + '<td data-l="想問什麼">' + esc(l.intent) + '</td>'
+      + '<td data-l="狀態"><span class="pill ' + cls + '">' + esc(l.status) + '</span></td>'
+      + '<td data-l="下一步">' + esc(l.next) + '</td>'
+      + '</tr>';
+  }).join('') || '<tr><td colspan="6" style="color:#7C8CA1">沒有符合條件的名單</td></tr>';
+  $('leadCount').textContent = '顯示 ' + rows.length + ' / ' + leads.length + ' 筆（DEMO 資料）';
+}
+
+/* ---------- 渲染：警示 ---------- */
+function renderAlerts(){
+  $('alerts').innerHTML = alerts.map(function(a, i){
+    var cls = a.lv === '高' ? 'high' : (a.lv === '中' ? 'mid' : 'low');
+    return '<div class="alert ' + cls + (a.done ? ' done' : '') + '">'
+      + '<span class="lv">' + esc(a.lv) + '</span>'
+      + '<span class="msg">' + esc(a.msg) + '</span>'
+      + '<span class="tm">' + esc(a.time) + '</span>'
+      + '<button class="act" type="button" data-alert="' + i + '">' + (a.done ? '已處理' : '標記處理') + '</button>'
+      + '</div>';
+  }).join('') || '<div class="note">目前沒有警示。</div>';
+}
+
+/* ---------- 渲染：模式徽章 ---------- */
+function renderMode(){
+  var b = $('modeBadge'), h = $('modeHint');
+  b.className = 'badge';
+  if(state.mode === 'live'){
+    b.classList.add('live'); b.textContent = 'LIVE — 5 站真實端點已連上';
+    h.textContent = '延遲為瀏覽器實測值；名單與金額仍為 DEMO（/api/leads 需授權）';
+  } else if(state.mode === 'partial'){
+    b.classList.add('partial'); b.textContent = 'PARTIAL — 部分站點已連上';
+    h.textContent = '僅顯示實測得到的延遲；未連上的站標示「端點未提供 / 無法連線」';
+  } else if(state.mode === 'offline'){
+    b.classList.add('off'); b.textContent = 'OFFLINE — 全部站點連不上';
+    h.textContent = '畫面數字維持 DEMO，不代表真實狀態；請檢查網路或 CORS';
+  } else {
+    b.classList.add('demo'); b.textContent = 'DEMO 模式 — 未連上真實 API';
+    h.textContent = '按「測試 5 站真實 API」會嘗試連各站真實端點';
+  }
+}
+
+/* ---------- 渲染：全部 ---------- */
+function renderAll(){
+  renderNodes();
+  renderKPIs();
+  renderAI();
+  renderDomains();
+  renderLeads();
+  renderAlerts();
+  renderMode();
+  drawMain();
+  var ls = state.lastSync ? hhmmss(state.lastSync) : '—';
+  $('lastSync').textContent = '上次同步：' + ls;
+  $('footSync').textContent = ls;
+  $('footVer').textContent = 'v' + APP_VERSION;
+  $('footBuild').textContent = BUILD_AT.replace('T', ' ').slice(0, 16);
+  $('chartSrc').textContent = state.realLatency != null
+    ? 'AI 延遲：實測 ' + state.realLatency + 'ms'
+    : 'AI 延遲：DEMO 模擬';
+  $('chartNote').textContent = state.realLatency != null
+    ? '目前：延遲線使用瀏覽器實測值（' + state.realLatency + 'ms 平均）；流量脈衝仍為示意。'
+    : '目前：DEMO 模擬波動 · 真實 API 尚未連上。';
+}
+
+/* ---------- Sparkline ---------- */
+function drawSpark(cv, data, color){
+  if(!cv || !data || !data.length) return;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var w = cv.clientWidth || 200, h = cv.clientHeight || 42;
+  cv.width = Math.round(w * dpr);
+  cv.height = Math.round(h * dpr);
+  var c = cv.getContext('2d');
+  c.setTransform(dpr, 0, 0, dpr, 0, 0);
+  c.clearRect(0, 0, w, h);
+
+  var min = Math.min.apply(null, data), max = Math.max.apply(null, data);
+  var span = (max - min) || 1;
+  var pad = 4;
+  var pts = data.map(function(v, i){
+    return {
+      x: pad + (i / (data.length - 1 || 1)) * (w - pad * 2),
+      y: h - pad - ((v - min) / span) * (h - pad * 2)
+    };
+  });
+
+  var g = c.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, color + '33');
+  g.addColorStop(1, color + '00');
+  c.beginPath();
+  c.moveTo(pts[0].x, h);
+  pts.forEach(function(p){ c.lineTo(p.x, p.y); });
+  c.lineTo(pts[pts.length - 1].x, h);
+  c.closePath();
+  c.fillStyle = g;
+  c.fill();
+
+  c.beginPath();
+  pts.forEach(function(p, i){ i ? c.lineTo(p.x, p.y) : c.moveTo(p.x, p.y); });
+  c.strokeStyle = color;
+  c.lineWidth = 1.8;
+  c.lineJoin = 'round';
+  c.shadowColor = color + '99';
+  c.shadowBlur = 6;
+  c.stroke();
+  c.shadowBlur = 0;
+
+  var last = pts[pts.length - 1];
+  c.beginPath();
+  c.arc(last.x, last.y, 2.4, 0, Math.PI * 2);
+  c.fillStyle = color;
+  c.fill();
+}
+
+/* ---------- 主圖 ---------- */
+var mainCanvas = $('mainChart');
+var hoverIdx = -1;
+
+function drawMain(){
+  if(!mainCanvas) return;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var w = mainCanvas.clientWidth || 600;
+  var h = mainCanvas.clientHeight || 220;
+  mainCanvas.width = Math.round(w * dpr);
+  mainCanvas.height = Math.round(h * dpr);
+  var c = mainCanvas.getContext('2d');
+  c.setTransform(dpr, 0, 0, dpr, 0, 0);
+  c.clearRect(0, 0, w, h);
+
+  var padL = 40, padR = 44, padT = 14, padB = 22;
+  var iw = w - padL - padR, ih = h - padT - padB;
+  if(iw <= 10 || ih <= 10) return;
+
+  /* 網格 */
+  c.strokeStyle = 'rgba(11,21,36,.07)';
+  c.lineWidth = 1;
+  for(var i = 0; i <= 4; i++){
+    var y = padT + (ih / 4) * i;
+    c.beginPath(); c.moveTo(padL, y); c.lineTo(padL + iw, y); c.stroke();
+  }
+  for(var j = 0; j <= 6; j++){
+    var x = padL + (iw / 6) * j;
+    c.beginPath(); c.moveTo(x, padT); c.lineTo(x, padT + ih); c.stroke();
+  }
+
+  var fMax = 100, lMax = 450;
+  function px(i){ return padL + (i / (chartData.length - 1 || 1)) * iw; }
+  function pyF(v){ return padT + ih - (v / fMax) * ih; }
+  function pyL(v){ return padT + ih - (Math.min(v, lMax) / lMax) * ih; }
+
+  /* 流量面積 */
+  var g = c.createLinearGradient(0, padT, 0, padT + ih);
+  g.addColorStop(0, 'rgba(37,99,235,.22)');
+  g.addColorStop(1, 'rgba(37,99,235,0)');
+  c.beginPath();
+  c.moveTo(px(0), padT + ih);
+  chartData.forEach(function(d, i){ c.lineTo(px(i), pyF(d.f)); });
+  c.lineTo(px(chartData.length - 1), padT + ih);
+  c.closePath();
+  c.fillStyle = g;
+  c.fill();
+
+  /* 流量線 */
+  c.beginPath();
+  chartData.forEach(function(d, i){ i ? c.lineTo(px(i), pyF(d.f)) : c.moveTo(px(i), pyF(d.f)); });
+  c.strokeStyle = '#2563EB';
+  c.lineWidth = 2.2;
+  c.lineJoin = 'round';
+  c.shadowColor = 'rgba(37,99,235,.55)';
+  c.shadowBlur = 10;
+  c.stroke();
+  c.shadowBlur = 0;
+
+  /* 延遲線 */
+  c.beginPath();
+  chartData.forEach(function(d, i){ i ? c.lineTo(px(i), pyL(d.l)) : c.moveTo(px(i), pyL(d.l)); });
+  c.strokeStyle = '#0D9488';
+  c.lineWidth = 1.9;
+  c.setLineDash([5, 4]);
+  c.shadowColor = 'rgba(13,148,136,.5)';
+  c.shadowBlur = 8;
+  c.stroke();
+  c.setLineDash([]);
+  c.shadowBlur = 0;
+
+  /* 軸標 */
+  c.fillStyle = '#7C8CA1';
+  c.font = '10px ui-monospace,Menlo,monospace';
+  c.textAlign = 'right';
+  c.fillText('100', padL - 6, padT + 4);
+  c.fillText('50', padL - 6, padT + ih / 2 + 3);
+  c.fillText('0', padL - 6, padT + ih + 3);
+  c.textAlign = 'left';
+  c.fillText('450ms', padL + iw + 6, padT + 4);
+  c.fillText('0', padL + iw + 6, padT + ih + 3);
+
+  /* hover */
+  if(hoverIdx >= 0 && hoverIdx < chartData.length){
+    var hx = px(hoverIdx);
+    c.strokeStyle = 'rgba(8,145,178,.55)';
+    c.lineWidth = 1;
+    c.setLineDash([3, 3]);
+    c.beginPath(); c.moveTo(hx, padT); c.lineTo(hx, padT + ih); c.stroke();
+    c.setLineDash([]);
+    var d = chartData[hoverIdx];
+    c.beginPath(); c.arc(hx, pyF(d.f), 3.4, 0, Math.PI * 2);
+    c.fillStyle = '#2563EB'; c.fill();
+    c.beginPath(); c.arc(hx, pyL(d.l), 3.4, 0, Math.PI * 2);
+    c.fillStyle = '#0D9488'; c.fill();
+  }
+}
+
+function onChartMove(ev){
+  var rect = mainCanvas.getBoundingClientRect();
+  var x = (ev.touches ? ev.touches[0].clientX : ev.clientX) - rect.left;
+  var padL = 40, padR = 44;
+  var iw = rect.width - padL - padR;
+  if(iw <= 0) return;
+  var idx = Math.round(((x - padL) / iw) * (chartData.length - 1));
+  idx = Math.max(0, Math.min(chartData.length - 1, idx));
+  hoverIdx = idx;
+  drawMain();
+  var tip = $('chartTip');
+  var d = chartData[idx];
+  tip.innerHTML = 'T-' + (chartData.length - idx) + '<br>流量 ' + d.f.toFixed(1) + '<br>延遲 ' + Math.round(d.l) + 'ms';
+  tip.classList.add('on');
+  var tw = tip.offsetWidth || 90;
+  var left = Math.min(Math.max(4, x - tw / 2), rect.width - tw - 4);
+  tip.style.left = left + 'px';
+  tip.style.top = '8px';
+}
+function onChartLeave(){
+  hoverIdx = -1;
+  $('chartTip').classList.remove('on');
+  drawMain();
+}
+
+/* ---------- CSV 匯出 ---------- */
+function csvCell(v){
+  var s = String(v == null ? '' : v);
+  /* 防 CSV 公式注入 */
+  if(/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+  return '"' + s.replace(/"/g, '""') + '"';
+}
+function exportCSV(){
+  var q = clampStr($('leadSearch').value, 40).trim().toLowerCase();
+  var f = $('leadFilter').value;
+  var rows = leads.filter(function(l){
+    var hitQ = !q || (l.src + ' ' + l.intent + ' ' + l.name + ' ' + l.next).toLowerCase().indexOf(q) >= 0;
+    return hitQ && (f === 'all' || l.status === f);
+  });
+  if(!rows.length){
+    logLine('warn', '匯出取消：目前篩選沒有資料');
+    return;
+  }
+  var head = ['時間', '來源', '客人', '想問什麼', '狀態', '下一步'];
+  var lines = [head.map(csvCell).join(',')];
+  rows.forEach(function(l){
+    lines.push([l.t, l.src, l.name, l.intent, l.status, l.next].map(csvCell).join(','));
+  });
+  var csv = '\uFEFF' + lines.join('\r\n');
+  var blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'snt-leads-' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+  state.events++;
+  renderKPIs();
+  logLine('ok', '已匯出 ' + rows.length + ' 筆名單 CSV（本機下載，未上傳）');
+}
+
+/* ---------- 版本檢查 ---------- */
+function cmpVer(a, b){
+  var pa = String(a).split('.').map(Number), pb = String(b).split('.').map(Number);
+  for(var i = 0; i < Math.max(pa.length, pb.length); i++){
+    var x = pa[i] || 0, y = pb[i] || 0;
+    if(x > y) return 1;
+    if(x < y) return -1;
+  }
+  return 0;
+}
+function checkVersion(){
+  var url = location.pathname + '?_v=' + Date.now();
+  fetchJSON(url, 8000).then(function(res){
+    if(!res.ok || !res.raw) return;
+    var m = res.raw.match(/APP_VERSION\s*=\s*['"]([0-9.]+)['"]/);
+    if(!m) return;
+    if(cmpVer(m[1], APP_VERSION) > 0){
+      state.updateAvailable = m[1];
+      $('newVer').textContent = 'v' + m[1];
+      $('curVer').textContent = 'v' + APP_VERSION;
+      $('updateBanner').classList.add('on');
+      logLine('warn', '偵測到新版 v' + m[1] + '（目前 v' + APP_VERSION + '），可重新載入');
+    }
+  }).catch(function(){ /* 版本檢查失敗不影響主畫面 */ });
+}
+
+/* ---------- 事件綁定 ---------- */
+$('syncBtn').addEventListener('click', function(){
+  state.syncLeft = state.intervalMs / 1000;
+  doSync('manual');
+});
+$('pauseBtn').addEventListener('click', function(){
+  state.paused = !state.paused;
+  this.textContent = state.paused ? '繼續同步' : '暫停同步';
+  this.setAttribute('aria-pressed', String(state.paused));
+  this.classList.toggle('primary', state.paused);
+  logLine('info', state.paused ? '同步已暫停（畫面保留最後一次結果）' : '同步已恢復');
+});
+$('interval').addEventListener('change', function(){
+  var v = parseInt(this.value, 10);
+  if(!isFinite(v) || v < 5000 || v > 600000) v = 15000;
+  state.intervalMs = v;
+  state.syncLeft = v / 1000;
+  logLine('info', '更新間隔改為 ' + (v / 1000) + ' 秒');
+});
+$('testAllBtn').addEventListener('click', testAll);
+$('exportBtn').addEventListener('click', exportCSV);
+$('clearTermBtn').addEventListener('click', clearTerm);
+$('simLineBtn').addEventListener('click', function(){
+  logLine('info', '手動測試：LINE Webhook 已觸發，正在轉給真人…');
+});
+$('simPriceBtn').addEventListener('click', function(){
+  logLine('info', '手動測試：定價查詢 /api/pricing 200 OK');
+});
+$('reloadBtn').addEventListener('click', function(){ location.reload(); });
+$('leadSearch').addEventListener('input', renderLeads);
+$('leadFilter').addEventListener('change', renderLeads);
+
+$('aiFilters').addEventListener('click', function(e){
+  var b = e.target.closest('button[data-f]');
+  if(b) filterAI(b.getAttribute('data-f'));
+});
+$('domainCards').addEventListener('click', function(e){
+  var b = e.target.closest('button[data-test]');
+  if(b) testOne(parseInt(b.getAttribute('data-test'), 10));
+});
+$('alerts').addEventListener('click', function(e){
+  var b = e.target.closest('button[data-alert]');
+  if(b) toggleAlert(parseInt(b.getAttribute('data-alert'), 10));
+});
+
+mainCanvas.addEventListener('mousemove', onChartMove);
+mainCanvas.addEventListener('mouseleave', onChartLeave);
+mainCanvas.addEventListener('touchstart', onChartMove, {passive: true});
+mainCanvas.addEventListener('touchmove', onChartMove, {passive: true});
+mainCanvas.addEventListener('touchend', onChartLeave);
+
+var resizeTimer = null;
+window.addEventListener('resize', function(){
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function(){
+    drawMain();
+    Array.prototype.forEach.call(document.querySelectorAll('canvas[data-spark]'), function(cv){
+      var k = cv.getAttribute('data-spark');
+      var colors = {leads:'#2563EB', rev:'#0D9488', lat:'#0891B2', events:'#7C3AED'};
+      drawSpark(cv, kpiSeries[k], colors[k] || '#2563EB');
+    });
+  }, 120);
+});
+
+/* ---------- 啟動 ---------- */
+renderAll();
+logLine('ok', 'SNT v' + APP_VERSION + ' 戰情室啟動 · 純靜態 · 無金鑰');
+logLine('info', '自動更新：每 ' + (state.intervalMs / 1000) + ' 秒重抓 · 每 5 分鐘檢查頁面版本');
+setInterval(tick, 100);
+setTimeout(function(){ doSync('boot'); }, 600);
+setInterval(checkVersion, VERSION_CHECK_MS);
+setTimeout(checkVersion, 4000);
 </script>
 </body>
 </html>
