@@ -2,6 +2,6 @@
  "name": "orbit-tower-site",
  "private": true,
  "dependencies": {
-  "@neondatabase/serverless": "^1.0.4"
+  "@neondatabase/serverless": "^1.2.1"
  }
 }
