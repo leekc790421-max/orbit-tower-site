@@ -26,9 +26,10 @@ async function toNeon(lead) {
   const sql = neon();
   if (!sql) return null;
   try {
-    await sql`INSERT INTO leads (kind, email, name, company, role, topic, intent, message, industry, pain, page, phone, transcript, order_status, quote_id, funnel_score, funnel_tier, ip, at)
+    await sql`INSERT INTO leads (kind, email, name, company, role, topic, intent, message, industry, pain, page, phone, transcript, order_status, quote_id, funnel_score, funnel_tier, ip, at, site, source, tenant_key)
       VALUES (${lead.kind}, ${lead.email}, ${lead.name}, ${lead.company}, ${lead.role}, ${lead.topic}, ${lead.intent}, ${lead.message}, ${lead.industry}, ${lead.pain}, ${lead.page}, ${lead.phone},
-              ${JSON.stringify(lead.transcript)}::jsonb, ${lead.order_status || null}, ${lead.quote_id || null}, ${lead.funnel_score}, ${lead.funnel_tier}, ${lead.ip}, ${lead.at})`;
+              ${JSON.stringify(lead.transcript)}::jsonb, ${lead.order_status || null}, ${lead.quote_id || null}, ${lead.funnel_score}, ${lead.funnel_tier}, ${lead.ip}, ${lead.at},
+              ${lead.site}, ${lead.source}, ${lead.tenant_key})`;
     return { ok: true, backend: 'neon' };
   } catch (e) { return { ok: false, backend: 'neon', error: String(e && e.message || e).slice(0, 160) }; }
 }
@@ -66,9 +67,16 @@ module.exports = async function handler(req, res) {
     } catch (e) { return res.status(200).json({ ok: false, error: String(e.message || e).slice(0, 120) }); }
   }
   // 簡單限流（每 IP 10 分鐘 20 單，防機器人灌水名單）
-  { const rlm = (globalThis.__lrl || (globalThis.__lrl = new Map())); const ip0 = String((req.headers['x-forwarded-for'] || '')).split(',')[0].trim();
-    const nx = Date.now(); const w0 = rlm.get(ip0) || [0, nx + 600000]; if (w0[1] < nx) { w0[0] = 0; w0[1] = nx + 600000; } w0[0]++; rlm.set(ip0, w0);
-    if (w0[0] > 20) return res.status(429).json({ error: 'rate-limited' }); } // orbit-leads GET
+  // DB 原子限流（每 IP 10 分鐘 20 單）。原本的 globalThis.__lrl 在 Serverless
+  // 多實例下每個實例各自計數，等於沒有全域限流，故改為資料庫函式。
+  { const ip0 = String((req.headers['x-forwarded-for'] || '')).split(',')[0].trim() || 'unknown';
+    const sql0 = neon();
+    if (sql0) {
+      try {
+        const rl = await sql0`SELECT lead_rate_hit(${ip0}, 600, 20) AS allowed`;
+        if (rl[0] && rl[0].allowed === false) return res.status(429).json({ error: 'rate-limited' });
+      } catch (e) { console.log('RATE_LIMIT_FAIL ' + String(e && e.message || e).slice(0, 120)); }
+    } } // orbit-leads DB 原子限流
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
 
   let b = {};
@@ -92,6 +100,10 @@ module.exports = async function handler(req, res) {
     pain: clip(b.pain || f.pain, 300),
     page: clip(b.page || b.url, 160),
     phone: clip(f.phone || b.phone, 32),
+    // 站別歸屬：上游 payload 的 site/source、x-site header、SITE_KEY 依序取值
+    site: clip(b.site || b.source || (req.headers || {})['x-site'] || process.env.SITE_KEY || 'unknown', 60),
+    source: clip(b.source || (req.headers || {})['x-site'] || process.env.SITE_KEY || 'unknown', 60),
+    tenant_key: clip(b.tenant_key || process.env.DEFAULT_TENANT_ID || 'snt-main', 64),
     order_status: clip(b.order_status, 40),     // /api/order syncLead 帶入
     quote_id: clip(b.quote_id, 80),
     transcript: Array.isArray(b.transcript) ? b.transcript.slice(-8).map(m => ({
