@@ -89,7 +89,7 @@ async function ceoCheck() {
   const vipCeo = await fetch('https://vip.xingdeng.tw/api/ceo?view=ping').then(r => r.json()).catch(() => null);
 
   // LINE
-  const line = await probe('https://line.me/R/ti/p/@559julyu', { timeout: 6000 });
+  const line = await probe('https://line.me/R/ti/p/@580ctuew', { timeout: 6000 });
 
   // 昨日數字
   const NURL = process.env.NEON_CONNECTION_STRING || process.env.DATABASE_URL;

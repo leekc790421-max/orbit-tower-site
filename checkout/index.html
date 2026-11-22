@@ -2,11 +2,11 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>線上報價與定金沙箱｜光曦星閣・光曦星軌</title>
-<meta name="description" content="三步驟產生初步商業報價單（含 ROI 摘要，可列印或一鍵下載 PDF），並透過沙箱金流鎖定預約。"><meta property="og:site_name" content="光曦星閣・光曦星軌">
+<title>線上報價與付款方式｜光曦星閣 SNT</title>
+<meta name="description" content="三步驟產生初步商業報價單（含 ROI 摘要，可列印或一鍵下載 PDF），並提供明確的定金付款方式與核銷流程。"><meta property="og:site_name" content="光曦星閣・光曦星軌">
 <link rel="canonical" href="https://xingdeng.tw/checkout"><link rel="alternate" hreflang="zh-Hant" href="https://xingdeng.tw/checkout"><link rel="alternate" hreflang="en" href="https://xingdeng.tw/checkout?hl=en"><link rel="alternate" hreflang="ja" href="https://xingdeng.tw/checkout?hl=ja"><link rel="alternate" hreflang="x-default" href="https://xingdeng.tw/checkout">
 <meta property="og:type" content="website"><meta property="og:title" content="線上報價與定金・光曦星軌">
-<meta property="og:description" content="選方案→留資訊→格式化報價單＋ROI 摘要，一鍵下載 PDF。定金三通道：沙箱收單・對公匯款（826／臺銀松山）・Payoneer 直連。">
+<meta property="og:description" content="選方案→留資訊→格式化報價單＋ROI 摘要，一鍵下載 PDF。定金方式：對公匯款（人工核銷）。線上刷卡開通前由業務逐案確認。">
 <meta property="og:image" content="https://xingdeng.tw/assets/og.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/assets/logo-mark.png">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -31,8 +31,8 @@
 <section style="padding-top:34px"><div class="wrap">
 <span class="tag-chip">🧾 QUOTE ENGINE・三步驟自動報價</span>
 <h1 style="margin:12px 0 6px">產生你的初步商業報價單</h1>
-<p class="lead" style="max-width:680px">選方案 → 留 COMPANY／EMAIL → 馬上拿到格式化報價單與 ROI 摘要；可列印為 PDF，或送進定金沙箱（本階段僅沙箱／測試模式，不收真實款項）。</p>
-<div class="steps"><b>1 選擇方案</b><span>→</span><b>2 公司資訊</b><span>→</span><b>3 報價單＋定金沙箱</b></div>
+<p class="lead" style="max-width:680px">選方案 → 留 COMPANY／EMAIL → 馬上拿到格式化報價單與 ROI 摘要；可列印為 PDF，或依下方付款方式支付定金（人工核銷，到帳後 72 小時內回覆開通）。</p>
+<div class="steps"><b>1 選擇方案</b><span>→</span><b>2 公司資訊</b><span>→</span><b>3 報價單＋付款方式</b></div>
 
 <div class="co-grid">
 <div class="card">
@@ -49,17 +49,17 @@
 </div>
 <div class="no-print" style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
 <button class="btn btn--primary" id="gen">⚡ 產生報價單＋ROI 摘要</button>
-<button class="btn" id="pay" disabled style="opacity:.5">🔒 定金・沙箱金流</button>
+<button class="btn" id="pay" disabled style="opacity:.5">🔒 建立訂單・取得付款方式</button>
 <button class="btn" id="pdfdown" disabled style="opacity:.5">⬇ 下載 PDF 報價單</button>
 <button class="btn btn--ghost" id="printbtn" disabled style="opacity:.5">🖨 列印／另存 PDF</button>
 </div>
-<p class="no-print" style="font-size:12px;color:#94A3B8;margin-top:8px" id="mode-note">金流模式：偵測中…（綁定 sk_test_／sandbox 金鑰後自動升級為真實沙箱收單）</p><div class="no-print" style="margin-top:12px;border:1px solid #E2E8F0;border-radius:12px;padding:12px 14px;font-size:13px;line-height:2;color:#334155"><b>② 定金・對公收款（三通道・現為預留啟用，正式以業務核可報價單為準）</b><br>🏦 國內網銀／ATM／臨櫃：樂天國際商業銀行（代碼 826）帳號 812-010-0××-××××<br>🌍 海外大額電匯：臺灣銀行松山分行 Bank of Taiwan｜SWIFT BKTWTWTP（海外 B2B 專用 BKTWTWTP060）｜分行解款 0040646｜帳號 004-064××××××××4×<br>⚡ 國際快速：Payoneer <a href="https://link.payoneer.com/Token?t=4D0FBCB1CAEE48E48FEACE39662D6BB7&src=mobile" target="_blank" rel="noopener">快速付款直連</a><br><span style="color:#64748B">美元計價依 api/align.js 每日對時折算（逾時降級 32.5）。帳資為部分遮蔽版；完整欄位列於簽約後核可文件。任何声稱冒名收款皆可向 service@xingdeng.tw 舉報。</span></div>
+<p class="no-print" style="font-size:12px;color:#94A3B8;margin-top:8px" id="mode-note">付款方式：訂單建立後顯示（現行 stage 為對公匯款・人工核銷）。</p><div class="no-print" style="margin-top:12px;border:1px solid #E2E8F0;border-radius:12px;padding:12px 14px;font-size:13px;line-height:2;color:#334155"><b>② 定金・對公收款（三通道・現為預留啟用，正式以業務核可報價單為準）</b><br>🏦 國內網銀／ATM／臨櫃：款項以訂單確認後寄送的正式收款資料為準<br>🌍 海外大額電匯：請向 service@xingdeng.tw 索取正式版 SWIFT 與帳號資料（不在公開頁面列示）<br>⚡ 國際快速：Payoneer（付款連結採逐單產生，不在公開頁面貼出）<br><span style="color:#64748B">美元計價依 api/align.js 每日對時折算（逾時降級 32.5）。公開頁面不再列示帳號欄位；完整資料僅隨訂單提供。任何声稱冒名收款皆可向 service@xingdeng.tw 舉報。</span></div>
 </div>
 
 <div><div id="qbox" class="quote" aria-live="polite"><p class="muted" style="margin:4px 0">報價單預覽：完成左側選擇後按「產生報價單」。此預覽區塊可直接 <b>⌘/Ctrl+P 列印為 PDF</b>。</p></div></div>
 </div></div></section>
 
-<footer><div class="wrap"><div class="foot__bar"><span>© 2026 光曦星閣・光曦星軌（SNT）｜報價單為初步商業文件，正式合約以業務核可版本為準。</span><span>本頁面為沙箱模式 — 不會產生真實扣款。</span></div></div></footer>
+<footer><div class="wrap"><div class="foot__bar"><span>© 2026 光曦星閣・光曦星軌（SNT）｜報價單為初步商業文件，正式合約以業務核可版本為準。</span><span>付款與開通採人工核銷，細節以業務核可報價單為準。</span></div></div></footer>
 
 <script src="/assets/chat-widget.js" defer></script>
 <script>
@@ -91,14 +91,14 @@ document.getElementById('gen').onclick=function(){
 };
 document.getElementById('pay').onclick=function(){
  if(!quote)return;
- var b=document.getElementById('pay');b.disabled=true;b.textContent='建立沙箱訂單…';
+ var b=document.getElementById('pay');b.disabled=true;b.textContent='建立訂單…';
  fetch('/api/order',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({ref:quote.no,item:quote.item.id,amount:quote.totals.grand,qty:quote.lines[0].qty,desc:quote.lines[0].desc,email:quote.customer.email,company:quote.customer.company})})
  .then(function(r){return r.json()})
- .then(function(j){b.textContent='🔒 定金・沙箱金流';b.disabled=false;if(!j.ok)throw 0;window.dispatchEvent(new CustomEvent('order-mode',{detail:j}))
-  var n=document.getElementById('mode-note');n.innerHTML='已建立沙箱訂單：<b>'+j.order+'</b>（provider: '+j.provider+'）→ ';
-  var a=document.createElement('a');a.className='btn btn--sm btn--primary';a.href=j.payUrl;a.textContent=j.mode.indexOf('local')>-1?'進入確認頁（模擬）':'前往沙箱金流付定金';n.appendChild(a);
+ .then(function(j){b.textContent='🔒 建立訂單・取得付款方式';b.disabled=false;if(!j.ok)throw 0;window.dispatchEvent(new CustomEvent('order-mode',{detail:j}))
+  var n=document.getElementById('mode-note');n.innerHTML='已建立訂單：<b>'+j.order+'</b>（provider: '+j.provider+'）→ ';
+  var a=document.createElement('a');a.className='btn btn--sm btn--primary';a.href=j.payUrl;a.textContent=j.mode.indexOf('local')>-1?'進入確認頁（模擬）':'前往付款';n.appendChild(a);
   setTimeout(function(){ if(!/^\w+:\/\//.test(a.href))a.click(); },4000);})
- .catch(function(){b.textContent='🔒 定金・沙箱金流';b.disabled=false;alert('訂單服務暫時可用，報價單仍可留存。');});
+ .catch(function(){b.textContent='🔒 建立訂單・取得付款方式';b.disabled=false;alert('訂單服務暫時可用，報價單仍可留存。');});
 };
 document.getElementById('printbtn').onclick=function(){window.print();};
 document.getElementById('pdfdown').onclick=function(){
@@ -120,7 +120,7 @@ document.getElementById('pdfdown').onclick=function(){
 };
 (function(){try{fetch('/api/order').then(function(r){return r.json()}).then(function(j){
  var n=document.getElementById('mode-note');if(!n)return;
- if(j.mode==='sandbox'&&!j.stripe.match(/test|live/))n.innerHTML='金流模式：<b>沙箱（模擬單）</b>｜綁 sk_test_＝真沙箱收單；<b>PAYMENT_MODE=live＋sk_live_ 雙重開關</b>才收正式款。';
+ if(j.mode==='sandbox'&&!j.stripe.match(/test|live/))n.innerHTML='付款狀態：尚未綁定正式收單金鑰，訂單一律採人工核銷。';
  else n.innerHTML='金流模式：<b>'+j.mode+'</b>｜Stripe: '+j.stripe+'｜PayPal: '+j.paypal;
 }).catch(function(){});}catch(e){}})();
 </script>

@@ -1,7 +1,7 @@
 /* POST /api/concierge-llm — 站內 AI 接待顧問的 LLM 代理（金鑰集中於本專案 env）
    ----------------------------------------------------------------------------
    v7 整合：三層切換（L1 免費 LLM 閘道 → L2 Z.ai → L3 本地規則引擎）全部委派
-   _snt-core.js，與 @559julyu 總部 LINE 機器人、/admin AI CEO 終端共用同一套
+   _snt-core.js，與 @580ctuew 總部 LINE 機器人、/admin AI CEO 終端共用同一套
    語感與定價邏輯。任何一處改語感或價格，只改核心一檔。
 
    設計：金鑰永不外流；人格與事實由核心的 buildSystemPrompt 定義，此處只做
@@ -34,10 +34,10 @@ const SITE_CTA = {
 
 const SITE_LINE = {
   decoration: { id: '@580ctuew', label: 'LINE 木作諮詢' },
-  xingdeng:   { id: '@559julyu', label: 'LINE 企業諮詢' },
-  tower:      { id: '@559julyu', label: 'LINE 企業諮詢' },
-  orbit:      { id: '@559julyu', label: 'LINE 企業諮詢' },
-  vip:        { id: '@559julyu', label: 'LINE 企業諮詢' }
+  xingdeng:   { id: '@580ctuew', label: 'LINE 企業諮詢' },
+  tower:      { id: '@580ctuew', label: 'LINE 企業諮詢' },
+  orbit:      { id: '@580ctuew', label: 'LINE 企業諮詢' },
+  vip:        { id: '@580ctuew', label: 'LINE 企業諮詢' }
 };
 
 function readBody(req) {

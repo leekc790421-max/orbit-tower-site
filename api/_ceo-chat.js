@@ -6,7 +6,7 @@
    2. Context Awareness：每次對話前即時讀取 Neon（leads / ad_bot_tasks / ad_bot_dispatch / ad_bot_quota / growth_event / subscription_events），
       以「真實數字」餵給 LLM，禁止模型自行編造。
    3. v7.1 整合：LLM 層委派 _snt-core.js 的三層無縫切換（L1 免費閘道 → L2 Z.ai → L3 本地規則），
-      與 @559julyu 總部 LINE 機器人、站內 Concierge 共用同一套語感與定價引擎。
+      與 @580ctuew 總部 LINE 機器人、站內 Concierge 共用同一套語感與定價引擎。
    4. 全程 try/catch；LLM 或 DB 逾時回傳友善提示，HTTP 仍為 200。
    5. 串流：text/event-stream（SSE），逐字輸出；不支援時自動退回一次性 JSON。 */
 

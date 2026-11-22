@@ -221,7 +221,7 @@ async function lineHealth() {
       token: pick('LINE_OA_1_TOKEN', 'LINE_BOT1_TOKEN', 'LINE_CHANNEL_TOKEN')
     },
     {
-      id: '@559julyu',
+      id: '@580ctuew',
       label: '光曜星樞 SNT・B2B/VIP 服務',
       token: pick('LINE_OA_2_TOKEN', 'LINE_BOT2_TOKEN')
     }

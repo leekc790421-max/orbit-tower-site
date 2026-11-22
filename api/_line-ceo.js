@@ -1,5 +1,5 @@
 'use strict';
-/* SNT v6.0 — LINE 總部 AI CEO 語感層（@559julyu 光曜星樞 SNT 總部 / @580ctuew 光曜星稜）
+/* SNT v6.0 — LINE 總部 AI CEO 語感層（@580ctuew 光曜星樞 SNT 總部 / @580ctuew 光曜星稜）
    ----------------------------------------------------------------------------
    v7 整合：所有定價、語感、三層 LLM 切換全部委派給 _snt-core.js（雙軌智能核心）。
    本檔只負責：OA 身分、意圖偵測、LINE 發送、歡迎語。
@@ -16,7 +16,7 @@ const CORE = require('./_snt-core.js');
 /* ---------- 兩個 OA 的身分 ---------- */
 const OAS = {
   hq: {
-    id: '@559julyu',
+    id: '@580ctuew',
     name: '光曜星樞 SNT 總部',
     role: '對外、對內唯一指定總部與自動化對口',
     tokenEnv: ['LINE_BOT1_TOKEN', 'LINE_CHANNEL_TOKEN', 'LINE_CHANNEL_ACCESS_TOKEN']

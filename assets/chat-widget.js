@@ -57,13 +57,13 @@
   }
   function askLead(){
     var slot=P.querySelector('#sntLeadSlot');if(slot.dataset.on)return;slot.dataset.on=1;
-    slot.innerHTML='<div class="snt-lead">📥 想把這份策略帶回去執行？留 Email，戰略長給你 <b>90 天落地排程</b>＋方案報價。<input id="sntEm" type="email" placeholder="name@company.com"><div style="display:flex;gap:8px;align-items:center"><button class="snt-go" style="border:0;border-radius:8px;padding:7px 12px;cursor:pointer" id="sntSend">領取策略包</button><span>或 <a class="ln" target="_blank" rel="noopener" href="https://line.me/R/ti/p/@559julyu">LINE 直接聊 ⚡</a></span></div></div>';
+    slot.innerHTML='<div class="snt-lead">📥 想把這份策略帶回去執行？留 Email，戰略長給你 <b>90 天落地排程</b>＋方案報價。<input id="sntEm" type="email" placeholder="name@company.com"><div style="display:flex;gap:8px;align-items:center"><button class="snt-go" style="border:0;border-radius:8px;padding:7px 12px;cursor:pointer" id="sntSend">領取策略包</button><span>或 <a class="ln" target="_blank" rel="noopener" href="https://line.me/R/ti/p/@580ctuew">LINE 直接聊 ⚡</a></span></div></div>';
     slot.querySelector('#sntSend').onclick=async function(){
       var em=slot.querySelector('#sntEm').value.trim();
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){slot.querySelector('#sntEm').focus();return}
       this.textContent='⋯';
       try{await fetch(HUB+'/api/leads',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:em,industry:(his[0]||{}).c||'',pain:'',page:location.pathname,transcript:his.slice(-8).map(function(m){return{r:m.r,c:m.c}})})});
-        slot.innerHTML='<div class="snt-lead" style="border-style:solid">✅ 已送達維修台佇列。想要真人立刻對談：LINE <a class="ln" href="https://line.me/R/ti/p/@559julyu">@559julyu</a>・或先逛 <a class="ln" href="'+HUB+'/kits">懶人包展示櫃</a>。</div>';}
+        slot.innerHTML='<div class="snt-lead" style="border-style:solid">✅ 已送達維修台佇列。想要真人立刻對談：LINE <a class="ln" href="https://line.me/R/ti/p/@580ctuew">@580ctuew</a>・或先逛 <a class="ln" href="'+HUB+'/kits">懶人包展示櫃</a>。</div>';}
       catch(e){this.textContent='再試一次'}
     };
   }

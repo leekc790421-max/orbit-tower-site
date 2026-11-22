@@ -2,7 +2,7 @@
 /* ============================================================================
    SNT v6.0 雙軌智能核心（Dual-Track Intelligence Core）— v7.1
    ----------------------------------------------------------------------------
-   本檔為 @559julyu 總部 LINE 機器人、站內 Concierge、tower /admin AI CEO 終端
+   本檔為 @580ctuew 總部 LINE 機器人、站內 Concierge、tower /admin AI CEO 終端
    三者共用的唯一智能層。任何一處要改語感或定價，只改這裡。
 
    設計原則
@@ -307,7 +307,7 @@ function runLocalStrategistEngine(userMessage, contextData) {
   /* 4-3 網域分租／架網懶人包／SaaS 訂閱 */
   if (RE_WEB.test(msg)) {
     return [
-      '歡迎來到 SNT 數位總部（@559julyu）。',
+      '歡迎來到 SNT 數位總部（@580ctuew）。',
       '我們提供「網域分租＋AI 自動接單＋全站追蹤矩陣」一站式架網懶人包，無需自己養工程團隊，開通即上線：',
       '• 14 天全功能免綁約試用，實測有效名單轉換再決定方案。',
       `• 三階彈性訂閱（$${SAAS_TIERS.Starter.price.toLocaleString()} / $${SAAS_TIERS.Pro.price.toLocaleString()} / $${SAAS_TIERS.Enterprise.price.toLocaleString()}），隨業務規模隨時升降級。`,
@@ -329,7 +329,7 @@ function runLocalStrategistEngine(userMessage, contextData) {
   /* 4-5 裝修屋主諮詢 */
   if (RE_DECO.test(msg)) {
     return [
-      '光曜星樞總部（@559julyu）為你服務。',
+      '光曜星樞總部（@580ctuew）為你服務。',
       '我們專注於中彰投苗新地區的精準木作與統包工程，拒絕模糊報價與工期延宕。你可以直接傳送「格局圖／現場照片」或告知「房屋所在區域與預算區間」，系統將為你快速估算工期並安排專屬顧問對接。'
     ].join('\n');
   }
@@ -344,7 +344,7 @@ function runLocalStrategistEngine(userMessage, contextData) {
 
   /* 4-7 預設開場白 */
   return [
-    '光曜星樞 SNT 總部（@559julyu）。',
+    '光曜星樞 SNT 總部（@580ctuew）。',
     '我們把「數位獲客引擎」與「實體工程交付」放在同一套系統裡跑：前端用 AI 接單與精準分流，後端用標準化報價把案子落地。',
     '你現在是想「找案源／拓展客流」、「租用架網懶人包」、「做 LINE 官方帳號商業擴編」，還是洽談「裝修統包合作」？直接說，我給你最直接的判斷。'
   ].join('\n');
@@ -366,7 +366,7 @@ function buildSystemPrompt(contextData) {
   const site = String(ctx.site || 'hq');
 
   const siteLine = {
-    hq: '你代表「光曜星樞 SNT 總部」（LINE @559julyu），是對外、對內唯一指定總部與自動化對口，統籌所有 B2B 與 B2C 對口與自動報價。',
+    hq: '你代表「光曜星樞 SNT 總部」（LINE @580ctuew），是對外、對內唯一指定總部與自動化對口，統籌所有 B2B 與 B2C 對口與自動報價。',
     lumi: '你代表「光曜星稜」（LINE @580ctuew），是中部木作精裝修的獲客端，語氣像懂行的現場顧問。',
     decoration: '你代表「光曜星稜・中部木作精裝修統包」，服務範圍為台中、彰化、南投、苗栗、新竹。',
     xingdeng: '你代表「SNT 光曜星樞・B2B AI 數位總部」，主站為 xingdeng.tw。',
@@ -375,7 +375,7 @@ function buildSystemPrompt(contextData) {
     vip: '你代表「CosmoSphere・黑卡算力會所」，主站為 vip.xingdeng.tw。'
   }[site] || '你代表「光曜星樞 SNT 總部」。';
 
-  return `你是 SNT 數位總部（@559julyu）的首席商業策略長。
+  return `你是 SNT 數位總部（@580ctuew）的首席商業策略長。
 ${siteLine}
 
 【語感要求】

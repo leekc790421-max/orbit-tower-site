@@ -141,6 +141,6 @@ module.exports = async function handler(req, res) {
     }
   }
   // 全鏈降級兜底：規則引擎永在
-  const out = lane === 'front_desk' ? (() => { const r = ruleFrontDesk(msgs); return r.reply; })() : '（調度器：所有主鏈失效，此線暫離線，請稍後再試或走 LINE @559julyu）';
+  const out = lane === 'front_desk' ? (() => { const r = ruleFrontDesk(msgs); return r.reply; })() : '（調度器：所有主鏈失效，此線暫離線，請稍後再試或走 LINE @580ctuew）';
   res.status(200).json({ ok: true, lane, provider: 'rule', degraded: true, reply: out, capture: lane === 'front_desk' && out.includes('[[LEAD_CAPTURE]]'), attempts });
 };

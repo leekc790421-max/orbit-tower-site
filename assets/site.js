@@ -92,7 +92,7 @@
           track('lead_' + data.type + '_sent');
           f.innerHTML = '<div style="padding:10px 2px"><b style="color:#059669;font-size:17px">✓ 名單已送達後端收單池</b><p class="muted" style="margin:8px 0 0;font-size:14.5px">業務與 AI 顧問將於 24 小時內回覆 ' +
             (f.querySelector('[name="email"]') ? f.querySelector('[name="email"]').value : '您的信箱') +
-            '。若想加速，可同步加 <a href="https://line.me/R/ti/p/@559julyu" style="color:#06C755;font-weight:700">LINE 官方帳號 @559julyu</a> 註明姓名，AI 直接為您排單。</p></div>';
+            '。若想加速，可同步加 <a href="https://line.me/R/ti/p/@580ctuew" style="color:#06C755;font-weight:700">LINE 官方帳號 @580ctuew</a> 註明姓名，AI 直接為您排單。</p></div>';
         })
         .catch(function () { track('lead_' + data.type); mailFallback(); });
     });

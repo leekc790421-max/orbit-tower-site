@@ -56,7 +56,7 @@
     '行銷站｜未來趨勢文章': { en: 'Official Site・Future Insights', ja: '公式サイト・トレンド記事' },
     '預約導覽 Demo': { en: 'Book a Guided Demo', ja: 'デモ予約' },
     '光曦星閣官網｜行銷站': { en: 'SNT Official Site', ja: '光曦星閣公式サイト' },
-    '線上報價單・沙箱金流': { en: 'Online Quote・Sandbox Pay', ja: 'オンライン見積・サンドボックス決済' },
+    '線上報價單・付款方式': { en: 'Online Quote・Sandbox Pay', ja: 'オンライン見積・サンドボックス決済' },
     '拾光引 SNT｜命理雙域站': { en: 'LumiGuide SNT｜Destiny Suite', ja: '拾光引 SNT｜命理ツインサイト' },
     '拾光引 SNT・命理雙域站': { en: 'LumiGuide SNT・Destiny Suite', ja: '拾光引 SNT・命理ツインサイト' },
     '拾光引 LumiGuide': { en: 'LumiGuide', ja: '拾光引 LumiGuide' },
