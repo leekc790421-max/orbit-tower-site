@@ -81,4 +81,7 @@ function loadTrue(){fetch('/api/corps?bot=pool',{credentials:'same-origin'}).the
 if(q().get('key')){document.getElementById('keyin').value=q().get('key');history.replaceState(null,'',location.pathname)}else{setTimeout(function(){load()},50)}
 setInterval(function(){if(S.ok)loadTrue()},60000);
 var _r=render;render=function(d){S.ok=1;_r(d)};
-</script></body></html>
+</script><script>window.SNT_SITE_ID=window.SNT_SITE_ID||"tower";</script>
+<script src="/assets/snt-cdp.js" defer></script>
+<script src="/snt-family.js" defer></script>
+</body></html>
