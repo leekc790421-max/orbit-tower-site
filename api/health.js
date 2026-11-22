@@ -156,6 +156,20 @@ module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Access-Control-Allow-Origin', '*');
 
+  // ── 匿名流量事件收口（/api/track 經 rewrite 導到這裡）──────────────
+  // 為什麼掛在這裡：Hobby 方案 12 個函式已滿，新增 api/track.js 會讓建置失敗。
+  // 既有 _track.js 早就寫好（growth_event 表），只是檔名底線開頭不會被路由，
+  // 所以 /api/track 一直 404。這裡只做轉接，不改 _track.js 的邏輯。
+  if (req.query && req.query.mode === 'track') {
+    try {
+      const track = require('./_track');
+      return await track(req, res);
+    } catch (e) {
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(200).json({ ok: false, degraded: true, error: String((e && e.message) || e).slice(0, 160) });
+    }
+  }
+
   // ── 全站指令廣播（/admin 專用）────────────────────────────────────
   if (req.query && req.query.mode === 'broadcast') {
     try {
