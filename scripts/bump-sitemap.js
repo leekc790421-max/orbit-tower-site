@@ -3,7 +3,7 @@
    金鑰檔＝根目錄 32 位 hex 檔名 .txt（內容＝檔名）。 */
 const fs = require("fs");
 
-const HOST = "xingdeng.tw";
+const HOST = "tower.xingdeng.tw";
 
 let s = "";
 if (fs.existsSync("sitemap.xml")) {
